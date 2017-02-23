@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'polls.apps.PollsConfig',
-    'snippets.apps.SnippetsConfig',
+    'personas.apps.PersonasConfig',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
