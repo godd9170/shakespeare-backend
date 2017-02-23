@@ -22,3 +22,21 @@ class Persona(models.Model):
     #                               full=True, **options)
     #     self.highlighted = highlight(self.code, lexer, formatter)
     #     super(Snippet, self).save(*args, **kwargs)
+
+
+class ValueProposition(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    title = models.CharField(max_length=100, blank=True, default='')
+    persona = models.ForeignKey('personas.Persona', related_name='value_propositions', on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ('created',)
+
+
+class CallToAction(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    title = models.CharField(max_length=100, blank=True, default='')
+    persona = models.ForeignKey('personas.Persona', related_name='calls_to_action', on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ('created',)
