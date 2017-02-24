@@ -54,15 +54,4 @@ CREATE USER shakespeare-admin WITH PASSWORD 'salesforce1';
 
 ## Elastic Beanstalk Deploys
 
-Set the correct location of the WSGIPATH
-```eb config```
-
-Then find where the WSGIPATH is defined and correct it to:
-
-```
-aws:elasticbeanstalk:container:python:
-   NumProcesses: '1'
-   NumThreads: '15'
-   StaticFiles: /static/=static/
-   WSGIPath: iotd/iotd/wsgi.py
-```
+```eb deploy```
