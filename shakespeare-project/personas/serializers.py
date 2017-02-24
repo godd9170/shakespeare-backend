@@ -1,25 +1,27 @@
 from rest_framework import serializers
-from personas.models import Persona
+from personas.models import Persona, ValueProposition, CallToAction
 from django.contrib.auth.models import User
-from personas.models import ValueProposition, CallToAction
 
-class PersonaSerializer(serializers.ModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username') #You can include additional fields that aren't necessarily on the model like this
-    calls_to_action = serializers.PrimaryKeyRelatedField(many=True, queryset=CallToAction.objects.all())
-    value_propositions = serializers.PrimaryKeyRelatedField(many=True, queryset=ValueProposition.objects.all())
-    
-    class Meta:
-        model = Persona
-        fields = ('id', 'title', 'owner', 'calls_to_action', 'value_propositions')
 
-class ValuePropositionSerializer(serializers.ModelSerializer):
+class ValuePropositionSerializer(serializers.HyperlinkedModelSerializer):
+    personas = serializers.HyperlinkedRelatedField(many=True, view_name='persona-detail', queryset=Persona.objects.all())
 
     class Meta:
         model = ValueProposition
-        fields = ('id', 'title', 'persona')
+        fields = ('id', 'title', 'personas')
 
-class CallToActionSerializer(serializers.ModelSerializer):
+class CallToActionSerializer(serializers.HyperlinkedModelSerializer):
+    personas = serializers.HyperlinkedRelatedField(many=True, view_name='persona-detail', queryset=Persona.objects.all())
 
     class Meta:
         model = CallToAction
-        fields = ('id', 'title', 'persona')
+        fields = ('id', 'title', 'personas')
+
+class PersonaSerializer(serializers.HyperlinkedModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username') #You can include additional fields that aren't necessarily on the model like this
+    value_propositions = ValuePropositionSerializer(many=True, source='value_proposition_personas')
+    calls_to_action = CallToActionSerializer(many=True, source='call_to_action_personas')
+
+    class Meta:
+        model = Persona
+        fields = ('id', 'title', 'owner' , 'value_propositions', 'calls_to_action')
