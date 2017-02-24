@@ -3,3 +3,8 @@
 **/*__pycache__
 **/*.DS_Store
 **/*.sqlite*
+**/*.pem
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
