@@ -1,69 +1,70 @@
-from personas.models import Persona
-from personas.serializers import PersonaSerializer
 from django.contrib.auth.models import User
 from django.http import Http404
-from rest_framework.views import APIView
+from rest_framework import status, generics, permissions # for the generic user api
+from rest_framework.reverse import reverse
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework import generics, permissions # for the generic user api
-from personas.permissions import IsOwner #get our specially designed permissions for the personas
+from rest_framework.decorators import api_view
+from personas import models, serializers, permissions
+
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        'personas': reverse('persona-list', request=request, format=format),
+        'valueprops': reverse('value-proposition-list', request=request, format=format),
+        'ctas': reverse('call-to-action-list', request=request, format=format),
+    })
 
 class PersonaList(generics.ListCreateAPIView): #NOTE: Using the list generic
-    permission_classes = (IsOwner,)
+    permission_classes = (permissions.IsOwner,)
     """
     List all personas, or create a new persona.
     """
-    serializer_class = PersonaSerializer
+    serializer_class = serializers.PersonaSerializer
 
     def get_queryset(self):
-        return Persona.objects.filter(owner=self.request.user) #Only show the user objects they are owners of
-    # def get(self, request, format=None):
-    #     personas = Persona.objects.filter(owner=self.request.user) #only show your own personas
-    #     #CHECK IF USER HAS PERMISSION TO SEE THE OBJECTS (TODO: A loop?)
-    #     for persona in personas:
-    #         self.check_object_permissions(self.request, persona)
-
-    #     serializer = PersonaSerializer(personas, many=True)
-    #     return Response(serializer.data)
-
-    # def post(self, request, format=None):
-    #     serializer = PersonaSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save(owner=self.request.user) #Because I'm not using the generic ModelViewSet, we need to include the owner in the save here instead of doing the overridden (perform_create)
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return models.Persona.objects.filter(owner=self.request.user) #Only show the user objects they are owners of
 
 
 class PersonaDetail(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = (IsOwner,)
+    permission_classes = (permissions.IsOwner,)
     """
     Retrieve, update or delete a persona instance.
     """
-    queryset = Persona.objects.all()
-    serializer_class = PersonaSerializer
-    # def get_object(self, pk):
-    #     try:
-    #         return Persona.objects.get(pk=pk)
-    #     except Persona.DoesNotExist:
-    #         raise Http404
+    queryset = models.Persona.objects.all()
+    serializer_class = serializers.PersonaSerializer
 
-    # def get(self, request, pk, format=None):
-    #     persona = self.get_object(pk)
-    #     self.check_object_permissions(self.request, persona) #Ensure the user has permission to see
-    #     serializer = PersonaSerializer(persona)
-    #     return Response(serializer.data)
 
-    # def put(self, request, pk, format=None):
-    #     persona = self.get_object(pk)
-    #     self.check_object_permissions(self.request, persona) #Ensure the user has permission to see this
-    #     serializer = PersonaSerializer(persona, data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class ValuePropositionList(generics.ListCreateAPIView): #NOTE: Using the list generic
+    """
+    List all personas, or create a new persona.
+    """
+    serializer_class = serializers.ValuePropositionSerializer
 
-    # def delete(self, request, pk, format=None):
-    #     persona = self.get_object(pk)
-    #     self.check_object_permissions(self.request, persona) #Ensure the user has permission to see this
-    #     persona.delete()
-    #     return Response(status=status.HTTP_204_NO_CONTENT)
+    def get_queryset(self):
+        return models.ValueProposition.objects.all()
+        #return ValueProposition.objects.filter(persona=self.request.user) #Only show the user objects they are owners of
+
+class ValuePropositionDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update or delete a persona instance.
+    """
+    queryset = models.ValueProposition.objects.all()
+    serializer_class = serializers.ValuePropositionSerializer
+
+
+class CallToActionList(generics.ListCreateAPIView): #NOTE: Using the list generic
+    """
+    List all personas, or create a new persona.
+    """
+    serializer_class = serializers.CallToActionSerializer
+
+    def get_queryset(self):
+        return models.CallToAction.objects.all()
+        #return ValueProposition.objects.filter(persona=self.request.user) #Only show the user objects they are owners of
+
+class CallToActionDetail(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Retrieve, update or delete a persona instance.
+    """
+    queryset = models.CallToAction.objects.all()
+    serializer_class = serializers.CallToActionSerializer
