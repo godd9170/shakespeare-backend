@@ -27,7 +27,8 @@ class Persona(models.Model):
 class ValueProposition(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=100, blank=True, default='')
-    persona = models.ForeignKey('personas.Persona', related_name='value_propositions', on_delete=models.CASCADE)
+    personas = models.ManyToManyField(Persona, related_name='value_proposition_personas') #related name is how Persona will refer to it's ValuePropositions
+    #persona = models.ForeignKey('personas.Persona', related_name='value_propositions', on_delete=models.CASCADE)
 
     class Meta:
         ordering = ('created',)
@@ -36,7 +37,8 @@ class ValueProposition(models.Model):
 class CallToAction(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=100, blank=True, default='')
-    persona = models.ForeignKey('personas.Persona', related_name='calls_to_action', on_delete=models.CASCADE)
+    personas = models.ManyToManyField(Persona, related_name='call_to_action_personas')
+    #persona = models.ForeignKey('personas.Persona', related_name='calls_to_action', on_delete=models.CASCADE)
 
     class Meta:
         ordering = ('created',)
