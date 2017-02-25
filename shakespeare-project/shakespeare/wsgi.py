@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "shakespeare-project.shakespeare.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "shakespeare.settings")
 
 application = get_wsgi_application()
