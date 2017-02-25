@@ -2,7 +2,6 @@ from rest_framework import serializers
 from personas.models import Persona, ValueProposition, CallToAction
 from django.contrib.auth.models import User
 
-
 class ValuePropositionSerializer(serializers.HyperlinkedModelSerializer):
     personas = serializers.HyperlinkedRelatedField(many=True, view_name='persona-detail', queryset=Persona.objects.all())
 
