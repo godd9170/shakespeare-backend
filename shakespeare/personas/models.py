@@ -7,6 +7,9 @@ class Persona(models.Model):
     title = models.CharField(max_length=100, blank=True, default='')
     owner = models.ForeignKey('auth.User', related_name='personas', on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.title
+
     class Meta:
         ordering = ('created',)
 
@@ -26,9 +29,13 @@ class Persona(models.Model):
 
 class ValueProposition(models.Model):
     created = models.DateTimeField(auto_now_add=True)
+    body = models.CharField(max_length=1000, blank=True, default='')
     title = models.CharField(max_length=100, blank=True, default='')
     personas = models.ManyToManyField(Persona, related_name='value_proposition_personas') #related name is how Persona will refer to it's ValuePropositions
     #persona = models.ForeignKey('personas.Persona', related_name='value_propositions', on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.title
 
     class Meta:
         ordering = ('created',)
@@ -39,6 +46,9 @@ class CallToAction(models.Model):
     title = models.CharField(max_length=100, blank=True, default='')
     personas = models.ManyToManyField(Persona, related_name='call_to_action_personas')
     #persona = models.ForeignKey('personas.Persona', related_name='calls_to_action', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         ordering = ('created',)
