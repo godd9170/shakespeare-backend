@@ -7,7 +7,7 @@ class ValuePropositionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ValueProposition
-        fields = ('id', 'title', 'personas')
+        fields = ('id', 'body', 'title', 'created', 'personas')
 
 class CallToActionSerializer(serializers.HyperlinkedModelSerializer):
     personas = serializers.HyperlinkedRelatedField(many=True, view_name='persona-detail', queryset=Persona.objects.all())
