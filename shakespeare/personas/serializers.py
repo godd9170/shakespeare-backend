@@ -18,8 +18,8 @@ class CallToActionSerializer(serializers.HyperlinkedModelSerializer):
 
 class PersonaSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username') #You can include additional fields that aren't necessarily on the model like this
-    value_propositions = ValuePropositionSerializer(many=True, source='value_proposition_personas')
-    calls_to_action = CallToActionSerializer(many=True, source='call_to_action_personas')
+    value_propositions = ValuePropositionSerializer(many=True, source='value_proposition_personas', read_only=True)
+    calls_to_action = CallToActionSerializer(many=True, source='call_to_action_personas', read_only=True)
 
     class Meta:
         model = Persona

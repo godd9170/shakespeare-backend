@@ -26,7 +26,9 @@ SECRET_KEY = 'c$f9v76$n!@h=r2bfa&n2um*#8ibxe66q4nryb6o@l)_ilq(u&'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'default-environment.hjt2m2vmx2.us-east-1.elasticbeanstalk.com'
+    'default-environment.hjt2m2vmx2.us-east-1.elasticbeanstalk.com',
+    'localhost',
+    '127.0.0.1'
 ]
 
 

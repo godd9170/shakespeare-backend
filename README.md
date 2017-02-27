@@ -54,4 +54,6 @@ CREATE USER shakespeare-admin WITH PASSWORD 'salesforce1';
 
 ## Elastic Beanstalk Deploys
 
+Make sure that whatever elastic beanstalk url is generated, is put into the `shakespeare.settings` `ALLOWED_HOSTS`
+
 ```eb deploy```

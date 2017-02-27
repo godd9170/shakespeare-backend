@@ -21,6 +21,9 @@ class PersonaList(generics.ListCreateAPIView): #NOTE: Using the list generic
     """
     serializer_class = serializers.PersonaSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
     def get_queryset(self):
         return models.Persona.objects.filter(owner=self.request.user) #Only show the user objects they are owners of
 
