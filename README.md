@@ -54,6 +54,19 @@ CREATE USER shakespeare-admin WITH PASSWORD 'salesforce1';
 
 ## Elastic Beanstalk Deploys
 
+Obtain ebcli tools with
+
+```
+pip install awsebcli
+```
+
+Make sure that you've got and AWS account, and your credentials are environment variables named
+
+```
+export AWS_ACCESS_KEY_ID=xxx
+export AWS_SECRET_ACCESS_KEY=xxx
+```
+
 Make sure that whatever elastic beanstalk url is generated, is put into the `shakespeare.settings` `ALLOWED_HOSTS`
 
 ```eb deploy```
