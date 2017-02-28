@@ -11,6 +11,8 @@ class Persona(models.Model):
         return self.title
 
     class Meta:
+        verbose_name = "persona"
+        verbose_name_plural = "personas"
         ordering = ('created',)
 
     # def save(self, *args, **kwargs):
@@ -38,6 +40,8 @@ class ValueProposition(models.Model):
         return self.title
 
     class Meta:
+        verbose_name = "value proposition"
+        verbose_name_plural = "value propositions"
         ordering = ('created',)
 
 
@@ -51,4 +55,6 @@ class CallToAction(models.Model):
         return self.title
 
     class Meta:
+        verbose_name = "call to action"
+        verbose_name_plural = "calls to action"
         ordering = ('created',)

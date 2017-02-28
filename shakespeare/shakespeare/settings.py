@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'organizations',
     'personas.apps.PersonasConfig',
+    'administration.apps.AdministrationConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
