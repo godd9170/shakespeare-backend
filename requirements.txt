@@ -5,7 +5,9 @@ botocore==1.5.17
 cement==2.8.2
 colorama==0.3.7
 Django==1.10.5
+django-extensions==1.7.7
 django-filter==1.0.1
+django-organizations==0.9.1
 djangorestframework==3.5.4
 docker-py==1.7.2
 dockerpty==0.4.1

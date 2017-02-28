@@ -31,11 +31,16 @@ ALLOWED_HOSTS = [
     '127.0.0.1'
 ]
 
+# Django Organizations https://github.com/bennylope/django-organizations
+ORGS_INVITATION_BACKEND = 'myapp.backends.MyInvitationBackend'
+ORGS_REGISTRATION_BACKEND = 'myapp.backends.MyRegistrationBackend'
+#ORGS_SLUGFIELD = 'autoslug.fields.AutoSlugField'
 
 # Application definition
 
 INSTALLED_APPS = [
     'rest_framework',
+    'organizations',
     'personas.apps.PersonasConfig',
     'django.contrib.admin',
     'django.contrib.auth',
