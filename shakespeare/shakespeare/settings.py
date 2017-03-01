@@ -31,9 +31,12 @@ ALLOWED_HOSTS = [
     '127.0.0.1'
 ]
 
+# Google Oauth
+GOOGLE_OAUTH2_CLIENT_SECRETS_JSON = 'administration/google_credentials.json'
+
 # Django Organizations https://github.com/bennylope/django-organizations
-ORGS_INVITATION_BACKEND = 'myapp.backends.MyInvitationBackend'
-ORGS_REGISTRATION_BACKEND = 'myapp.backends.MyRegistrationBackend'
+#ORGS_INVITATION_BACKEND = 'shakespeare.backends.MyInvitationBackend'
+#ORGS_REGISTRATION_BACKEND = 'shakespeare.backends.MyRegistrationBackend'
 #ORGS_SLUGFIELD = 'autoslug.fields.AutoSlugField'
 
 # Application definition
