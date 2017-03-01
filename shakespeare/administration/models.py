@@ -1,11 +1,14 @@
-import pickle
-import base64
 from django.db import models
-from django.contrib import admin
-from django.contrib.auth.models import User
-
 from organizations.models import Organization, OrganizationUser
-from oauth2client.contrib.django_util.models import CredentialsField
+from social_django.models import AbstractUserSocialAuth, DjangoStorage, USER_MODEL
+
+
+class CustomUserSocialAuth(AbstractUserSocialAuth):
+    user = models.ForeignKey(USER_MODEL, related_name='custom_social_auth',
+                             on_delete=models.CASCADE)
+
+class CustomDjangoStorage(DjangoStorage):
+    user = CustomUserSocialAuth
 
 class Account(Organization):
     class Meta:
@@ -14,10 +17,3 @@ class Account(Organization):
 class AccountUser(OrganizationUser):
     class Meta:
         proxy = True
-
-class CredentialsModel(models.Model):
-    id = models.ForeignKey(User, primary_key=True)
-    credential = CredentialsField()
-
-class CredentialsAdmin(admin.ModelAdmin):
-    pass

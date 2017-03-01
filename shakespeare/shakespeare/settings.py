@@ -32,7 +32,8 @@ ALLOWED_HOSTS = [
 ]
 
 # Google Oauth
-GOOGLE_OAUTH2_CLIENT_SECRETS_JSON = 'administration/google_credentials.json'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '17899710816-u7u7qscddvv0and0m2siteomikh7hl6e.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'yDJwJL-i3S6Yr4uiB2GXsbIi'
 
 # Django Organizations https://github.com/bennylope/django-organizations
 #ORGS_INVITATION_BACKEND = 'shakespeare.backends.MyInvitationBackend'
@@ -42,16 +43,17 @@ GOOGLE_OAUTH2_CLIENT_SECRETS_JSON = 'administration/google_credentials.json'
 # Application definition
 
 INSTALLED_APPS = [
-    'rest_framework',
-    'organizations',
-    'personas.apps.PersonasConfig',
-    'administration.apps.AdministrationConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'social_django',
+    'organizations',
+    'personas.apps.PersonasConfig',
+    'administration.apps.AdministrationConfig',
 ]
 
 MIDDLEWARE = [
@@ -80,9 +82,74 @@ TEMPLATES = [
             ],
         },
     },
+    {
+        'BACKEND': 'django_jinja.backend.Jinja2',
+        'APP_DIRS': True,
+        'DIRS': [
+            os.path.join(BASE_DIR, 'administration', 'templates')
+        ],
+        'OPTIONS': {
+            'match_extension': '.html',
+            'match_regex': r'^(?!admin/).*',
+            'filters': {
+                'backend_name': 'administration.filters.backend_name',
+                'backend_class': 'administration.filters.backend_class',
+                'icon_name': 'administration.filters.icon_name',
+                'social_backends': 'administration.filters.social_backends',
+                'legacy_backends': 'administration.filters.legacy_backends',
+                'oauth_backends': 'administration.filters.oauth_backends',
+                'filter_backends': 'administration.filters.filter_backends',
+                'slice_by': 'administration.filters.slice_by'
+            },
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+            ],
+        }
+    },
 ]
+# Social Auth
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/done/'
+SOCIAL_AUTH_STRATEGY = 'social_django.strategy.DjangoStrategy'
+SOCIAL_AUTH_STORAGE = 'social_django.models.DjangoStorage'
+# SOCIAL_AUTH_STORAGE = 'app.models.CustomDjangoStorage'
+SOCIAL_AUTH_GOOGLE_OAUTH_SCOPE = [
+    'https://mail.google.com/',
+    'https://www.googleapis.com/auth/userinfo.profile'
+]
+SOCIAL_AUTH_EMAIL_FORM_HTML = 'email_signup.html'
+SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'app.mail.send_validation'
+SOCIAL_AUTH_EMAIL_VALIDATION_URL = '/email-sent/'
+SOCIAL_AUTH_USERNAME_FORM_HTML = 'username_signup.html'
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'administration.pipeline.require_email',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.mail.mail_validation',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.debug.debug',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+    'social_core.pipeline.debug.debug'
+)
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth',
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 WSGI_APPLICATION = 'shakespeare.wsgi.application'
+
 
 
 # Database
