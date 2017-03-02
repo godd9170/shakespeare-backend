@@ -13,10 +13,8 @@ The best way to develop this API is with a python3 virtual environment. I like t
 │   └── pip-selfcheck.json
 ├── README.md
 ├── requirements.txt
-└── shakespeare-project
-    ├── manage.py
-    ├── personas
-    ├── shakespeare
+└── shakespeare
+    └── manage.py
 ```
 
 Instructions on setting up a virtual environment can be found below.
@@ -70,3 +68,17 @@ export AWS_SECRET_ACCESS_KEY=xxx
 Make sure that whatever elastic beanstalk url is generated, is put into the `shakespeare.settings` `ALLOWED_HOSTS`
 
 ```eb deploy```
+
+## Notable Libraries
+
+#### [social-app-django](http://python-social-auth.readthedocs.io/)
+
+Used to a) authenticate users into the app, b) permit access to the mail server.
+
+#### [django-rest](http://django-rest-framework.readthedocs.io/en/latest/)
+
+Handles the exposure of the shakespeare API
+
+#### [django-organizations](https://github.com/bennylope/django-organizations)
+
+A schema that defines organizations so we can share shakespeare resources across multiple users of a common account.
