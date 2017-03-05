@@ -75,10 +75,14 @@ Make sure that whatever elastic beanstalk url is generated, is put into the `sha
 
 Used to a) authenticate users into the app, b) permit access to the mail server.
 
-#### [django-rest](http://django-rest-framework.readthedocs.io/en/latest/)
+#### [django-rest-framework](http://django-rest-framework.readthedocs.io/en/latest/)
 
 Handles the exposure of the shakespeare API
 
 #### [django-organizations](https://github.com/bennylope/django-organizations)
 
 A schema that defines organizations so we can share shakespeare resources across multiple users of a common account.
+
+#### [django-rest-framework-social-oauth2](https://github.com/PhilipGarnero/django-rest-framework-social-oauth2)
+
+The genius behind marrying `social-app-django` and `django-rest-framework`. Offers a 'convert' endpoint that turns the access token from the client into an auth with our api.
