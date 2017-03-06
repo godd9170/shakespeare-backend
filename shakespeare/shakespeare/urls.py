@@ -21,8 +21,9 @@ from organizations.backends import invitation_backend
 urlpatterns = [
     url(r'^', include('personas.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^auth/', include('rest_framework_social_oauth2.urls')),
     url(r'^administration/', include('administration.urls')),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     # url(r'^accounts/', include('organizations.urls')),
     # url(r'^invitations/', include(invitation_backend().get_urls())),
 ]
