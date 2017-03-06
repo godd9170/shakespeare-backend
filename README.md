@@ -41,7 +41,7 @@ Instructions on setting up a virtual environment can be found below.
 
 ```
 psql
-CREATE DATABASE myproject;
+CREATE DATABASE shakespeare-dev;
 ```
 
 2) Create a db new user
@@ -58,7 +58,7 @@ Obtain ebcli tools with
 pip install awsebcli
 ```
 
-Make sure that you've got and AWS account, and your credentials are environment variables named
+Make sure that you've got an AWS account, and your credentials are environment variables named
 
 ```
 export AWS_ACCESS_KEY_ID=xxx
@@ -73,7 +73,7 @@ Make sure that whatever elastic beanstalk url is generated, is put into the `sha
 
 #### [social-app-django](http://python-social-auth.readthedocs.io/)
 
-Used to a) authenticate users into the app, b) permit access to the mail server.
+Used to a) authenticate users into the app, b) permit access to the gmail SMTP server.
 
 #### [django-rest-framework](http://django-rest-framework.readthedocs.io/en/latest/)
 
