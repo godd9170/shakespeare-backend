@@ -44,10 +44,11 @@ psql
 CREATE DATABASE shakespeare-dev;
 ```
 
-2) Create a db new user
+2) Create a db new user and allow them to make new DBs (for testing)
 
 ```
-CREATE USER shakespeare-admin WITH PASSWORD 'salesforce1';
+CREATE USER shakespeareadmin WITH PASSWORD 'salesforce1';
+ALTER USER shakespeareadmin CREATEDB;
 ```
 
 ## Elastic Beanstalk Deploys
