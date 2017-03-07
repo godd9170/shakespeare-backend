@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import Research, Piece, Nugget
 
-# Register your models here.
+admin.site.register(Research)
+admin.site.register(Piece)
+admin.site.register(Nugget)
