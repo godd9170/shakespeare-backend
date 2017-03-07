@@ -18,8 +18,6 @@ class ResearchDetail(APIView):
             raise Http404
 
     def get(self, request, uuid, format=None):
-        print('uuid: {}'.format(uuid))
-        print('owner: {}'.format(self.request.user))
         research = self.get_object(uuid)
         serializer = ResearchSerializer(research)
         return Response(serializer.data)

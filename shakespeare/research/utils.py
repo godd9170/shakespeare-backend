@@ -16,7 +16,7 @@ def whois(email):
     if r.status_code != 200: #if Full Contact couldn't find anyone, raise an exception
         raise ContactNotFoundException
 
-    response = json.loads(r.text)
+    response = r.json()
 
     # Try to get name
     try:
@@ -42,5 +42,4 @@ def whois(email):
     # Assign rest of response to other_data
     who['other_data'] = response
 
-    print("OUT: {}".format(who))
     return who
