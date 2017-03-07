@@ -22,9 +22,70 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'c$f9v76$n!@h=r2bfa&n2um*#8ibxe66q4nryb6o@l)_ilq(u&'
 
+
+# Database
+# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
+
+if 'RDS_DB_NAME' in os.environ:
+    DEBUG_HANDLERS = ['file']
+    DEBUG_LOG_DIR = '/var/log/app_logs/django_debug.log'
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.environ['RDS_DB_NAME'],
+            'USER': os.environ['RDS_USERNAME'],
+            'PASSWORD': os.environ['RDS_PASSWORD'],
+            'HOST': os.environ['RDS_HOSTNAME'],
+            'PORT': os.environ['RDS_PORT'],
+        }
+    }
+else:
+    DEBUG_HANDLERS = ['console']
+    DEBUG_LOG_DIR = BASE_DIR + '/shakespeare/.logs/django_debug.log'
+    DATABASES = {
+        'default' : {
+            'ENGINE' : 'django.db.backends.postgresql_psycopg2',
+            'NAME' : 'shakespeare-dev',
+            'USER' : 'shakespeareadmin',
+            'PASS' : 'salesforce1',
+            'HOST' : '127.0.0.1',
+            'PORT' : '5432'
+        }
+    }
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-DEBUG_LOG_DIR = '/var/log/app_logs/django_debug.log'
+LOGGING = {
+    'version': 1,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': DEBUG_LOG_DIR,
+            'formatter': 'simple'
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': DEBUG_HANDLERS,
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    }
+}
 
 ALLOWED_HOSTS = [
     'default-environment.hjt2m2vmx2.us-east-1.elasticbeanstalk.com',
@@ -198,34 +259,6 @@ AUTHENTICATION_BACKENDS = (
 )
 
 WSGI_APPLICATION = 'shakespeare.wsgi.application'
-
-
-
-# Database
-# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
-if 'RDS_DB_NAME' in os.environ:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.environ['RDS_DB_NAME'],
-            'USER': os.environ['RDS_USERNAME'],
-            'PASSWORD': os.environ['RDS_PASSWORD'],
-            'HOST': os.environ['RDS_HOSTNAME'],
-            'PORT': os.environ['RDS_PORT'],
-        }
-    }
-else:
-    DATABASES = {
-        'default' : {
-            'ENGINE' : 'django.db.backends.postgresql_psycopg2',
-            'NAME' : 'shakespeare-dev',
-            'USER' : 'shakespeareadmin',
-            'PASS' : 'salesforce1',
-            'HOST' : '127.0.0.1',
-            'PORT' : '5432'
-        }
-    }
 
 
 

@@ -4,6 +4,7 @@
 **/*.DS_Store
 **/*.sqlite*
 **/*.pem
+**/*.logs
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
