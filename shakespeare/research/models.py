@@ -2,21 +2,31 @@ from django.db import models
 from django.contrib.postgres.fields import JSONField # JSON Field
 import uuid
 
-
-# The specific research 'job' 
-class Research(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) #We'll use a UUID here to help anonymize the location of the results. 
+class Individual(models.Model):
+    email = models.EmailField(unique=True)
     created = models.DateTimeField(auto_now_add=True)
-    #title = models.CharField(max_length=100, blank=True, default='') I'm not sure a title makes sense here
-    owner = models.ForeignKey('auth.User', related_name='research', on_delete=models.CASCADE)
     firstname = models.CharField(max_length=100, blank=True, default='')
     lastname = models.CharField(max_length=100, blank=True, default='')
     jobtitle = models.CharField(max_length=100, blank=True, default='')
     avatar = models.CharField(max_length=500, blank=True, default='') #URL to an avatar
-    email = models.EmailField()
     company = models.CharField(max_length=100, blank=True, default='')
+
+    def __str__(self):
+        return "{} {} ({})".format(str(self.firstname),str(self.lastname), str(self.email))
+
+    class Meta:
+        verbose_name = "research"
+        verbose_name_plural = "research"
+        ordering = ('created',)
+
+# The specific research 'job' 
+class Research(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) #We'll use a UUID here to help anonymize the location of the results. 
+    owner = models.ForeignKey('auth.User', related_name='research', on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False)
     other_data = JSONField() #All the fullcontact (or w/e we use) results
+    individual = models.ForeignKey('research.Individual', related_name='research', on_delete=models.CASCADE) #Lookup the individual for which this research is for.
 
     def __str__(self):
         return str(self.id)
