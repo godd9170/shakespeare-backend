@@ -1,4 +1,5 @@
-from research.models import Research
+from research.models import Research, Individual, Company
+from django.core.exceptions import ObjectDoesNotExist
 from research.serializers import ResearchSerializer
 from django.http import Http404
 from rest_framework.views import APIView
@@ -24,9 +25,16 @@ class ResearchDetail(APIView):
 
     def post(self, request, format=None):
         data = request.data
-        research = Research(owner=self.request.user, **utils.whois(data['email'])) #HERE WE KICK OF RESEARCH JOBS
+        email = data['email']
+
+        try: # See if we've got this individual already
+            individual = Individual.objects.get(email=email) 
+        except ObjectDoesNotExist: # We don't have this individual, let's get Clearbit to try
+            print('No individual????')
+            individual = utils.whois(email) #this will toss an API error if nobody is found # create the research
+        
+        research = Research(individual=individual, owner=self.request.user) #HERE WE KICK OF RESEARCH JOBS
         research.save()
         return Response({'id' : str(research.id)})
-        #return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     

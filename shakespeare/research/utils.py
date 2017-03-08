@@ -1,45 +1,77 @@
-import requests
 import json
-from research import models
+import uuid
+import clearbit
+from research.models import Individual, Company
 from research.exceptions import ContactNotFoundException
+from django.core.exceptions import ObjectDoesNotExist
 
-api_key = "5fa92173a917916a" #Store this in settings
-url = "https://api.fullcontact.com/v2/person.json" #This too
+clearbit.key = 'sk_886efa2d89a51d9fc048d5d04023d09a' #TODO: Store this in settings
 
+
+# Returns a new Individual Model, will attempt to associate an existing Company or make
+# a new one should Clearbit have one.
 def whois(email):
-    who = {'email' : email}
-    r = requests.get(url, params={
-        'email' : email, 
-        'apiKey' : api_key
-    })
-
-    if r.status_code != 200: #if Full Contact couldn't find anyone, raise an exception
+    #Fetch the person/company
+    response = clearbit.Enrichment.find(email=email, stream=True) #get the clearbit person/company
+    
+    ## Individual
+    person = response['person'] #clearbit
+    individual = {'email' : email} #shakespeare
+    if person is None: #if Clearbit can't find anyone, raise an exception
+        raise ContactNotFoundException
+    # Try to get individual info
+    try:
+        print('person {}'.format(person))
+        name = person['name']
+        employment = person['employment']
+        individual.update({
+            'lastname' : name['familyName'],
+            'firstname' : name['givenName'],
+            'avatar' : person['avatar'],
+            'jobtitle' : employment['title'],
+            'role' : employment['role'],
+            'companyname' : employment['name'],
+            'clearbit' : uuid.UUID(person['id'])
+        })
+    except Exception as e:
+        print('Error in person response for {}: {}'.format(email, e))
         raise ContactNotFoundException
 
-    response = r.json()
+    ## Company
+    company = response['company'] #clearbit
+    organization = {} #shakespeare -> I'm calling the placeholder for what we return `organization`. Yes I realize this is confusing. Sue me.
+    if (company is None) or (company.get('domain', None) is None): #if Clearbit can't find an org, or it doesn't have a domain don't bother associating an organization
+        newIndividual = Individual(**individual)
+        newIndividual.save()
+        return newIndividual #Create the new individual without a company
+    
+    try: # See if we've got this company already
+        newCompany = Company.objects.get(domain=company['domain']) 
+    except ObjectDoesNotExist: # We don't have this company, let's see what Clearbit got, and we'll make a new one.
+        # Try to get company info
+        try:
+            category = company['category']
+            crunchbase = company['crunchbase']
+            organization.update({
+                'domain' : company['domain'],
+                'name' : company['name'],
+                'description' : company['description'],
+                'industry' : category['industry'],
+                'sector' : category['sector'],
+                'crunchbase' : crunchbase['handle'],
+                'logo' : company['logo'],
+                'location' : company['geo'],
+                'clearbit' : uuid.UUID(company['id'])
+            })
+            print("********************>>>>>>>>>>>>>>ORG!!!!!!!!!! {}".format(organization))
+            newCompany = Company(**organization)
+            newCompany.save()
+            print("********************>>>>>>>>>>>>>>NEW COMPANY!!!!!!! {}".format(newCompany))
+        except Exception as e:
+            newIndividual = Individual(**individual)
+            newIndividual.save()
+            return newIndividual # We can't make a new org so just return an individual unassociated
 
-    # Try to get name
-    try:
-        who['lastname'] = response['contactInfo'].get('familyName', '')
-        who['firstname'] = response['contactInfo'].get('givenName', '')
-    except Exception as e:
-        print('Unable to find name for {}'.format(email))
-
-    # Try to get avatar
-    try:
-        who['avatar'] = next((photo for photo in response['photos'] if photo["isPrimary"] == True))['url']
-    except Exception as e:
-        print('Unable to find avatar for {}'.format(email))
-
-    # Try to get job details
-    try:
-        job = next((organizations for organizations in response['organizations'] if organizations["current"] == True))
-        who['jobtitle'] = job.get('title', '')
-        who['company'] = job.get('name', '')
-    except Exception as e:
-        print('Unable to find job details for {}'.format(email))
-
-    # Assign rest of response to other_data
-    who['other_data'] = response
-
-    return who
+    newIndividual = Individual(company=newCompany, **individual)
+    newIndividual.save()
+    return newIndividual #If we're here, we have a company model (either already existing or newly created)
