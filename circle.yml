@@ -1,3 +1,5 @@
+general:
+  build_dir: shakespeare
 dependencies:
   pre:
     - sudo apt-get install python-dev
