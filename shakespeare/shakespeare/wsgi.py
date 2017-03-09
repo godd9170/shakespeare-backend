@@ -12,7 +12,7 @@ sys.path.insert(0, '/opt/python/current/app') #Thanks http://stackoverflow.com/a
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "shakespeare.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "shakespeare.settings.production")
 
 
 application = get_wsgi_application()

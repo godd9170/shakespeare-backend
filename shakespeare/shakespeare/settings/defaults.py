@@ -22,73 +22,47 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'c$f9v76$n!@h=r2bfa&n2um*#8ibxe66q4nryb6o@l)_ilq(u&'
 
-
-# Database
-# https://docs.djangoproject.com/en/1.10/ref/settings/#databases
-
-if 'RDS_DB_NAME' in os.environ:
-    DEBUG_HANDLERS = ['file']
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': os.environ['RDS_DB_NAME'],
-            'USER': os.environ['RDS_USERNAME'],
-            'PASSWORD': os.environ['RDS_PASSWORD'],
-            'HOST': os.environ['RDS_HOSTNAME'],
-            'PORT': os.environ['RDS_PORT'],
-        }
-    }
-else:
-    DEBUG_HANDLERS = ['console']
-    DATABASES = {
-        'default' : {
-            'ENGINE' : 'django.db.backends.postgresql_psycopg2',
-            'NAME' : 'shakespearedev',
-            'USER' : 'shakespeareadmin',
-            'PASS' : 'salesforce1',
-            'HOST' : '127.0.0.1',
-            'PORT' : '5432'
-        }
-    }
-
-HANDLERS = {
-    'console': {
-        'level': 'INFO',
-        'class': 'logging.StreamHandler',
-        'formatter': 'simple'
-    }
-}
-if 'IS_CI_BUILD' not in os.environ:
-    HANDLERS.update({
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': '/var/log/app_logs/django_debug.log',
-            'formatter': 'simple'
-        },
-    })
+# ------------
+# Logging
+# ------------
+# HANDLERS = {
+#     'console': {
+#         'level': 'INFO',
+#         'class': 'logging.StreamHandler',
+#         'formatter': 'simple'
+#     }
+# }
+# if 'IS_CI_BUILD' not in os.environ:
+#     HANDLERS.update({
+#         'file': {
+#             'level': 'DEBUG',
+#             'class': 'logging.FileHandler',
+#             'filename': '/var/log/app_logs/django_debug.log',
+#             'formatter': 'simple'
+#         },
+#     })
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-LOGGING = {
-    'version': 1,
-    'formatters': {
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
-        },
-    },
-    'handlers': HANDLERS,
-    'loggers': {
-        'django': {
-            'handlers': DEBUG_HANDLERS,
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    }
-}
+# LOGGING = {
+#     'version': 1,
+#     'formatters': {
+#         'verbose': {
+#             'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+#         },
+#         'simple': {
+#             'format': '%(levelname)s %(message)s'
+#         },
+#     },
+#     'handlers': HANDLERS,
+#     'loggers': {
+#         'django': {
+#             'handlers': DEBUG_HANDLERS,
+#             'level': 'DEBUG',
+#             'propagate': True,
+#         },
+#     }
+# }
 
 ALLOWED_HOSTS = [
     'production.sfpvwpungj.us-east-1.elasticbeanstalk.com',
@@ -313,7 +287,3 @@ REST_FRAMEWORK = {
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
-
-#STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "..", "www", "static")
-STATIC_URL = '/static/'
