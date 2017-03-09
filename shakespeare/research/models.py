@@ -64,10 +64,12 @@ class Research(models.Model):
 # One 'result' of a search for information for the prospect.
 class Piece(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    title = models.CharField(max_length=100, blank=True, default='')
+    publisheddate = models.DateTimeField(null=True)
+    title = models.TextField(blank=True, default='')
     author = models.CharField(max_length=1000, blank=True, default='')
     body = models.CharField(max_length=1000, blank=True, default='')
     source = models.CharField(max_length=1000, blank=True, default='') # We'll make this a text field for now. Ideally it's a lookup to a 'Data Source' table in the future
+    url = models.TextField(blank=True, default='')
     research = models.ForeignKey('research.Research', related_name='piece', on_delete=models.CASCADE) #Lookup the research instance that spawned this
     
     def __str__(self):
@@ -81,9 +83,10 @@ class Piece(models.Model):
 # An NLP extracted 'snippet' of quotable/interesting/relevant material found within the body of a 'Piece'
 class Nugget(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    actor = models.CharField(max_length=1000, blank=True, default='') #The person/place/thing responsible for this nugget
+    speaker = models.CharField(max_length=100, blank=True, default='')
+    category = models.CharField(max_length=100, choices=(('quote', 'Quote'), ('tweet', 'Tweet'), ('joblisting', 'Job Listing')), default='quote')
+    entity = models.CharField(max_length=1000, blank=True, default='') #The person/place/thing responsible for this nugget
     body = models.CharField(max_length=1000, blank=True, default='') #The body of text comprising the nugget
-    #class = models. #We'll need some form of classifier here, that tells us if this is a quote, tweet, video, paraphrase etc. etc.
     piece = models.ForeignKey('research.Piece', related_name='nugget', on_delete=models.CASCADE) #Lookup the research instance that spawned this
     
     def __str__(self):
