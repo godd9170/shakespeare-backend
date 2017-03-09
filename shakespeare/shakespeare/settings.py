@@ -28,7 +28,6 @@ SECRET_KEY = 'c$f9v76$n!@h=r2bfa&n2um*#8ibxe66q4nryb6o@l)_ilq(u&'
 
 if 'RDS_DB_NAME' in os.environ:
     DEBUG_HANDLERS = ['file']
-    DEBUG_LOG_DIR = '/var/log/app_logs/django_debug.log'
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -41,7 +40,6 @@ if 'RDS_DB_NAME' in os.environ:
     }
 else:
     DEBUG_HANDLERS = ['console']
-    DEBUG_LOG_DIR = BASE_DIR + '/shakespeare/.logs/django_debug.log'
     DATABASES = {
         'default' : {
             'ENGINE' : 'django.db.backends.postgresql_psycopg2',
@@ -74,7 +72,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': DEBUG_LOG_DIR,
+            'filename': '/var/log/app_logs/django_debug.log',
             'formatter': 'simple'
         },
     },
