@@ -1,4 +1,5 @@
 # Shakespeare-backend
+[![CircleCI](https://circleci.com/gh/Saasli/shakespeare-backend/tree/master.svg?style=svg&circle-token=169056e79165a14b945cc31617539c132b8083b6)](https://circleci.com/gh/Saasli/shakespeare-backend/tree/master)
 
 ## Getting Started
 
