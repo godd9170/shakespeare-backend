@@ -5,12 +5,19 @@ from research.models import Individual, Company
 from research.exceptions import ContactNotFoundException
 from django.core.exceptions import ObjectDoesNotExist
 
+from research.aggregators.storyzy import do_storyzy
+
 clearbit.key = 'sk_886efa2d89a51d9fc048d5d04023d09a' #TODO: Store this in settings
+
+
+def get_research_pieces(research):
+    do_storyzy(research) #Fetch + Build Research Pieces + Nuggets from Storyzy
+
 
 
 # Returns a new Individual Model, will attempt to associate an existing Company or make
 # a new one should Clearbit have one.
-def whois(email):
+def whois(email): # get_contact
     #Fetch the person/company
     response = clearbit.Enrichment.find(email=email, stream=True) #get the clearbit person/company
     
