@@ -11,9 +11,10 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+DEBUG = True #Default to true
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 #BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # Quick-start development settings - unsuitable for production
@@ -21,56 +22,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'c$f9v76$n!@h=r2bfa&n2um*#8ibxe66q4nryb6o@l)_ilq(u&'
-
-# ------------
-# Logging
-# ------------
-# HANDLERS = {
-#     'console': {
-#         'level': 'INFO',
-#         'class': 'logging.StreamHandler',
-#         'formatter': 'simple'
-#     }
-# }
-# if 'IS_CI_BUILD' not in os.environ:
-#     HANDLERS.update({
-#         'file': {
-#             'level': 'DEBUG',
-#             'class': 'logging.FileHandler',
-#             'filename': '/var/log/app_logs/django_debug.log',
-#             'formatter': 'simple'
-#         },
-#     })
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# LOGGING = {
-#     'version': 1,
-#     'formatters': {
-#         'verbose': {
-#             'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
-#         },
-#         'simple': {
-#             'format': '%(levelname)s %(message)s'
-#         },
-#     },
-#     'handlers': HANDLERS,
-#     'loggers': {
-#         'django': {
-#             'handlers': DEBUG_HANDLERS,
-#             'level': 'DEBUG',
-#             'propagate': True,
-#         },
-#     }
-# }
-
-ALLOWED_HOSTS = [
-    'production.sfpvwpungj.us-east-1.elasticbeanstalk.com',
-    'default-environment.hjt2m2vmx2.us-east-1.elasticbeanstalk.com',
-    'localhost',
-    '127.0.0.1',
-    '172.31.4.100'
-]
 
 # Google Oauth
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '17899710816-u7u7qscddvv0and0m2siteomikh7hl6e.apps.googleusercontent.com'
