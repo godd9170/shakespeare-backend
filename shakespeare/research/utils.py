@@ -21,7 +21,6 @@ def whois(email):
         raise ContactNotFoundException
     # Try to get individual info
     try:
-        print('person {}'.format(person))
         name = person['name']
         employment = person['employment']
         individual.update({
@@ -63,10 +62,8 @@ def whois(email):
                 'location' : company['geo'],
                 'clearbit' : uuid.UUID(company['id'])
             })
-            print("********************>>>>>>>>>>>>>>ORG!!!!!!!!!! {}".format(organization))
             newCompany = Company(**organization)
             newCompany.save()
-            print("********************>>>>>>>>>>>>>>NEW COMPANY!!!!!!! {}".format(newCompany))
         except Exception as e:
             newIndividual = Individual(**individual)
             newIndividual.save()

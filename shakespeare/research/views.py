@@ -30,7 +30,6 @@ class ResearchDetail(APIView):
         try: # See if we've got this individual already
             individual = Individual.objects.get(email=email) 
         except ObjectDoesNotExist: # We don't have this individual, let's get Clearbit to try
-            print('No individual????')
             individual = utils.whois(email) #this will toss an API error if nobody is found # create the research
         
         research = Research(individual=individual, owner=self.request.user) #HERE WE KICK OF RESEARCH JOBS
