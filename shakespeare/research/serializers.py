@@ -19,7 +19,7 @@ class NuggetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Nugget
-        fields = ('id', 'created', 'actor', 'body' )
+        fields = ('id', 'created', 'speaker', 'body' )
 
 class PieceSerializer(serializers.ModelSerializer):
     nuggets = NuggetSerializer(many=True, source='nugget', read_only=True)
