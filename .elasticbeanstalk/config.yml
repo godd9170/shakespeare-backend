@@ -1,0 +1,20 @@
+branch-defaults:
+  master:
+    environment: production
+    group_suffix: null
+environment-defaults:
+  production:
+    branch: null
+    repository: null
+global:
+  application_name: Shakespeare
+  default_ec2_keyname: shakespeare
+  default_platform: arn:aws:elasticbeanstalk:us-east-1::platform/Python 3.4 running
+    on 64bit Amazon Linux/2.3.1
+  default_region: us-east-1
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  profile: null
+  sc: git
+  workspace_type: Application
