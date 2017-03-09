@@ -51,6 +51,23 @@ else:
         }
     }
 
+HANDLERS = {
+    'console': {
+        'level': 'INFO',
+        'class': 'logging.StreamHandler',
+        'formatter': 'simple'
+    }
+}
+if 'IS_CI_BUILD' not in os.environ:
+    HANDLERS.update({
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/var/log/app_logs/django_debug.log',
+            'formatter': 'simple'
+        },
+    })
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 LOGGING = {
@@ -63,19 +80,7 @@ LOGGING = {
             'format': '%(levelname)s %(message)s'
         },
     },
-    'handlers': {
-        'console': {
-            'level': 'INFO',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple'
-        },
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': '/var/log/app_logs/django_debug.log',
-            'formatter': 'simple'
-        },
-    },
+    'handlers': HANDLERS,
     'loggers': {
         'django': {
             'handlers': DEBUG_HANDLERS,
