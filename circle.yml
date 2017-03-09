@@ -1,6 +1,7 @@
 dependencies:
   pre:
     - sudo apt-get install python-dev
+    - pip install appdirs --upgrade #appdir workaround https://github.com/ActiveState/appdirs/issues/89#issuecomment-282326570
     - sudo pip install 'awsebcli==3.7.4' --force-reinstall
 deployment:
   production:
