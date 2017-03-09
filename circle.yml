@@ -1,6 +1,8 @@
 machine:
   python:
     version: 3.4.3
+  services:
+    - postgresql
 general:
   build_dir: shakespeare
 dependencies:
@@ -10,6 +12,11 @@ dependencies:
     - sudo pip install 'awsebcli==3.7.4' --force-reinstall
     - pip install --upgrade pip
     - pip install -r ../requirements.txt #reqs are a dir above
+database:
+  override:
+    - createdb shakespearedev
+    - echo "CREATE USER shakespeareadmin WITH PASSWORD 'salesforce1';" | psql -U postgres
+    - echo "ALTER USER shakespeareadmin CREATEDB;" | psql -U postgres
 deployment:
   production:
     branch: master
