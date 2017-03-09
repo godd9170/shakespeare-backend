@@ -88,6 +88,7 @@ LOGGING = {
 }
 
 ALLOWED_HOSTS = [
+    'production.sfpvwpungj.us-east-1.elasticbeanstalk.com',
     'default-environment.hjt2m2vmx2.us-east-1.elasticbeanstalk.com',
     'localhost',
     '127.0.0.1',
