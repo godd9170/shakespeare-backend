@@ -8,10 +8,10 @@ general:
 dependencies:
   pre:
     #- sudo apt-get install python-dev
-    - pip install --upgrade pip
-    #- sudo pip install appdirs --upgrade #appdir workaround https://github.com/ActiveState/appdirs/issues/89#issuecomment-282326570
+    - sudo pip install --upgrade pip
+    - sudo pip install appdirs --upgrade #appdir workaround https://github.com/ActiveState/appdirs/issues/89#issuecomment-282326570
     #- sudo pip install 'awsebcli==3.7.4' --force-reinstall
-    - pip install -r ../requirements.txt #reqs are a dir above
+    - sudo pip install -r ../requirements.txt #reqs are a dir above
 database:
   override:
     - echo "CREATE USER shakespeareadmin WITH PASSWORD 'salesforce1';" | psql -U postgres
