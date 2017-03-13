@@ -1,6 +1,6 @@
+import uuid
 from django.db import models
 from django.contrib.postgres.fields import JSONField # JSON Field
-import uuid
 
 
 class Company(models.Model):
@@ -45,6 +45,7 @@ class Individual(models.Model):
         verbose_name_plural = "individuals"
         ordering = ('created',)
 
+
 # The specific research 'job' 
 class Research(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) #We'll use a UUID here to help anonymize the location of the results. 
@@ -60,6 +61,7 @@ class Research(models.Model):
         verbose_name = "research"
         verbose_name_plural = "research"
         ordering = ('created',)
+
 
 # One 'result' of a search for information for the prospect.
 class Piece(models.Model):
@@ -79,6 +81,7 @@ class Piece(models.Model):
         verbose_name = "piece"
         verbose_name_plural = "pieces"
         ordering = ('created',)
+
 
 # An NLP extracted 'snippet' of quotable/interesting/relevant material found within the body of a 'Piece'
 class Nugget(models.Model):

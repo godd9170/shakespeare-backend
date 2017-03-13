@@ -1,25 +1,16 @@
 import json
+
 from .decorators import render_to
 
-# Django Stuff
-from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout, login, get_user_model
-
-# Social Auth Stuff
 from social_core.backends.oauth import BaseOAuth1, BaseOAuth2
-from social_core.backends.google import GooglePlusAuth
-from social_core.backends.utils import load_backends
-#from social.exceptions import AuthAlreadyAssociated
 from social_django.utils import psa, load_strategy
 
-# Django Rest Framework Stuff
-from rest_framework import status
-from rest_framework.response import Response
-
 User = get_user_model()
+
 
 def logout(request):
     """Logs out user"""

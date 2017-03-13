@@ -1,5 +1,6 @@
 from rest_framework.exceptions import APIException
 
+
 class ContactNotFoundException(APIException):
     status_code = 404
     default_detail = 'Unable to find a contact by that email.'

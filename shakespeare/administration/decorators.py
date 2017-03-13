@@ -3,7 +3,7 @@ from functools import wraps
 from django.conf import settings
 from django.shortcuts import render
 
-from administration.utils import common_context
+from .utils import common_context
 
 from social_django.utils import load_strategy
 
