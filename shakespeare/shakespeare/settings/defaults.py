@@ -234,7 +234,21 @@ REST_FRAMEWORK = {
     )
 }
 
+# This stores the number of days to use an individual's contact details before re-requesting them from Clearbit (upon email composition)
+INDIVIDUAL_REFRESH_MAX_AGE = 14
+
 #APPEND_SLASH=False # We don't care if the user doesn't include the trailing slash
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
+
+
+# REDIS related settings
+REDIS_HOST = 'localhost'
+REDIS_PORT = '6379'
+
+# CELERY related settings
+
+BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'

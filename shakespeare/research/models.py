@@ -1,11 +1,11 @@
+import uuid
 from django.db import models
 from django.contrib.postgres.fields import JSONField # JSON Field
-import uuid
+from model_utils.models import TimeStampedModel
 
 
-class Company(models.Model):
+class Company(TimeStampedModel):
     domain = models.CharField(unique=True, max_length=100) # Ensure the domain is unique
-    created = models.DateTimeField(auto_now_add=True)
     clearbit = models.UUIDField() # The clearbit UUID
     name = models.CharField(max_length=100, blank=True, null=True)
     industry = models.CharField(max_length=100, blank=True, null=True)
@@ -24,10 +24,11 @@ class Company(models.Model):
         ordering = ('created',)
 
 
-# The individual to which research can be performed on. 
-class Individual(models.Model):
+class Individual(TimeStampedModel):
+    """
+    The individual to which research can be performed on.
+    """
     email = models.EmailField(unique=True) # Ensure that this email is unique
-    created = models.DateTimeField(auto_now_add=True)
     firstname = models.CharField(max_length=100, blank=True, null=True)
     lastname = models.CharField(max_length=100, blank=True, null=True)
     jobtitle = models.CharField(max_length=200, blank=True, null=True)
@@ -45,11 +46,13 @@ class Individual(models.Model):
         verbose_name_plural = "individuals"
         ordering = ('created',)
 
-# The specific research 'job' 
-class Research(models.Model):
+
+class Research(TimeStampedModel):
+    """
+    The specific research 'job'
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) #We'll use a UUID here to help anonymize the location of the results. 
     owner = models.ForeignKey('auth.User', related_name='research', on_delete=models.CASCADE)
-    created = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False)
     individual = models.ForeignKey('research.Individual', related_name='research', on_delete=models.CASCADE)
 
@@ -61,9 +64,11 @@ class Research(models.Model):
         verbose_name_plural = "research"
         ordering = ('created',)
 
-# One 'result' of a search for information for the prospect.
-class Piece(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
+
+class Piece(TimeStampedModel):
+    """
+    One 'result' of a search for information for the prospect.
+    """
     publisheddate = models.DateTimeField(null=True)
     title = models.TextField(blank=True, default='')
     author = models.CharField(max_length=1000, blank=True, default='')
@@ -80,9 +85,11 @@ class Piece(models.Model):
         verbose_name_plural = "pieces"
         ordering = ('created',)
 
-# An NLP extracted 'snippet' of quotable/interesting/relevant material found within the body of a 'Piece'
-class Nugget(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
+
+class Nugget(TimeStampedModel):
+    """
+    An NLP extracted 'snippet' of quotable/interesting/relevant material found within the body of a 'Piece'
+    """
     speaker = models.CharField(max_length=100, blank=True, default='')
     category = models.CharField(max_length=100, choices=(('quote', 'Quote'), ('tweet', 'Tweet'), ('joblisting', 'Job Listing')), default='quote')
     entity = models.CharField(max_length=1000, blank=True, default='') #The person/place/thing responsible for this nugget

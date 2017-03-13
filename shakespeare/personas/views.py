@@ -1,11 +1,10 @@
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User
-from django.http import Http404
-from rest_framework import status, generics, permissions # for the generic user api
+from rest_framework import generics  # for the generic user api
 from rest_framework.reverse import reverse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from personas import models, serializers, permissions
+
+from . import models, serializers, permissions
+
 
 
 @api_view(['GET'])
@@ -16,7 +15,8 @@ def api_root(request, format=None):
         'ctas': reverse('call-to-action-list', request=request, format=format),
     })
 
-class PersonaList(generics.ListCreateAPIView): #NOTE: Using the list generic
+
+class PersonaList(generics.ListCreateAPIView):  # NOTE: Using the list generic
     permission_classes = (permissions.IsOwner,)
     """
     List all personas, or create a new persona.
@@ -27,7 +27,7 @@ class PersonaList(generics.ListCreateAPIView): #NOTE: Using the list generic
         serializer.save(owner=self.request.user)
 
     def get_queryset(self):
-        return models.Persona.objects.filter(owner=self.request.user) #Only show the user objects they are owners of
+        return models.Persona.objects.filter(owner=self.request.user)  #Only show the user objects they are owners of
 
 
 class PersonaDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -39,7 +39,7 @@ class PersonaDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.PersonaSerializer
 
 
-class ValuePropositionList(generics.ListCreateAPIView): #NOTE: Using the list generic
+class ValuePropositionList(generics.ListCreateAPIView):  # NOTE: Using the list generic
     """
     List all personas, or create a new persona.
     """
@@ -49,6 +49,7 @@ class ValuePropositionList(generics.ListCreateAPIView): #NOTE: Using the list ge
         return models.ValueProposition.objects.all()
         #return ValueProposition.objects.filter(persona=self.request.user) #Only show the user objects they are owners of
 
+
 class ValuePropositionDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     Retrieve, update or delete a persona instance.
@@ -57,7 +58,7 @@ class ValuePropositionDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.ValuePropositionSerializer
 
 
-class CallToActionList(generics.ListCreateAPIView): #NOTE: Using the list generic
+class CallToActionList(generics.ListCreateAPIView):  # NOTE: Using the list generic
     """
     List all personas, or create a new persona.
     """
@@ -66,6 +67,7 @@ class CallToActionList(generics.ListCreateAPIView): #NOTE: Using the list generi
     def get_queryset(self):
         return models.CallToAction.objects.all()
         #return ValueProposition.objects.filter(persona=self.request.user) #Only show the user objects they are owners of
+
 
 class CallToActionDetail(generics.RetrieveUpdateDestroyAPIView):
     """
