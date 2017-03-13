@@ -28,6 +28,7 @@ class Company(models.Model):
 class Individual(models.Model):
     email = models.EmailField(unique=True) # Ensure that this email is unique
     created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
     firstname = models.CharField(max_length=100, blank=True, null=True)
     lastname = models.CharField(max_length=100, blank=True, null=True)
     jobtitle = models.CharField(max_length=200, blank=True, null=True)
