@@ -24,8 +24,10 @@ class Company(TimeStampedModel):
         ordering = ('created',)
 
 
-# The individual to which research can be performed on. 
 class Individual(TimeStampedModel):
+    """
+    The individual to which research can be performed on.
+    """
     email = models.EmailField(unique=True) # Ensure that this email is unique
     firstname = models.CharField(max_length=100, blank=True, null=True)
     lastname = models.CharField(max_length=100, blank=True, null=True)
@@ -45,8 +47,10 @@ class Individual(TimeStampedModel):
         ordering = ('created',)
 
 
-# The specific research 'job' 
 class Research(TimeStampedModel):
+    """
+    The specific research 'job'
+    """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False) #We'll use a UUID here to help anonymize the location of the results. 
     owner = models.ForeignKey('auth.User', related_name='research', on_delete=models.CASCADE)
     complete = models.BooleanField(default=False)
@@ -61,8 +65,10 @@ class Research(TimeStampedModel):
         ordering = ('created',)
 
 
-# One 'result' of a search for information for the prospect.
 class Piece(TimeStampedModel):
+    """
+    One 'result' of a search for information for the prospect.
+    """
     publisheddate = models.DateTimeField(null=True)
     title = models.TextField(blank=True, default='')
     author = models.CharField(max_length=1000, blank=True, default='')
@@ -80,8 +86,10 @@ class Piece(TimeStampedModel):
         ordering = ('created',)
 
 
-# An NLP extracted 'snippet' of quotable/interesting/relevant material found within the body of a 'Piece'
 class Nugget(TimeStampedModel):
+    """
+    An NLP extracted 'snippet' of quotable/interesting/relevant material found within the body of a 'Piece'
+    """
     speaker = models.CharField(max_length=100, blank=True, default='')
     category = models.CharField(max_length=100, choices=(('quote', 'Quote'), ('tweet', 'Tweet'), ('joblisting', 'Job Listing')), default='quote')
     entity = models.CharField(max_length=1000, blank=True, default='') #The person/place/thing responsible for this nugget
