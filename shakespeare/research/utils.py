@@ -4,7 +4,7 @@ import clearbit
 from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Individual, Company
-from .exceptions import ContactNotFoundException, UnexpectedClearbitPersonPayload
+from .exceptions import ContactNotFoundException, UnexpectedClearbitPersonPayload, UnexpectedClearbitCompanyPayload
 from .aggregators.storyzy import do_storyzy
 
 
