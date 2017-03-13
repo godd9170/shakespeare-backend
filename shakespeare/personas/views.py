@@ -1,3 +1,4 @@
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from django.http import Http404
 from rest_framework import status, generics, permissions # for the generic user api
@@ -5,6 +6,7 @@ from rest_framework.reverse import reverse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from personas import models, serializers, permissions
+
 
 @api_view(['GET'])
 def api_root(request, format=None):
