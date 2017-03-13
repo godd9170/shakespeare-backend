@@ -6,6 +6,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from research import utils
+from django.conf import settings
+from django.utils import timezone
+from datetime import datetime, timedelta
 import json
 
 class ResearchDetail(APIView):
@@ -31,12 +34,18 @@ class ResearchDetail(APIView):
         # Get the person we're dealing with
         #
         try: # See if we've got this individual already
-            individual = Individual.objects.get(email=email) 
+            individual = Individual.objects.get(email=email)
+            if individual.modified < (timezone.now() - timedelta(days = settings.INDIVIDUAL_REFRESH_MAX_AGE)):
+            #if (datetime.timedelta(datetime.datetime.now() - individual.modified) > settings.INDIVIDUAL_REFRESH_MAX_AGE):
+            # if (individual.modified + settings.INDIVIDUAL_REFRESH_MAX_AGE > datetime.datetime.now()):
+                individual = utils.update_individual(email)
+
+
         except ObjectDoesNotExist: # We don't have this individual, let's get Clearbit to try
-            individual = utils.whois(email) #this will toss an API error if nobody is found # create the research
+            individual = utils.create_individual(email) #this will toss an API error if nobody is found # create the research
         
         # 
-        # Create a new research piece
+        # Create a new research 
         #
         research = Research(individual=individual, owner=self.request.user) #HERE WE KICK OF RESEARCH JOBS
         research.save()
@@ -46,5 +55,3 @@ class ResearchDetail(APIView):
         utils.get_research_pieces(research)
 
         return Response({'id' : str(research.id)})
-    
-    

@@ -234,6 +234,9 @@ REST_FRAMEWORK = {
     )
 }
 
+# This stores the number of days to use an individual's contact details before re-requesting them from Clearbit (upon email composition)
+INDIVIDUAL_REFRESH_MAX_AGE = 14
+
 #APPEND_SLASH=False # We don't care if the user doesn't include the trailing slash
 
 # Static files (CSS, JavaScript, Images)
