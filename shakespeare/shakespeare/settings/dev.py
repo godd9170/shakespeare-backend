@@ -19,7 +19,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'shakespearedev',
         'USER': 'shakespeareadmin',
-        'PASS': 'salesforce1',
+        'PASSWORD': 'salesforce1',
         'HOST': '127.0.0.1',
         'PORT': '5432'
     }
