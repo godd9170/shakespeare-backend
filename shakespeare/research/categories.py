@@ -1,5 +1,5 @@
 # This might need to be it's own model with twin Many2Many Lookups to Nuggets and NuggetWrappers
-NUGGET_WRAPPER_CATEGORIES = (
+NUGGET_TEMPLATE_CATEGORIES = (
     ('quote', 'Quote'), # Storyzy
     ('testimonial', 'Testimonial'), # Featured Customers
     ('hires', 'Hires'),
