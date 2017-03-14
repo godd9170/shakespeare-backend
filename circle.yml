@@ -7,9 +7,9 @@ general:
   build_dir: shakespeare
 dependencies:
   pre:
-    - sudo apt-get install python3-bs4
-    - sudo apt-get install python-dev
     - sudo pip install --upgrade pip
+    - sudo apt-get install python-dev
+    - sudo apt-get install python3-bs4
     - sudo pip install -r ../requirements.txt
 database:
   override:
