@@ -237,6 +237,10 @@ REST_FRAMEWORK = {
 # This stores the number of days to use an individual's contact details before re-requesting them from Clearbit (upon email composition)
 INDIVIDUAL_REFRESH_MAX_AGE = 14
 
+# Stores Predict Leads credentials
+PREDICT_LEADS_X_USER_TOKEN = 'RV2yyK98JbTxfqnFswey'
+PREDICT_LEADS_X_USER_EMAIL = 'charlie@shakespeare.ai'
+
 #APPEND_SLASH=False # We don't care if the user doesn't include the trailing slash
 
 # Static files (CSS, JavaScript, Images)

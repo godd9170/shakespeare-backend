@@ -26,7 +26,7 @@ class PieceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Piece
-        fields = ('id', 'title', 'body', 'source', 'author', 'nuggets')
+        fields = ('id', 'title', 'body', 'source', 'author', 'publisheddate', 'created', 'nuggets')
 
 class ResearchSerializer(serializers.ModelSerializer):
     pieces = PieceSerializer(many=True, source='piece', read_only=True)

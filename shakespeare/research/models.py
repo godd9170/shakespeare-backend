@@ -66,6 +66,7 @@ class Research(models.Model):
 
 # One 'result' of a search for information for the prospect.
 class Piece(models.Model):
+    aggregator = models.TextField(blank=True, default='')
     created = models.DateTimeField(auto_now_add=True)
     publisheddate = models.DateTimeField(null=True)
     title = models.TextField(blank=True, default='')
