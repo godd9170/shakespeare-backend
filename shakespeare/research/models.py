@@ -114,9 +114,11 @@ class NuggetTemplate(TimeStampedModel):
     """
     The pre-created 'templates' that present a values from a 'Nugget' in an 'email presentable' way
     """
-    template = models.TextField(blank=True, default='')
+    subject = models.CharField(max_length=200, default='')
+    intro = models.TextField(blank=True, default='')
+    segue = models.TextField(blank=True, default='')
     category = models.CharField(max_length=100, choices=NUGGET_TEMPLATE_CATEGORIES, default='quote')
-    mergefields = ArrayField(models.CharField(max_length=200), blank=True)
+    mergefields = ArrayField(models.CharField(max_length=100), blank=True)
 
     def save(self, *args, **kwargs):
         merges = re.findall("{{(.*?)}}", self.template) #get all the template names from within the mustaches
