@@ -128,7 +128,7 @@ class NuggetTemplate(TimeStampedModel):
         super(TimeStampedModel, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.wrapper
+        return self.subject
 
     class Meta:
         verbose_name = "nugget template"
