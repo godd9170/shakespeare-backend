@@ -9,6 +9,7 @@ from django.utils import timezone
 
 from .models import Research, Individual
 from .serializers import ResearchSerializer
+from .tasks import get_research_pieces_task
 from . import utils
 
 
@@ -43,9 +44,9 @@ class ResearchDetail(APIView):
                 individual = utils.update_individual(email)
 
 
-        except ObjectDoesNotExist:  # We don't have this individual, let's get Clearbit to try
-            individual = utils.create_individual(
-                email)  # this will toss an API error if nobody is found # create the research
+        except ObjectDoesNotExist:
+            # We don't have this individual, let's get Clearbit to try
+            individual = utils.create_individual(email)
 
         # 
         # Create a new research 
@@ -55,6 +56,7 @@ class ResearchDetail(APIView):
         # 
         # Aggregate some sources for this person
         #
-        utils.get_research_pieces(research)
+        # utils.get_research_pieces(research)
+        get_research_pieces_task.delay(research_id=research.pk)
 
         return Response({'id': str(research.id)})
