@@ -19,21 +19,21 @@ class IndividualSerializer(serializers.ModelSerializer):
 class NuggetSerializer(serializers.ModelSerializer):
     templates = serializers.SerializerMethodField()
 
-    def get_templates(self, obj):
-        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>{}'.format(list(obj.get_mergefields())))
-        mergefields = list(obj.get_mergefields()) #Get all the additional data merge fields
-        templates = NuggetTemplate.objects.filter(mergefields__contained_by=mergefields)
+    def get_templates(self, nugget):
+        mergefields = list(nugget.get_mergefields()) #Get all the additional data merge fields
+        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>MERGEFIELDS: {}'.format(mergefields))
+        templates = NuggetTemplate.objects.filter(mergefields__contained_by = mergefields)
         return NuggetTemplateSerializer(templates, many=True).data
 
     class Meta:
         model = Nugget
-        fields = ('id', 'created', 'speaker', 'body', 'templates')
+        fields = ('id', 'created', 'speaker', 'body', 'templates', 'additionaldata')
 
 class NuggetTemplateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NuggetTemplate
-        fields = ('template')
+        fields = ('template',) #NOTE: 
 
 class PieceSerializer(serializers.ModelSerializer):
     nuggets = NuggetSerializer(many=True, source='nugget', read_only=True)
