@@ -21,7 +21,6 @@ class NuggetSerializer(serializers.ModelSerializer):
 
     def get_templates(self, nugget):
         mergefields = list(nugget.get_mergefields()) #Get all the additional data merge fields
-        print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>MERGEFIELDS: {}'.format(mergefields))
         templates = NuggetTemplate.objects.filter(mergefields__contained_by = mergefields)
         return NuggetTemplateSerializer(templates, many=True).data
 
@@ -33,7 +32,7 @@ class NuggetTemplateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NuggetTemplate
-        fields = ('template',) #NOTE: 
+        fields = ('subject', 'intro', 'segue')
 
 class PieceSerializer(serializers.ModelSerializer):
     nuggets = NuggetSerializer(many=True, source='nugget', read_only=True)
