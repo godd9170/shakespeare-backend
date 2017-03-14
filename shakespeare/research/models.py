@@ -124,8 +124,8 @@ class NuggetTemplate(TimeStampedModel):
 
     def save(self, *args, **kwargs):
         merges = re.findall("{{(.*?)}}", self.intro) #get all the template names from within the mustaches
-        merges.append(re.findall("{{(.*?)}}", self.subject)) # and subject merges
-        merges.append(re.findall("{{(.*?)}}", self.segue)) # and segue merges
+        merges += re.findall("{{(.*?)}}", self.subject) # and subject merges
+        merges += re.findall("{{(.*?)}}", self.segue) # and segue merges
         self.mergefields = list(set(merges)) #unique them
         super(TimeStampedModel, self).save(*args, **kwargs)
 
