@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view
 from . import models, serializers, permissions
 
 
+
 @api_view(['GET'])
 def api_root(request, format=None):
     return Response({

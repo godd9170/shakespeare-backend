@@ -6,13 +6,17 @@ from django.core.exceptions import ObjectDoesNotExist
 from .models import Individual, Company
 from .exceptions import ContactNotFoundException, UnexpectedClearbitPersonPayload, UnexpectedClearbitCompanyPayload
 from .aggregators.storyzy import do_storyzy
+from .aggregators.predictleads import do_predictleads_events
+from .aggregators.featuredcustomers import do_featuredcustomers
 
 
 clearbit.key = 'sk_886efa2d89a51d9fc048d5d04023d09a'  # TODO: Store this in settings
 
 
 def get_research_pieces(research):
-    do_storyzy(research)  # Fetch + Build Research Pieces + Nuggets from Storyzy
+    do_storyzy(research) # Fetch + Build Research Pieces + Nuggets from Storyzy
+    do_predictleads_events(research) # Get events from Predict Leads and build research pieces
+    do_featuredcustomers(research) # Get reviews from Featured Customers and build research pieces and nuggets
 
 
 ################################################################################################################
