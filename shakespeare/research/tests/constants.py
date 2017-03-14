@@ -124,7 +124,7 @@ STORYZY_RESPONSE_RESULTS = {
                     {
                         "id": "2711770",
                         "name": "Shan-Lyn Ma",
-                        "publisher": false,
+                        "publisher": False,
                         "type": "person"
                     }
                 ]
@@ -144,7 +144,7 @@ STORYZY_RESPONSE_RESULTS = {
                         "from": "Justworks",
                         "id": "2639896",
                         "name": "Michael Greten",
-                        "publisher": false,
+                        "publisher": False,
                         "type": "person"
                     }
                 ]
