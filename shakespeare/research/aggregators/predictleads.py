@@ -21,14 +21,17 @@ def do_predictleads_events(research):
 			research_piece = {
 				'aggregator' : 'PredictLeads',
 				'title' : datum['attributes']['title'],
-			    'body' : '',
+			    # 'body' : '',
 			    'url' : datum['attributes']['url'],
 			    'publisheddate' : datum['attributes']['found_at']
-			    # 'author' = 
-			    # 'source' = 
 			}
 			newPiece = Piece(research=research, **research_piece)
 			newPiece.save()
+			nugget = {
+				'additionaldata' : datum['attributes']['additional_data'],
+				'category' : datum['attributes']['categories'][0]
+			}
+			Nugget(piece=newPiece, **nugget).save()
 
 
 
@@ -60,7 +63,15 @@ def do_predictleads_jobopenings(research):
 			nugget = {
 				'speaker' : '',
 				'body' : datum['attributes']['title'],
-				'category' : 'joblisting'
+				'additionaldata' : datum['attributes']['additional_data']
 				# 'entity'
 			}
+			try:
+				nugget.update({
+				'category' : datum['attributes']['categories'][0],
+				})
+			except:
+				nugget.update({
+				'category' : '',
+				})
 			Nugget(piece=newPiece, **nugget).save()

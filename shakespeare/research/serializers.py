@@ -26,7 +26,7 @@ class NuggetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Nugget
-        fields = ('id', 'created', 'speaker', 'body', 'templates', 'additionaldata')
+        fields = ('id', 'created', 'category', 'speaker', 'body', 'templates', 'additionaldata')
 
 class NuggetTemplateSerializer(serializers.ModelSerializer):
 

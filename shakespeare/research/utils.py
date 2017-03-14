@@ -14,10 +14,10 @@ clearbit.key = 'sk_886efa2d89a51d9fc048d5d04023d09a'  # TODO: Store this in sett
 
 
 def get_research_pieces(research):
-    do_storyzy(research) # Fetch + Build Research Pieces + Nuggets from Storyzy
-    do_predictleads_events(research) # Get events from Predict Leads and build research pieces
+    # do_storyzy(research) # Fetch + Build Research Pieces + Nuggets from Storyzy
+    # do_predictleads_events(research) # Get events from Predict Leads and build research pieces
     do_predictleads_jobopenings(research) # Get job openings from PredictLeads and build research pieces and nuggets
-    do_featuredcustomers(research) # Get reviews from Featured Customers and build research pieces and nuggets
+    # do_featuredcustomers(research) # Get reviews from Featured Customers and build research pieces and nuggets
 
 
 ################################################################################################################
