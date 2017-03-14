@@ -19,3 +19,7 @@ deployment:
     branch: master
     commands:
       - eb deploy --profile default
+
+test:
+  override:
+    - python manage.py test
