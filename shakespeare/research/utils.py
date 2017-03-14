@@ -18,6 +18,7 @@ def get_research_pieces(research):
     do_predictleads_events(research) # Get events from Predict Leads and build research pieces
     do_featuredcustomers(research) # Get reviews from Featured Customers and build research pieces and nuggets
 
+
 ################################################################################################################
 # TO DO LIST:
 # - Company domain none and error considerations?  
