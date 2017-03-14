@@ -101,6 +101,10 @@ class Nugget(TimeStampedModel):
     def __str__(self):
         return self.body
 
+    def get_mergefields(self):
+        return self.additionaldata.keys() if (self.additionaldata is not None) else []
+        #return self.additionaldata.keys() # The keys of the additionaldata are the mergefields in the NuggetTemplate
+
     class Meta:
         verbose_name = "nugget"
         verbose_name_plural = "nuggets"

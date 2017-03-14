@@ -30,6 +30,12 @@ DATABASES = {
 # ------------
 STATIC_URL = '/static/'
 
+#
+#
+#
+
+ACCESS_TOKEN_EXPIRE_SECONDS = 2592000 #One Month
+
 # ------------
 # Logging
 # ------------
