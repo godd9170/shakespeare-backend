@@ -28,9 +28,16 @@ def do_predictleads_events(research):
 			newPiece = Piece(research=research, **research_piece)
 			newPiece.save()
 			nugget = {
-				'additionaldata' : datum['attributes']['additional_data'],
-				'category' : datum['attributes']['categories'][0]
+				'additionaldata' : datum['attributes']['additional_data']
 			}
+			try:
+				nugget.update({
+				'category' : datum['attributes']['categories'][0]
+				})
+			except:
+				nugget.update({
+				'category' : ''
+				})
 			Nugget(piece=newPiece, **nugget).save()
 
 
@@ -68,10 +75,10 @@ def do_predictleads_jobopenings(research):
 			}
 			try:
 				nugget.update({
-				'category' : datum['attributes']['categories'][0],
+				'category' : datum['attributes']['categories'][0]
 				})
 			except:
 				nugget.update({
-				'category' : '',
+				'category' : ''
 				})
 			Nugget(piece=newPiece, **nugget).save()
