@@ -1,7 +1,8 @@
-import uuid
+import uuid, re
 from django.db import models
-from django.contrib.postgres.fields import JSONField # JSON Field
+from django.contrib.postgres.fields import JSONField, ArrayField # JSON + Array Fields
 from model_utils.models import TimeStampedModel
+from .categories import NUGGET_WRAPPER_CATEGORIES
 
 
 class Company(TimeStampedModel):
@@ -91,10 +92,11 @@ class Nugget(TimeStampedModel):
     An NLP extracted 'snippet' of quotable/interesting/relevant material found within the body of a 'Piece'
     """
     speaker = models.CharField(max_length=100, blank=True, default='')
-    category = models.CharField(max_length=100, choices=(('quote', 'Quote'), ('tweet', 'Tweet'), ('joblisting', 'Job Listing')), default='quote')
+    category = models.CharField(max_length=100, choices=NUGGET_WRAPPER_CATEGORIES, default='quote')
     entity = models.CharField(max_length=1000, blank=True, default='') #The person/place/thing responsible for this nugget
     body = models.CharField(max_length=1000, blank=True, default='') #The body of text comprising the nugget
     piece = models.ForeignKey('research.Piece', related_name='nugget', on_delete=models.CASCADE) #Lookup the research instance that spawned this
+    additionaldata = JSONField(null=True) # all the varying values to be merged into a wrapper
     
     def __str__(self):
         return self.body
@@ -103,3 +105,25 @@ class Nugget(TimeStampedModel):
         verbose_name = "nugget"
         verbose_name_plural = "nuggets"
         ordering = ('created',)
+
+class NuggetWrapper(TimeStampedModel):
+    """
+    The pre-created 'templates' that present a values from a 'Nugget' in an 'email presentable' way
+    """
+    wrapper = models.TextField(blank=True, default='')
+    category = models.CharField(max_length=100, choices=NUGGET_WRAPPER_CATEGORIES, default='quote')
+    mergefields = ArrayField(models.CharField(max_length=200), blank=True)
+
+    def save(self, *args, **kwargs):
+        merges = re.findall("{{(.*?)}}", self.wrapper) #get all the template names from within the mustaches
+        self.mergefields = list(set(merges)) #TODO: Make Unique
+        super(TimeStampedModel, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.wrapper
+
+    class Meta:
+        verbose_name = "nugget wrapper"
+        verbose_name_plural = "nugget wrappers"
+        ordering = ('created',)
+
