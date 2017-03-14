@@ -65,17 +65,12 @@ class Research(TimeStampedModel):
         ordering = ('created',)
 
 
-<<<<<<< HEAD
-# One 'result' of a search for information for the prospect.
-class Piece(models.Model):
-    aggregator = models.TextField(blank=True, default='')
-    created = models.DateTimeField(auto_now_add=True)
-=======
+
 class Piece(TimeStampedModel):
     """
     One 'result' of a search for information for the prospect.
     """
->>>>>>> origin/master
+    aggregator = models.TextField(blank=True, default='')
     publisheddate = models.DateTimeField(null=True)
     title = models.TextField(blank=True, default='')
     author = models.CharField(max_length=1000, blank=True, default='')
