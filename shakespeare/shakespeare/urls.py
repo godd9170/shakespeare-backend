@@ -15,8 +15,6 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from rest_framework import routers, serializers, viewsets
-from organizations.backends import invitation_backend
 
 urlpatterns = [
     url(r'^', include('personas.urls')),
