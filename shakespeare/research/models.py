@@ -57,7 +57,7 @@ class Research(TimeStampedModel):
     individual = models.ForeignKey('research.Individual', related_name='research', on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.id)
+        return str(self.individual)
 
     class Meta:
         verbose_name = "research"
