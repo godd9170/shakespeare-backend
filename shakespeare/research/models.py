@@ -76,12 +76,16 @@ class Piece(TimeStampedModel):
     title = models.TextField(blank=True, default='')
     author = models.CharField(max_length=1000, blank=True, default='')
     body = models.CharField(max_length=1000, blank=True, default='')
-    source = models.CharField(max_length=1000, blank=True, default='') # We'll make this a text field for now. Ideally it's a lookup to a 'Data Source' table in the future
+    source = JSONField(null=True) # The actual place on the web we got this from. We'll make this a JSON field for now. Ideally it's a lookup to a 'Data Source' table in the future
     url = models.TextField(blank=True, default='')
     research = models.ForeignKey('research.Research', related_name='piece', on_delete=models.CASCADE) #Lookup the research instance that spawned this
     
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(TimeStampedModel, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = "piece"
@@ -93,9 +97,7 @@ class Nugget(TimeStampedModel):
     """
     An NLP extracted 'snippet' of quotable/interesting/relevant material found within the body of a 'Piece'
     """
-    speaker = models.CharField(max_length=100, blank=True, default='')
     category = models.CharField(max_length=100, choices=NUGGET_TEMPLATE_CATEGORIES, default='quote')
-    entity = models.CharField(max_length=1000, blank=True, default='') #The person/place/thing responsible for this nugget
     body = models.CharField(max_length=1000, blank=True, default='') #The body of text comprising the nugget
     piece = models.ForeignKey('research.Piece', related_name='nugget', on_delete=models.CASCADE) #Lookup the research instance that spawned this
     additionaldata = JSONField(null=True) # all the varying values to be merged into a wrapper
@@ -106,6 +108,11 @@ class Nugget(TimeStampedModel):
     def get_mergefields(self):
         return self.additionaldata.keys() if (self.additionaldata is not None) else []
         #return self.additionaldata.keys() # The keys of the additionaldata are the mergefields in the NuggetTemplate
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(TimeStampedModel, self).save(*args, **kwargs)
+
 
     class Meta:
         verbose_name = "nugget"

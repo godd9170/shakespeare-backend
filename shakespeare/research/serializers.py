@@ -21,12 +21,12 @@ class NuggetSerializer(serializers.ModelSerializer):
 
     def get_templates(self, nugget):
         mergefields = list(nugget.get_mergefields()) #Get all the additional data merge fields
-        templates = NuggetTemplate.objects.filter(mergefields__contained_by = mergefields)
+        templates = NuggetTemplate.objects.filter(mergefields__contained_by = mergefields, category = nugget.category)
         return NuggetTemplateSerializer(templates, many=True).data
 
     class Meta:
         model = Nugget
-        fields = ('id', 'created', 'category', 'speaker', 'body', 'templates', 'additionaldata')
+        fields = ('id', 'created', 'category', 'body', 'templates', 'additionaldata')
 
 class NuggetTemplateSerializer(serializers.ModelSerializer):
 
@@ -39,7 +39,7 @@ class PieceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Piece
-        fields = ('id', 'title', 'body', 'source', 'author', 'publisheddate', 'created', 'nuggets')
+        fields = ('id', 'title', 'body', 'author', 'publisheddate', 'created', 'source', 'nuggets')
 
 class ResearchSerializer(serializers.ModelSerializer):
     pieces = PieceSerializer(many=True, source='piece', read_only=True)
