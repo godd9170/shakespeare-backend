@@ -3,6 +3,7 @@ machine:
     version: 3.4.3
   services:
     - postgresql
+    - redis
 general:
   build_dir: shakespeare
 
