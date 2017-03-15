@@ -29,10 +29,10 @@ def reshape_payload(quotes, category):
             'body' : quote['quote'],
             'category' : category,
             'additionaldata' : {
-                'speakername' : speaker['name'],
-                'speakercompany' : speaker['from'],
-                'speakertype' : speaker['type'],
-                'speakerpublisher' : speaker['publisher']
+                'speakername' : speaker.get('name'),
+                'speakercompany' : speaker.get('from'),
+                'speakertype' : speaker.get('type'),
+                'speakerpublisher' : speaker.get('publisher')
             }
         }
         this_research_piece = list(filter(lambda x: x.get('source_id') == this_source['id'], research_pieces)) #filter out all the elements that don't have that source id
