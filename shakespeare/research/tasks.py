@@ -1,5 +1,5 @@
 from celery import shared_task
-from .utils import get_research_pieces
+from research.utils import get_research_pieces
 from .models import Research
 
 
