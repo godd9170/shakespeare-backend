@@ -1,6 +1,6 @@
 from celery import shared_task
 from research.utils import get_research_pieces
-from .models import Research
+from research.models import Research
 
 
 @shared_task
