@@ -1,6 +1,6 @@
 from celery import shared_task
-from shakespeare.research.utils import get_research_pieces
-from shakespeare.research.models import Research
+from research.utils import get_research_pieces
+from research.models import Research
 
 
 @shared_task
