@@ -72,11 +72,11 @@ class Piece(TimeStampedModel):
     One 'result' of a search for information for the prospect.
     """
     aggregator = models.TextField(blank=True, default='')
-    publisheddate = models.DateTimeField(null=True)
+    publisheddate = models.DateTimeField(blank=True, null=True)
     title = models.TextField(blank=True, default='')
     author = models.CharField(max_length=1000, blank=True, default='')
     body = models.CharField(max_length=1000, blank=True, default='')
-    source = JSONField(null=True) # The actual place on the web we got this from. We'll make this a JSON field for now. Ideally it's a lookup to a 'Data Source' table in the future
+    source = JSONField(blank=True, null=True) # The actual place on the web we got this from. We'll make this a JSON field for now. Ideally it's a lookup to a 'Data Source' table in the future
     url = models.TextField(blank=True, default='')
     research = models.ForeignKey('research.Research', related_name='piece', on_delete=models.CASCADE) #Lookup the research instance that spawned this
     
