@@ -51,7 +51,7 @@ class ResearchDetail(APIView):
         # 
         # Create a new research 
         #
-        research = Research(individual=individual, owner=self.request.user)  # HERE WE KICK OF RESEARCH JOBS
+        research = Research(individual=individual, owner=self.request.user) 
         research.save()
         # 
         # Aggregate some sources for this person
