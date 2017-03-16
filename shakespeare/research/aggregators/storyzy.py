@@ -45,7 +45,7 @@ def reshape_payload(quotes, category):
                 'nuggets' : [nugget],
                 'source' : this_source
             })
-        else: #we've already created the source, grab it
+        else: #we've already created the piece, grab it
             this_research_piece[0]['nuggets'].append(nugget)
     return research_pieces
 
