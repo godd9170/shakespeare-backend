@@ -1,7 +1,8 @@
 import json
 
 from .decorators import render_to
-
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
@@ -11,6 +12,10 @@ from social_django.utils import psa, load_strategy
 
 User = get_user_model()
 
+
+@api_view(['GET'])
+def isvalid(request):
+    return Response(status=200)
 
 def logout(request):
     """Logs out user"""

@@ -3,15 +3,16 @@ machine:
     version: 3.4.3
   services:
     - postgresql
+    - redis
 general:
   build_dir: shakespeare
 
 dependencies:
   pre:
-#    - sudo pip install --upgrade pip
-#    - sudo apt-get install python-dev
-#    - sudo apt-get install python3-bs4
-    - sudo pip install -r ../requirements.txt
+    - sudo apt-get install python-dev
+    - sudo apt-get install python3-bs4
+    - pip install --upgrade pip
+    - pip install -r ../requirements.txt
 database:
   override:
     - echo "CREATE USER shakespeareadmin WITH PASSWORD 'salesforce1';" | psql -U postgres
@@ -21,3 +22,7 @@ deployment:
     branch: master
     commands:
       - eb deploy --profile default
+
+test:
+  override:
+    - python manage.py test

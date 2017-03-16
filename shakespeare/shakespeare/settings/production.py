@@ -66,3 +66,12 @@ LOGGING = {
         },
     }
 }
+
+# REDIS related settings
+REDIS_HOST = 'redis-production.u7sr1d.0001.use1.cache.amazonaws.com'
+REDIS_PORT = '6379'
+
+# CELERY related settings
+BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'

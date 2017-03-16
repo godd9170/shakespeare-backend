@@ -1,6 +1,5 @@
-import requests
-import json
-import datetime
+from datetime import datetime
+import requests, json, pytz
 from research.models import Research, Piece, Nugget
 
 # Generate the following data structure
@@ -41,7 +40,7 @@ def reshape_payload(quotes, category):
                 'source_id' : this_source['id'],
                 'title' : this_source['title'],
                 'url' : this_source['uri'],
-                'publisheddate' : datetime.datetime.fromtimestamp(int(quote['date']/1000)),
+                'publisheddate' : datetime.utcfromtimestamp(int(quote['date']/1000)).replace(tzinfo=pytz.utc),
                 'nuggets' : [nugget],
                 'source' : this_source
             })
