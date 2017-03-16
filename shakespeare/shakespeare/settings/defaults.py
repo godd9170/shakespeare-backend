@@ -46,9 +46,13 @@ INSTALLED_APPS = [
     'social_django',
     'rest_framework_social_oauth2',
     'organizations',
-    'personas.apps.PersonasConfig',
-    'administration.apps.AdministrationConfig',
-    'research.apps.ResearchConfig',
+
+    #'personas.apps.PersonasConfig',
+    #'administration.apps.AdministrationConfig',
+    #'research.apps.ResearchConfig',
+    'administration',
+    'personas',
+    'research',
 ]
 
 MIDDLEWARE = [
