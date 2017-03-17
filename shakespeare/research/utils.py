@@ -10,10 +10,12 @@ from .aggregators.predictleads import do_predictleads_events, do_predictleads_jo
 from .aggregators.featuredcustomers import do_featuredcustomers
 
 
-clearbit.key = 'sk_886efa2d89a51d9fc048d5d04023d09a'  # TODO: Store this in settings
-
-
 def get_research_pieces(research):
+    """
+    Run the various 3rd party services and enrich a research.models.Research model
+    :param research: research.models.Research
+    :return: None
+    """
     # do_storyzy(research) # Fetch + Build Research Pieces + Nuggets from Storyzy
     # do_predictleads_events(research) # Get events from Predict Leads and build research pieces
     do_predictleads_jobopenings(research) # Get job openings from PredictLeads and build research pieces and nuggets
