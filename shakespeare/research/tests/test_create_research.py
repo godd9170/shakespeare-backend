@@ -40,9 +40,9 @@ class ResearchTests(APITestCase):
         return mock_resp
 
     @patch('research.utils.clearbit.Enrichment.find') #Fake the clearbit call
-    def test_create_research_new_individual(self, mock_get):
+    def test_create_research_new_individual(self, mock_find):
         #mock_resp = self._mock_response(json_data=constants.CLEARBIT_RESPONSE)
-        mock_get.return_value = constants.CLEARBIT_RESPONSE_GOOD
+        mock_find.return_value = constants.CLEARBIT_RESPONSE_GOOD
 
         #Set up Request
         url = reverse('create_research')
