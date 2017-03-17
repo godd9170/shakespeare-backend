@@ -52,13 +52,15 @@ CREATE USER shakespeareadmin WITH PASSWORD 'salesforce1';
 ALTER USER shakespeareadmin CREATEDB;
 ```
 
-3) Starting Redis
+### Redis and Celery
+
+1) Starting Redis
 
 ```
 redis-server &
 ```
 
-4) Starting Celery workers
+2) Starting Celery workers
 
 From the project's root folder (the one containing ``manage.py``) run:
 ```
