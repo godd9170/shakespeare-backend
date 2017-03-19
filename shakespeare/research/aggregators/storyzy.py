@@ -50,17 +50,18 @@ def reshape_payload(quotes, category):
 
 def do_storyzy(research):
     companyName = research.individual.companyname #get the name of the company for this research
-    url = "http://www.storyzy.com/searchData?q={}".format(companyName) #get 
-    response = requests.get(url).json()
-    # obtain an array of quotes
-    research_pieces = reshape_payload(response['searchResponse']['quotesAbout'], 'quote_about') + reshape_payload(response['searchResponse']['quotesFrom'], 'quote_from')
-    for piece in research_pieces:
-        piece.pop('source_id', None) # source_id is no longer necessary
-        nuggets = piece.pop('nuggets', None) # get the nugget array
-        newPiece = Piece(research=research, **piece)
-        newPiece.save() #.full_clean()
-        for nugget in nuggets:
-            Nugget(piece=newPiece, **nugget).save() #.full_clean()
+    if companyName is not None:
+        url = "http://www.storyzy.com/searchData?q={}".format(companyName) #get 
+        response = requests.get(url).json()
+        # obtain an array of quotes
+        research_pieces = reshape_payload(response['searchResponse']['quotesAbout'], 'quote_about') + reshape_payload(response['searchResponse']['quotesFrom'], 'quote_from')
+        for piece in research_pieces:
+            piece.pop('source_id', None) # source_id is no longer necessary
+            nuggets = piece.pop('nuggets', None) # get the nugget array
+            newPiece = Piece(research=research, **piece)
+            newPiece.save() #.full_clean()
+            for nugget in nuggets:
+                Nugget(piece=newPiece, **nugget).save() #.full_clean()
 
     
 
