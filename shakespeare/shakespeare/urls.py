@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from administration import views
+from django.conf import settings
 
 urlpatterns = [
     url(r'^$', views.shakespeare),
@@ -27,3 +28,7 @@ urlpatterns = [
     # url(r'^accounts/', include('organizations.urls')),
     # url(r'^invitations/', include(invitation_backend().get_urls())),
 ]
+
+import clearbit
+
+clearbit.key = settings.CLEARBIT_KEY
