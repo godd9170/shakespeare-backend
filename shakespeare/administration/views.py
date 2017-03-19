@@ -23,6 +23,11 @@ def logout(request):
     return redirect('/')
 
 
+@render_to('shakespeare.html')
+def shakespeare(request):
+    """Home view, displays login mechanism"""
+    pass
+
 @render_to('home.html')
 def home(request):
     """Home view, displays login mechanism"""

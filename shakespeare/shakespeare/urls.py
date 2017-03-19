@@ -15,9 +15,10 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from administration import views
 
 urlpatterns = [
-    url(r'^', include('personas.urls')),
+    url(r'^$', views.shakespeare),
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include('rest_framework_social_oauth2.urls')),
     url(r'^administration/', include('administration.urls')),
