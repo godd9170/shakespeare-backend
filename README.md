@@ -88,3 +88,7 @@ A schema that defines organizations so we can share shakespeare resources across
 #### [django-rest-framework-social-oauth2](https://github.com/PhilipGarnero/django-rest-framework-social-oauth2)
 
 The genius behind marrying `social-app-django` and `django-rest-framework`. Offers a 'convert' endpoint that turns the access token from the client into an auth with our api.
+
+#### [django-cors-headers](https://github.com/ottoyiu/django-cors-headers)
+
+Allows us to make requests to our API from javascript on an alternate domain

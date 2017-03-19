@@ -33,6 +33,17 @@ STATIC_ROOT = os.path.join(BASE_DIR, "..", "www", "static")
 STATIC_URL = '/static/'
 
 # ------------
+# CORS Settings
+# ------------
+CORS_ORIGIN_ALLOW_ALL = True #We'll leave this true for now, but should be toggled of in the future
+# CORS_ORIGIN_WHITELIST = (
+#     'google.com',
+#     'hostname.example.com',
+#     'localhost:8000',
+#     '127.0.0.1:9000'
+# )
+
+# ------------
 # Logging
 # ------------
 LOGGING = {

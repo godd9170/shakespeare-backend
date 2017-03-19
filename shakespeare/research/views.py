@@ -56,7 +56,7 @@ class ResearchDetail(APIView):
         # 
         # Aggregate some sources for this person
         #
-        # utils.get_research_pieces(research)
+        #utils.get_research_pieces(research)
         get_research_pieces_task.delay(research_id=research.pk)
 
         return Response({'id': str(research.id)})
