@@ -7,3 +7,5 @@ from research.models import Research
 def get_research_pieces_task(research_id):
     research = Research.objects.get(pk=research_id)
     get_research_pieces(research)
+    research.complete = True #Mark the record complete once it's done gathering research
+    research.save()
