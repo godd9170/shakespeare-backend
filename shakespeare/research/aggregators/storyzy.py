@@ -1,5 +1,5 @@
 from datetime import datetime
-import requests, json, pytz
+import requests, json, pytz, re
 from research.models import Research, Piece, Nugget
 
 # Generate the following data structure
@@ -19,13 +19,26 @@ from research.models import Research, Piece, Nugget
 #         ]
 #     }
 # ]
+def remove_double_quotes(body):
+    try: # Defensive. Try to reformat the company name if it needs reformatting.
+        body = body.replace('\"','')
+    except:
+        pass
+    return body
+
+def remove_html_tags(body):
+    p = re.compile(r'<.*?>')
+    return p.sub('', body)
+
+
 def reshape_payload(quotes, category):
     research_pieces = []
     for quote in quotes:
         this_source = quote['source']
         speaker = quote['speakers'][0] ###ASSUMING 1st speak is the only speaker
+        quote_body = remove_double_quotes(remove_html_tags(quote['quote']))
         nugget = {
-            'body' : quote['quote'],
+            'body' : quote_body,
             'category' : category,
             'additionaldata' : {
                 'speakername' : speaker.get('name'),
