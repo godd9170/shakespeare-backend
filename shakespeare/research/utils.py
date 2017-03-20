@@ -34,13 +34,19 @@ def get_clearbit_person(response, email):
     if person is None:  # if Clearbit can't find anyone, raise an exception
         raise ContactNotFoundException
         # Try to get individual info
+
+    if person['avatar'] is None: # If we can't find a picture for the individual, show the company logo
+        avatar = response['company']['logo']
+    else:
+        avatar = person['avatar']
+
     try:
         name = person['name']
         employment = person['employment']
         individual.update({
             'lastname': name['familyName'],
             'firstname': name['givenName'],
-            'avatar': person['avatar'],
+            'avatar': avatar,
             'jobtitle': employment['title'],
             'role': employment['role'],
             'companyname': employment['name'],
