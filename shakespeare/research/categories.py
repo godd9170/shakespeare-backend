@@ -1,7 +1,8 @@
 # This might need to be it's own model with twin Many2Many Lookups to Nuggets and NuggetWrappers
 NUGGET_TEMPLATE_CATEGORIES = (
-    ('quote_from', 'Quote From'), # Storyzy
-    ('quote_about', 'Quote By'), # Storyzy
+    ('quote_from_individual', 'Quote From Individual'), # Storyzy (This actual person you're researching)
+    ('quote_from_company', 'Quote From Company'), # Storyzy (This is the company of the person you're researching)
+    ('quote_about', 'Quote By'), # Storyzy (This is any external person referring to either the individual or the company being researched)
     ('testimonial', 'Testimonial'), # Featured Customers
     ('hires', 'Hires'), # PredictLeads vvv
     ('promotes', 'Promotes'),
