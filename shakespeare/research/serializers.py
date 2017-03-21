@@ -17,18 +17,30 @@ class IndividualSerializer(serializers.ModelSerializer):
 
 
 class NuggetSerializer(serializers.ModelSerializer):
-    templates = serializers.SerializerMethodField()
+    compositions = serializers.SerializerMethodField()
 
-    def get_templates(self, nugget):
+    def get_compositions(self, nugget):
         mergefields = list(nugget.get_mergefields()) #Get all the additional data merge fields
         templates = NuggetTemplate.objects.filter(mergefields__contained_by = mergefields, category = nugget.category)
-        return NuggetTemplateSerializer(templates, many=True).data
+        return NuggetTemplateSerializer(templates, many=True, context={'nugget' : nugget}).data
 
     class Meta:
         model = Nugget
-        fields = ('id', 'created', 'category', 'body', 'templates', 'additionaldata')
+        fields = ('id', 'created', 'category', 'body', 'compositions', 'additionaldata')
 
 class NuggetTemplateSerializer(serializers.ModelSerializer):
+    subject = serializers.SerializerMethodField()
+    intro = serializers.SerializerMethodField()
+    segue = serializers.SerializerMethodField()
+
+    def get_subject(self, nuggettemplate):
+        return nuggettemplate.merge(nuggettemplate.subject, self.context['nugget'])
+
+    def get_intro(self, nuggettemplate):
+        return nuggettemplate.merge(nuggettemplate.intro, self.context['nugget'])
+
+    def get_segue(self, nuggettemplate):
+        return nuggettemplate.merge(nuggettemplate.segue, self.context['nugget'])
 
     class Meta:
         model = NuggetTemplate

@@ -34,6 +34,7 @@ def remove_html_tags(body):
 def reshape_payload(quotes, category):
     research_pieces = []
     for quote in quotes:
+        print('>>>>>>>>>>>>>>>>QUOTE: {}'.format(quote))
         this_source = quote['source']
         speaker = quote['speakers'][0] ###ASSUMING 1st speak is the only speaker
         quote_body = remove_double_quotes(remove_html_tags(quote['quote']))
@@ -41,10 +42,10 @@ def reshape_payload(quotes, category):
             'body' : quote_body,
             'category' : category,
             'additionaldata' : {
-                'speakername' : speaker.get('name'),
-                'speakercompany' : speaker.get('from'),
-                'speakertype' : speaker.get('type'),
-                'speakerpublisher' : speaker.get('publisher')
+                'name' : speaker.get('name'),
+                'company' : speaker.get('from'),
+                'type' : speaker.get('type'),
+                'publisher' : speaker.get('publisher')
             }
         }
         this_research_piece = list(filter(lambda x: x.get('source_id') == this_source['id'], research_pieces)) #filter out all the elements that don't have that source id

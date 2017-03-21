@@ -109,6 +109,7 @@ class Nugget(TimeStampedModel):
         return self.additionaldata.keys() if (self.additionaldata is not None) else []
         #return self.additionaldata.keys() # The keys of the additionaldata are the mergefields in the NuggetTemplate
 
+
     def save(self, *args, **kwargs):
         self.full_clean()
         super(TimeStampedModel, self).save(*args, **kwargs)
@@ -121,7 +122,9 @@ class Nugget(TimeStampedModel):
 
 class NuggetTemplate(TimeStampedModel):
     """
-    The pre-created 'templates' that present a values from a 'Nugget' in an 'email presentable' way
+    The pre-created 'templates' that present a values from a 'Nugget' in an 'email presentable' way. The convention for the replace strings
+    Is as follows: {{Model.fieldname}}. If that field happens to be a jsonfield then one more level of nesting should be used. e.g.
+    {{Individual.firstname}} or {{Nugget.additionaldata.company}}
     """
     subject = models.CharField(max_length=200, default='')
     intro = models.TextField(blank=True, default='')
@@ -130,11 +133,33 @@ class NuggetTemplate(TimeStampedModel):
     mergefields = ArrayField(models.CharField(max_length=100), blank=True)
 
     def save(self, *args, **kwargs):
-        merges = re.findall("{{(.*?)}}", self.intro) #get all the template names from within the mustaches
-        merges += re.findall("{{(.*?)}}", self.subject) # and subject merges
-        merges += re.findall("{{(.*?)}}", self.segue) # and segue merges
+        merges = re.findall("{{Nugget.additionaldata.(.*?)}}", self.intro + self.subject + self.segue) #get all the nugget additionaldata template names from within the mustaches
         self.mergefields = list(set(merges)) #unique them
         super(TimeStampedModel, self).save(*args, **kwargs)
+
+
+    # TODO: Investigate DRY way to merge in any arbitrary model using Model = apps.get_model(app_label='research', model_name=model)
+    # template is the string template to have values merged into it.
+    def merge(self, template, nugget):
+        models = list(set(re.findall("{{(.*?)\.", template))) #get all the unique models that will be merged
+        if 'Individual' in models:
+            fields = list(set(re.findall("{{Individual.(.*?)}}", template)))
+            for field in fields:
+                template = re.sub(r"{{Individual."+field+"}}", getattr(nugget.piece.research.individual, field), template)
+        if ('Company' in models) and (nugget.piece.research.individual.company is not None):
+            fields = list(set(re.findall("{{Company.(.*?)}}", template)))
+            for field in fields:
+                template = re.sub(r"{{Company."+field+"}}", getattr(nugget.piece.research.individual.company, field), template)
+        if 'Nugget' in models:
+            fields = list(set(re.findall("{{Nugget\.(.*?)(?:}}|\.)", template))) 
+            for field in fields:
+                if field == 'additionaldata':
+                    additionaldatafields = list(set(re.findall("{{Nugget.additionaldata\.(.*?)}}", template)))
+                    for additionaldatafield in additionaldatafields:
+                        template = re.sub(r"{{Nugget.additionaldata."+additionaldatafield+"}}", nugget.additionaldata[additionaldatafield], template)
+                else:
+                    template = re.sub(r"{{Nugget."+field+"}}", getattr(nugget, field), template)
+        return template
 
     def __str__(self):
         return self.subject
