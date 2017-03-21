@@ -27,8 +27,10 @@ def do_predictleads_events(research):
 			}
 			newPiece = Piece(research=research, **research_piece)
 			newPiece.save()
+			additionaldata = datum['attributes']['additional_data']
+			additionaldata['title'] = datum.get('attributes').get('title')
 			nugget = {
-				'additionaldata' : datum['attributes']['additional_data']
+				'additionaldata' : additionaldata
 			}
 			try:
 				nugget.update({
@@ -67,12 +69,10 @@ def do_predictleads_jobopenings(research):
 		data = response['data']
 
 		for datum in data:
-			additionaldata = datum['attributes']['additional_data']
-			additionaldata['title'] = datum['attributes'].get('title')
 			nugget = {
 				'speaker' : '',
 				'body' : datum['attributes']['title'],
-				'additionaldata' : additionaldata
+				'additionaldata' : datum['attributes']['additional_data']
 				# 'entity'
 			}
 			try:
