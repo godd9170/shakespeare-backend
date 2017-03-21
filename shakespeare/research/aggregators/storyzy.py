@@ -1,5 +1,5 @@
 from datetime import datetime
-import requests, json, pytz, re
+import requests, json, pytz
 from research.models import Research, Piece, Nugget
 
 # Generate the following data structure
@@ -19,33 +19,24 @@ from research.models import Research, Piece, Nugget
 #         ]
 #     }
 # ]
-def remove_double_quotes(body):
-    try: # Defensive. Try to reformat the company name if it needs reformatting.
-        body = body.replace('\"','')
-    except:
-        pass
-    return body
-
-def remove_html_tags(body):
-    p = re.compile(r'<.*?>')
-    return p.sub('', body)
-
-
-def reshape_payload(quotes, category):
+def reshape_payload(quotes, category, individual=None):
     research_pieces = []
     for quote in quotes:
-        print('>>>>>>>>>>>>>>>>QUOTE: {}'.format(quote))
         this_source = quote['source']
         speaker = quote['speakers'][0] ###ASSUMING 1st speak is the only speaker
-        quote_body = remove_double_quotes(remove_html_tags(quote['quote']))
+        if (category == "quote_from"):
+            if (speaker.get('name') == (individual.firstname + " " + individual.lastname)):
+                category = "quote_from_individual"
+            else:
+                category = "quote_from_company"
         nugget = {
-            'body' : quote_body,
+            'body' : quote['quote'],
             'category' : category,
             'additionaldata' : {
                 'name' : speaker.get('name'),
                 'company' : speaker.get('from'),
                 'type' : speaker.get('type'),
-                'publisher' : speaker.get('publisher')
+                'publisher' : this_source.get('publisher')
             }
         }
         this_research_piece = list(filter(lambda x: x.get('source_id') == this_source['id'], research_pieces)) #filter out all the elements that don't have that source id
@@ -65,12 +56,10 @@ def reshape_payload(quotes, category):
 def do_storyzy(research):
     companyName = research.individual.companyname #get the name of the company for this research
     if companyName is not None:
-        query = companyName + '%20' + research.individual.firstname + '%20' + research.individual.lastname 
-        # url = "http://www.storyzy.com/searchData?q={}".format(companyName) #get 
-        url = "http://www.storyzy.com/searchData?q={}".format(query)
+        url = "http://www.storyzy.com/searchData?q={}".format(companyName) #get 
         response = requests.get(url).json()
         # obtain an array of quotes
-        research_pieces = reshape_payload(response['searchResponse']['quotesAbout'], 'quote_about') + reshape_payload(response['searchResponse']['quotesFrom'], 'quote_from')
+        research_pieces = reshape_payload(response['searchResponse']['quotesAbout'], 'quote_about') + reshape_payload(response['searchResponse']['quotesFrom'], 'quote_from', research.individual)
         for piece in research_pieces:
             piece.pop('source_id', None) # source_id is no longer necessary
             nuggets = piece.pop('nuggets', None) # get the nugget array
