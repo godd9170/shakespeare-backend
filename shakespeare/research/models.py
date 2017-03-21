@@ -162,7 +162,7 @@ class NuggetTemplate(TimeStampedModel):
         return template
 
     def __str__(self):
-        return self.subject
+        return "{} ({})".format(str(self.subject), str(self.category))
 
     class Meta:
         verbose_name = "nugget template"
