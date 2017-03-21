@@ -67,10 +67,12 @@ def do_predictleads_jobopenings(research):
 		data = response['data']
 
 		for datum in data:
+			additionaldata = datum['attributes']['additional_data']
+			additionaldata['title'] = datum['attributes'].get('title')
 			nugget = {
 				'speaker' : '',
 				'body' : datum['attributes']['title'],
-				'additionaldata' : datum['attributes']['additional_data']
+				'additionaldata' : additionaldata
 				# 'entity'
 			}
 			try:
