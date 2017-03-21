@@ -19,7 +19,7 @@ def do_predictleads_events(research):
 
 		for datum in data:
 			research_piece = {
-				'aggregator' : 'PredictLeads',
+				'aggregator' : 'predictleads',
 				'title' : datum['attributes']['title'],
 			    # 'body' : '',
 			    'url' : datum['attributes']['url'],

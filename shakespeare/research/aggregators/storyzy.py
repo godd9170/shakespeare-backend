@@ -47,7 +47,8 @@ def reshape_payload(quotes, category, individual=None):
                 'url' : this_source['uri'],
                 'publisheddate' : datetime.utcfromtimestamp(int(quote['date']/1000)).replace(tzinfo=pytz.utc),
                 'nuggets' : [nugget],
-                'source' : this_source
+                'source' : this_source,
+                'aggregator' : 'storyzy'
             })
         else: #we've already created the piece, grab it
             this_research_piece[0]['nuggets'].append(nugget)
