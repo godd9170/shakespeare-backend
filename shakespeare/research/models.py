@@ -156,7 +156,7 @@ class NuggetTemplate(TimeStampedModel):
                 if field == 'additionaldata':
                     additionaldatafields = list(set(re.findall("{{Nugget.additionaldata\.(.*?)}}", template)))
                     for additionaldatafield in additionaldatafields:
-                        template = re.sub(r"{{Nugget.additionaldata."+additionaldatafield+"}}", nugget.additionaldata[additionaldatafield], template)
+                        template = re.sub(r"{{Nugget.additionaldata."+additionaldatafield+"}}", str(nugget.additionaldata[additionaldatafield]), template)
                 else:
                     template = re.sub(r"{{Nugget."+field+"}}", getattr(nugget, field), template)
         return template
