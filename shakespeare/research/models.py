@@ -103,7 +103,7 @@ class Nugget(TimeStampedModel):
     additionaldata = JSONField(null=True) # all the varying values to be merged into a wrapper
     
     def __str__(self):
-        return self.body
+        return "{} ({})".format(str(self.body), str(self.category))
 
     def get_mergefields(self):
         return self.additionaldata.keys() if (self.additionaldata is not None) else []
