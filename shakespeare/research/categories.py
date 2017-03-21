@@ -27,7 +27,6 @@ NUGGET_TEMPLATE_CATEGORIES = (
     ('partners_with', 'Partners With'),
     ('receives_award', 'Receives Award'),
     ('recognized_as', 'Recognized As'),
-    ('receives_award', 'Receives Award'),
     ('signs_new_client', 'Signs New Client'),
     ('files_suit_against', 'Files Suit Against'),
     ('has_issues_with', 'Has Issues With'),
