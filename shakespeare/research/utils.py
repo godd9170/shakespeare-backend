@@ -9,6 +9,9 @@ from .aggregators.storyzy import do_storyzy
 from .aggregators.predictleads import do_predictleads_events, do_predictleads_jobopenings
 from .aggregators.featuredcustomers import do_featuredcustomers
 
+import clearbit
+clearbit.key = settings.CLEARBIT_TOKEN
+
 
 def get_research_pieces(research):
     """
