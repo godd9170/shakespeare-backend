@@ -4,6 +4,18 @@ import json
 from django.conf import settings
 from research.models import Research, Piece, Nugget
 
+
+# TO DO: this lives both here and in storyzy, it will move into an aggregator utils at some stage
+# This function strips of the period at the end of an article title if there is one
+def reformat_article_title(title):
+    try:
+        if title.endswith('.') or title.endswith(',') or title.endswith(';'):
+            title = title[:-1]
+    except:
+        pass
+    return title
+
+
 def do_predictleads_events(research):
 	company = research.individual.company # Get the domain name of the company for this research
 
@@ -20,7 +32,7 @@ def do_predictleads_events(research):
 		for datum in data:
 			research_piece = {
 				'aggregator' : 'predictleads',
-				'title' : datum['attributes']['title'],
+				'title' : reformat_article_title(datum['attributes']['title']),
 			    # 'body' : '',
 			    'url' : datum['attributes']['url'],
 			    'publisheddate' : datum['attributes']['found_at']
