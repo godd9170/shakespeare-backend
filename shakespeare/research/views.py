@@ -9,7 +9,7 @@ from django.utils import timezone
 
 from .models import Research, Individual
 from .serializers import ResearchSerializer
-from .tasks import get_research_pieces_task
+from .tasks import get_research_pieces_task, collect_research
 from . import utils
 
 
@@ -57,7 +57,7 @@ class ResearchDetail(APIView):
         # Aggregate some sources for this person
         #
         #utils.get_research_pieces(research)
-        #get_research_pieces_task(research_id=research.pk) #SYNC
-        get_research_pieces_task.delay(research_id=research.pk) #ASYNC
+        #collect_research(research_id=research.pk) #SYNC
+        collect_research.delay(research_id=research.pk) #ASYNC
 
         return Response({'id': str(research.id)})
