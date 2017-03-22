@@ -64,6 +64,11 @@ def reshape_payload(quotes, category, individual=None):
                 category = "quote_from_individual"
             else:
                 category = "quote_from_company"
+
+        if (category == "quote_about"):
+            if (speaker.get('from') == individual.companyname):
+                category = "quote_from_company"
+
         nugget = {
             'body' : remove_stock_ticker(remove_double_quotes(remove_html_tags(quote['quote']))),
             'category' : category,
@@ -96,7 +101,7 @@ def do_storyzy(research):
         url = "http://www.storyzy.com/searchData?q={}".format(companyName) #get 
         response = requests.get(url).json()
         # obtain an array of quotes
-        research_pieces = reshape_payload(response['searchResponse']['quotesAbout'], 'quote_about') + reshape_payload(response['searchResponse']['quotesFrom'], 'quote_from', research.individual)
+        research_pieces = reshape_payload(response['searchResponse']['quotesAbout'], 'quote_about', research.individual) + reshape_payload(response['searchResponse']['quotesFrom'], 'quote_from', research.individual)
         for piece in research_pieces:
             piece.pop('source_id', None) # source_id is no longer necessary
             nuggets = piece.pop('nuggets', None) # get the nugget array
