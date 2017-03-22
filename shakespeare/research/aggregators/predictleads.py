@@ -70,7 +70,6 @@ def do_predictleads_jobopenings(research):
 
 		for datum in data:
 			nugget = {
-				'speaker' : '',
 				'body' : datum['attributes']['title'],
 				'additionaldata' : datum['attributes']['additional_data']
 				# 'entity'
