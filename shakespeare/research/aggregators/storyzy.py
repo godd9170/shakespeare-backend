@@ -47,6 +47,12 @@ def reformat_article_title(title):
         pass
     return title
 
+# This function removes any stock ticker symbols from quotes
+def remove_stock_ticker(quote):
+    quote = re.sub(r'\s\(?((?i)AMEX?|NYSE?|NASDAQ?|FTSE?|DOW?|TSX?|SSE?|SZSE?|OMX?|DAX?|ASX?):\s?\w+\)?', '', quote)
+    print(quote)
+    return quote
+
 
 def reshape_payload(quotes, category, individual=None):
     research_pieces = []
@@ -59,7 +65,7 @@ def reshape_payload(quotes, category, individual=None):
             else:
                 category = "quote_from_company"
         nugget = {
-            'body' : remove_double_quotes(remove_html_tags(quote['quote'])),
+            'body' : remove_stock_ticker(remove_double_quotes(remove_html_tags(quote['quote']))),
             'category' : category,
             'additionaldata' : {
                 'name' : speaker.get('name'),
