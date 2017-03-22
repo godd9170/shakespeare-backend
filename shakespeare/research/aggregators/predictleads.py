@@ -1,8 +1,25 @@
-import requests
-import json
+import requests, json, re
 
 from django.conf import settings
 from research.models import Research, Piece, Nugget
+
+
+# TO DO: this lives both here and in storyzy, it will move into an aggregator utils at some stage
+# This function strips of the period at the end of an article title if there is one
+def reformat_article_title(title):
+    try:
+        if title.endswith('.') or title.endswith(',') or title.endswith(';'):
+            title = title[:-1]
+    except:
+        pass
+    return title
+
+
+# PredictLeads often throws a date on the end of the title, this function removes it
+def remove_date_from_pl_title(title):
+    title = re.sub(r'\son\s(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May?|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)(\s\d{1,2}(th?|st?|nd?))?(\s\d{2}\')?', '', title)
+    return title
+
 
 def do_predictleads_events(research):
 	company = research.individual.company # Get the domain name of the company for this research
@@ -20,7 +37,7 @@ def do_predictleads_events(research):
 		for datum in data:
 			research_piece = {
 				'aggregator' : 'predictleads',
-				'title' : datum['attributes']['title'],
+				'title' : reformat_article_title(remove_date_from_pl_title(datum['attributes']['title'])),
 			    # 'body' : '',
 			    'url' : datum['attributes']['url'],
 			    'publisheddate' : datum['attributes']['found_at']
@@ -28,7 +45,7 @@ def do_predictleads_events(research):
 			newPiece = Piece(research=research, **research_piece)
 			newPiece.save()
 			additionaldata = datum['attributes']['additional_data']
-			additionaldata['title'] = datum.get('attributes').get('title')
+			additionaldata['title'] = remove_date_from_pl_title(datum.get('attributes').get('title'))
 			nugget = {
 				'additionaldata' : additionaldata
 			}

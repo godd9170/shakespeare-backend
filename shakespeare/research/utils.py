@@ -26,6 +26,20 @@ def get_research_pieces(research):
 # TO DO LIST:
 # - Company domain none and error considerations?  
 
+# This function makes sure that job titles are appropriately capitalised for presentation in browser. Clearbit has proved not great in this regard.
+def reformat_job_title(title):
+    original_words = title.split(" ")
+    updated_words =[]
+    stop_words = ['of', 'and']
+
+    for word in original_words:
+        if word not in stop_words:
+            word = word.capitalize()
+        updated_words.append(word)
+
+    return ' '.join(updated_words)
+
+
 
 def get_clearbit_person(response, email):
     ## Individual
@@ -47,7 +61,7 @@ def get_clearbit_person(response, email):
             'lastname': name['familyName'],
             'firstname': name['givenName'],
             'avatar': avatar,
-            'jobtitle': employment['title'],
+            'jobtitle': reformat_job_title(employment['title']),
             'role': employment['role'],
             'companyname': employment['name'],
             'clearbit': uuid.UUID(person['id'])
