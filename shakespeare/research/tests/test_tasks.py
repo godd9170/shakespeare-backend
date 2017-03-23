@@ -17,9 +17,9 @@ class ResearchTasksTests(APITestCase):
         self.client.login(username='john', password='johnpassword')
         self.client.force_authenticate(user=self.user)
 
-    @mock.patch('research.views.get_research_pieces_task.delay')
+    @mock.patch('research.views.collect_research')
     @mock.patch('research.utils.clearbit.Enrichment.find')
-    def test_task_called(self, mock_find, mock_get_research_pieces_task):
+    def test_collect_research_called(self, mock_find, mock_collect_research):
         mock_find.return_value = CLEARBIT_RESPONSE_GOOD
 
         # Check that we have no research in the database whatsoever
@@ -36,7 +36,7 @@ class ResearchTasksTests(APITestCase):
 
         research = research_objects[0]
 
-        mock_get_research_pieces_task.assert_called_once_with(research_id=research.id)
+        mock_collect_research.assert_called_once_with(research=research)
 
 
 

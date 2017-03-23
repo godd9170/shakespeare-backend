@@ -13,7 +13,7 @@ class AbstractAggregator(object):
     def create_nugget(self, nugget):
         Nugget(piece=self.currentPiece, **nugget).save()
 
-    
+
     # TO DO: this lives both here and in storyzy, it will move into an aggregator utils at some stage
     # This function strips of the period at the end of an article title if there is one
     def reformat_article_title(self, title):
