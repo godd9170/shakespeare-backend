@@ -1,5 +1,6 @@
 from datetime import datetime
 import requests, json, pytz, re
+from requests import HTTPError
 from research.models import Research, Piece, Nugget
 from .aggregator import AbstractAggregator
 
@@ -12,18 +13,25 @@ class Storyzy(AbstractAggregator):
 
     def request(self):
         url = "{}/searchData?q={}".format(RESOURCE_DOMAIN, self.research.individual.companyname) #get
-        self.quotes = requests.get(url).json()
+        resp = requests.get(url)
+        resp.raise_for_status()
+        self.quotes = resp.json()['searchResponse']
+
+
 
     def execute(self):
         if self.research.individual.companyname is not None:
-            self.request()
-            self.reshape_payload()
-            for piece in self.research_pieces:
-                piece.pop('source_id', None) # source_id is no longer necessary
-                nuggets = piece.pop('nuggets', None) # get the nugget array
-                self.create_piece(piece)
-                for nugget in nuggets:
-                    self.create_nugget(nugget)
+            try:
+                self.request()
+                self.reshape_payload()
+                for piece in self.research_pieces:
+                    piece.pop('source_id', None) # source_id is no longer necessary
+                    nuggets = piece.pop('nuggets', None) # get the nugget array
+                    self.create_piece(piece)
+                    for nugget in nuggets:
+                        self.create_nugget(nugget)
+            except HTTPError as e:
+                print('Storyzy is Down: {}'.format(e))
 
     # This function removes double quotes throughout the quote
     def remove_double_quotes(self, body): 
@@ -45,7 +53,6 @@ class Storyzy(AbstractAggregator):
     # This function removes any stock ticker symbols from quotes
     def remove_stock_ticker(self, quote):
         quote = re.sub(r'\s\(?((?i)AMEX?|NYSE?|NASDAQ?|FTSE?|DOW?|TSX?|SSE?|SZSE?|OMX?|DAX?|ASX?):\s?\w+\)?', '', quote)
-        print(quote)
         return quote
 
     # Generate the following data structure
@@ -66,8 +73,8 @@ class Storyzy(AbstractAggregator):
     #     }
     # ]
     def reshape_payload(self):
-        self.abouts = self.quotes['searchResponse']['quotesAbout']
-        self.froms = self.quotes['searchResponse']['quotesFrom']
+        self.abouts = self.quotes.get('quotesAbout') if (self.quotes.get('quotesAbout') is not None) else []
+        self.froms = self.quotes.get('quotesFrom') if (self.quotes.get('quotesFrom') is not None) else []
         allquotes = self.abouts + self.froms
         self.research_pieces = []
         for quote in allquotes:
