@@ -13,7 +13,6 @@ ALLOWED_HOSTS = [
 # ------------
 # Database
 # ------------
-
 DATABASES = {
     'default' : {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -41,7 +40,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 # -------------
 # Oauth 
 # -------------
-
 ACCESS_TOKEN_EXPIRE_SECONDS = 2592000 #One Month
 
 # ------------
@@ -72,3 +70,8 @@ LOGGING = {
         },
     }
 }
+
+# -------------
+# Celery
+# -------------
+PERFORM_ASYNCHRONOUS = True #Run the asyncronous tasks (i.e. research fetching)

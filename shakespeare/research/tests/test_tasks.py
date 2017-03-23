@@ -1,42 +1,62 @@
-from unittest import mock
+import uuid
+from unittest.mock import Mock, patch
 
 from django.urls import reverse
 from django.contrib.auth.models import User
 from rest_framework.test import APITestCase
+#from research.tasks import storyzy_task, predictleadsevents_task, predictleadsjobs_task, featuredcustomers_task
 
-from research.models import Research
-from research.tests.constants import CLEARBIT_RESPONSE_GOOD
+from research.models import Research, Individual
+from research.tests.constants.clearbit import CLEARBIT_RESPONSE_GOOD
 
 
 class ResearchTasksTests(APITestCase):
     def setUp(self):
         """
-        1) Authenticate an user
+        1) Authenticate a user
         """
         self.user = User.objects.create_user('john', 'john@snow.com', 'johnpassword')
         self.client.login(username='john', password='johnpassword')
         self.client.force_authenticate(user=self.user)
+        self.individual = Individual(
+                email='hgoddard@saasli.com', 
+                clearbit=uuid.uuid4(), 
+                companyname='ACME',
+                firstname='Henry',
+                lastname='Goddard')
+        self.individual.save() #create individual
+        # Create Research
+        self.research = Research(individual=self.individual, owner=self.user)
+        self.research.save() #create research
 
-    @mock.patch('research.views.get_research_pieces_task.delay')
-    @mock.patch('research.utils.clearbit.Enrichment.find')
-    def test_task_called(self, mock_find, mock_get_research_pieces_task):
-        mock_find.return_value = CLEARBIT_RESPONSE_GOOD
-
-        # Check that we have no research in the database whatsoever
-        self.assertEqual(len(Research.objects.all()), 0)
-
+    @patch('research.tasks.featuredcustomers_task.s')
+    @patch('research.tasks.predictleadsjobs_task.s')
+    @patch('research.tasks.predictleadsevents_task.s')
+    @patch('research.tasks.storyzy_task.s')
+    @patch('research.tasks.chord')
+    @patch('research.utils.clearbit.Enrichment.find') # Patch clearbit so not to burn credits 
+    def test_tasks_called(self, 
+            mock_find, 
+            mock_chord, 
+            storyzy_task, 
+            predictleadsevents_task, 
+            predictleadsjobs_task, 
+            featuredcustomers_task):
+        self.client.login(username='john', password='johnpassword')
+        self.client.force_authenticate(user=self.user)
         url = reverse('create_research')
-        data = {'email': 'testemail@email.com'}
+        data = {'email': 'hgoddard@saasli.com'}
 
         # Hit the endpoint to trigger the creation of a research object
         self.client.post(url, data, format='json')
-
-        research_objects = Research.objects.all()
-        self.assertEqual(len(research_objects), 1)
-
-        research = research_objects[0]
-
-        mock_get_research_pieces_task.assert_called_once_with(research_id=research.id)
+        mock_chord.assert_called_once_with(
+            [
+                storyzy_task(self.research.id),
+                predictleadsevents_task(self.research.id), 
+                predictleadsjobs_task(self.research.id), 
+                featuredcustomers_task(self.research.id)
+            ]
+        )
 
 
 
