@@ -257,12 +257,13 @@ PREDICT_LEADS_X_USER_EMAIL = 'charlie@shakespeare.ai'
 REDIS_HOST = 'localhost'
 REDIS_PORT = '6379'
 
+
+# CLEARBIT_KEY = 'sk_886efa2d89a51d9fc048d5d04023d09a' # Henry's first account
+# CLEARBIT_KEY = 'sk_a1bf7f2daff22c076f07080a660ebddd' # Richard's first account
+CLEARBIT_KEY = 'sk_e4f319623ed71b0d786865a8d4184c5d' # Clearbit Token now
+
 # CELERY related settings
 
 BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
 CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
-
-# CLEARBIT_KEY = 'sk_886efa2d89a51d9fc048d5d04023d09a' # Henry's first account
-# CLEARBIT_KEY = 'sk_a1bf7f2daff22c076f07080a660ebddd' # Richard's first account
-CLEARBIT_KEY = 'sk_e4f319623ed71b0d786865a8d4184c5d'

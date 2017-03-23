@@ -2,6 +2,7 @@ import uuid, re
 from django.db import models
 from django.contrib.postgres.fields import JSONField, ArrayField # JSON + Array Fields
 from model_utils.models import TimeStampedModel
+from django.template import Context, Template
 from .categories import NUGGET_TEMPLATE_CATEGORIES
 
 
@@ -137,29 +138,9 @@ class NuggetTemplate(TimeStampedModel):
         self.mergefields = list(set(merges)) #unique them
         super(TimeStampedModel, self).save(*args, **kwargs)
 
-
-    # TODO: Investigate DRY way to merge in any arbitrary model using Model = apps.get_model(app_label='research', model_name=model)
     # template is the string template to have values merged into it.
     def merge(self, template, nugget):
-        models = list(set(re.findall("{{(.*?)\.", template))) #get all the unique models that will be merged
-        if 'Individual' in models:
-            fields = list(set(re.findall("{{Individual.(.*?)}}", template)))
-            for field in fields:
-                template = re.sub(r"{{Individual."+field+"}}", getattr(nugget.piece.research.individual, field), template)
-        if ('Company' in models) and (nugget.piece.research.individual.company is not None):
-            fields = list(set(re.findall("{{Company.(.*?)}}", template)))
-            for field in fields:
-                template = re.sub(r"{{Company."+field+"}}", getattr(nugget.piece.research.individual.company, field), template)
-        if 'Nugget' in models:
-            fields = list(set(re.findall("{{Nugget\.(.*?)(?:}}|\.)", template))) 
-            for field in fields:
-                if field == 'additionaldata':
-                    additionaldatafields = list(set(re.findall("{{Nugget.additionaldata\.(.*?)}}", template)))
-                    for additionaldatafield in additionaldatafields:
-                        template = re.sub(r"{{Nugget.additionaldata."+additionaldatafield+"}}", str(nugget.additionaldata[additionaldatafield]), template)
-                else:
-                    template = re.sub(r"{{Nugget."+field+"}}", getattr(nugget, field), template)
-        return template
+        return Template(template).render(Context({"Nugget" : nugget}))
 
     def __str__(self):
         return "{} ({})".format(str(self.subject), str(self.category))

@@ -19,16 +19,39 @@ from research.models import Research, Piece, Nugget
 #         ]
 #     }
 # ]
-def remove_double_quotes(body): # This function removes double quotes throughout the quote
+
+# This function removes double quotes throughout the quote
+def remove_double_quotes(body): 
     try: # Defensive. Try to reformat the company name if it needs reformatting.
         body = body.replace('\"','')
     except:
         pass
     return body
 
-def remove_html_tags(body): # This function removes html tags within the quote
-    p = re.compile(r'<.*?>')
+
+# This function removes html tags within the quote
+def remove_html_tags(body):
+    try:
+        p = re.compile(r'<.*?>')
+    except:
+        pass
     return p.sub('', body)
+
+# TO DO: this lives both here and in predictleads, it will move into an aggregator utils at some stage
+# This function strips of the period at the end of an article title if there is one
+def reformat_article_title(title):
+    try:
+        if title.endswith('.') or title.endswith(',') or title.endswith(';'):
+            title = title[:-1]
+    except:
+        pass
+    return title
+
+# This function removes any stock ticker symbols from quotes
+def remove_stock_ticker(quote):
+    quote = re.sub(r'\s\(?((?i)AMEX?|NYSE?|NASDAQ?|FTSE?|DOW?|TSX?|SSE?|SZSE?|OMX?|DAX?|ASX?):\s?\w+\)?', '', quote)
+    print(quote)
+    return quote
 
 
 def reshape_payload(quotes, category, individual=None):
@@ -41,8 +64,13 @@ def reshape_payload(quotes, category, individual=None):
                 category = "quote_from_individual"
             else:
                 category = "quote_from_company"
+
+        if (category == "quote_about"):
+            if (speaker.get('from') == individual.companyname):
+                category = "quote_from_company"
+
         nugget = {
-            'body' : remove_double_quotes(remove_html_tags(quote['quote'])),
+            'body' : remove_stock_ticker(remove_double_quotes(remove_html_tags(quote['quote']))),
             'category' : category,
             'additionaldata' : {
                 'name' : speaker.get('name'),
@@ -55,7 +83,7 @@ def reshape_payload(quotes, category, individual=None):
         if len(this_research_piece) == 0: #this source hasn't showed up yet, let's make a new piece
             research_pieces.append({
                 'source_id' : this_source['id'],
-                'title' : this_source['title'],
+                'title' : reformat_article_title(this_source['title']),
                 'url' : this_source['uri'],
                 'publisheddate' : datetime.utcfromtimestamp(int(quote['date']/1000)).replace(tzinfo=pytz.utc),
                 'nuggets' : [nugget],
@@ -66,13 +94,14 @@ def reshape_payload(quotes, category, individual=None):
             this_research_piece[0]['nuggets'].append(nugget)
     return research_pieces
 
+
 def do_storyzy(research):
     companyName = research.individual.companyname #get the name of the company for this research
     if companyName is not None:
         url = "http://www.storyzy.com/searchData?q={}".format(companyName) #get
         response = requests.get(url).json()
         # obtain an array of quotes
-        research_pieces = reshape_payload(response['searchResponse']['quotesAbout'], 'quote_about') + reshape_payload(response['searchResponse']['quotesFrom'], 'quote_from', research.individual)
+        research_pieces = reshape_payload(response['searchResponse']['quotesAbout'], 'quote_about', research.individual) + reshape_payload(response['searchResponse']['quotesFrom'], 'quote_from', research.individual)
         for piece in research_pieces:
             piece.pop('source_id', None) # source_id is no longer necessary
             nuggets = piece.pop('nuggets', None) # get the nugget array
@@ -80,8 +109,5 @@ def do_storyzy(research):
             newPiece.save() #.full_clean()
             for nugget in nuggets:
                 Nugget(piece=newPiece, **nugget).save() #.full_clean()
-
-    
-
 
 #print(json.dumps(story(companyName), indent=4, sort_keys=True))

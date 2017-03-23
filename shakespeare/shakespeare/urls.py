@@ -30,5 +30,4 @@ urlpatterns = [
 ]
 
 import clearbit
-
 clearbit.key = settings.CLEARBIT_KEY

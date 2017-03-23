@@ -8,7 +8,8 @@ DEBUG = True #Just for now
 # --------------
 ALLOWED_HOSTS = [
     'production.sfpvwpungj.us-east-1.elasticbeanstalk.com',
-    'app.shakespeare.ai'
+    'app.shakespeare.ai',
+    'localhost'
 ]
 
 
