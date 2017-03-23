@@ -1,4 +1,5 @@
-import research.tests.constants as constants
+import research.tests.constants.clearbit as constants
+from research.tests.constants.shakespeare import SHAKESPEARE_NO_PERSON_RESPONSE
 from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework import status
@@ -58,7 +59,7 @@ class ResearchTests(APITestCase):
         self.assertEqual(Individual.objects.count(), 0) #Check no new Individual
         self.assertEqual(Company.objects.count(), 0) #Check no new Company
         
-        self.assertEqual(response.data, constants.SHAKESPEARE_NO_PERSON_RESPONSE) #Check for the proper no person response
+        self.assertEqual(response.data, SHAKESPEARE_NO_PERSON_RESPONSE) #Check for the proper no person response
 
     @patch('research.utils.clearbit.Enrichment.find') #Fake the clearbit call
     def test_create_research_new_individual_no_company(self, mock_get):
