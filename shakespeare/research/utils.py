@@ -13,16 +13,18 @@ from .exceptions import ContactNotFoundException, UnexpectedClearbitPersonPayloa
 
 # This function makes sure that job titles are appropriately capitalised for presentation in browser. Clearbit has proved not great in this regard.
 def reformat_job_title(title):
-    original_words = title.split(" ")
-    updated_words =[]
-    stop_words = ['of', 'and']
+    if title is not None:
+        original_words = title.split(" ")
+        updated_words =[]
+        stop_words = ['of', 'and']
 
-    for word in original_words:
-        if word not in stop_words:
-            word = word.capitalize()
-        updated_words.append(word)
+        for word in original_words:
+            if word not in stop_words:
+                word = word.capitalize()
+            updated_words.append(word)
 
-    return ' '.join(updated_words)
+        return ' '.join(updated_words)
+    return title
 
 
 
@@ -53,8 +55,8 @@ def get_clearbit_person(response, email):
         })
         return individual
     except Exception as e:
-        # print('Error in person response for {}: {}'.format(email, e))
-        raise UnexpectedClearbitPersonPayload
+        print('Error in person response for {}: {}'.format(email, e))
+        # raise UnexpectedClearbitPersonPayload
 
 
 def get_clearbit_company(response):
