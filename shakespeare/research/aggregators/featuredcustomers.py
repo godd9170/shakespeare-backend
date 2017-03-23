@@ -1,7 +1,6 @@
 import requests
 import json
 from bs4 import BeautifulSoup
-
 from django.conf import settings
 from research.models import Research, Piece, Nugget
 
@@ -36,10 +35,7 @@ def do_featuredcustomers(research):
             research_piece = {
                 'aggregator' : 'FeaturedCustomers',
                 'title' : 'Customer Testimonials',
-                # 'body' : '',
-                # 'url' : '',
                 'author' : 'Misc. Authors'
-                # 'source' : '',
             }
             newPiece = Piece(research=research, **research_piece)
             newPiece.save()
