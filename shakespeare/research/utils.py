@@ -5,21 +5,6 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Individual, Company
 from .exceptions import ContactNotFoundException, UnexpectedClearbitPersonPayload, UnexpectedClearbitCompanyPayload
-from .aggregators.storyzy import do_storyzy
-from .aggregators.predictleads import do_predictleads_events, do_predictleads_jobopenings
-from .aggregators.featuredcustomers import do_featuredcustomers
-
-
-def get_research_pieces(research):
-    """
-    Run the various 3rd party services and enrich a research.models.Research model
-    :param research: research.models.Research
-    :return: None
-    """
-    do_storyzy(research) # Fetch + Build Research Pieces + Nuggets from Storyzy
-    do_predictleads_events(research) # Get events from Predict Leads and build research pieces
-    # do_predictleads_jobopenings(research) # Get job openings from PredictLeads and build research pieces and nuggets
-    # do_featuredcustomers(research) # Get reviews from Featured Customers and build research pieces and nuggets
 
 
 ################################################################################################################

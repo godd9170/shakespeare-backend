@@ -1,9 +1,8 @@
 from celery import shared_task, task, signature, chord
-from research.utils import get_research_pieces
 from research.models import Research
 from research.aggregators.predictleads import do_predictleads_events
 from research.aggregators.storyzy import do_storyzy
-from research.aggregators.featuredcustomers import do_featuredcustomers
+from research.aggregators.featuredcustomers import FeaturedCustomers
 from django.conf import settings
                   
 
@@ -15,9 +14,11 @@ def collect_research(research):
             featuredcustomers.s(research.id)
         ])(finish.s(research.id).set(link_error=['error_callback']))
     else:
-        do_storyzy(research)
-        do_predictleads_events(research)
-        do_featuredcustomers(research)
+        #do_storyzy(research)
+        #do_predictleads_events(research)
+        FeaturedCustomers(research).execute()
+        research.complete = True # Mark as complete
+        research.save()
 
 @task(max_retries=3)
 def storyzy(research_id):
