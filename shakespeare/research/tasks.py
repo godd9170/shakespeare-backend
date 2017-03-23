@@ -1,10 +1,8 @@
 from celery import shared_task, task, signature, chord
 from research.models import Research
-from research.aggregators.predictleads import PredictLeads
-from research.aggregators.storyzy import Storyzy
-from research.aggregators.featuredcustomers import FeaturedCustomers
 from django.conf import settings
-                  
+from research.aggregators import * #get all of our aggregator classes
+
 
 def collect_research(research):
     if settings.PERFORM_ASYNCHRONOUS:
