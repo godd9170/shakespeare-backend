@@ -1,16 +1,16 @@
 from celery import shared_task, task, signature, chord
 from research.models import Research
 from django.conf import settings
-from research.aggregators import * #get all of our aggregator classes
+from .aggregators import * #get all of our aggregator classes
 
 
 def collect_research(research):
     if settings.PERFORM_ASYNCHRONOUS:
         chord([
-            storyzy.s(research.id),
-            predictleadsevents.s(research.id),
-            predictleadsjobs.s(research.id),
-            featuredcustomers.s(research.id)
+            storyzy_task.s(research.id),
+            predictleadsevents_task.s(research.id),
+            predictleadsjobs_task.s(research.id),
+            featuredcustomers_task.s(research.id)
         ])(finish.s(research.id).set(link_error=['error_callback']))
     else:
         #do_storyzy(research)
@@ -22,24 +22,24 @@ def collect_research(research):
         research.save()
 
 @task(max_retries=3)
-def storyzy(research_id):
+def storyzy_task(research_id):
     research = Research.objects.get(pk=research_id)
-    Storyzy(research).execute()
+    storyzy.Storyzy(research).execute()
 
 @task(max_retries=3)
-def predictleadsevents(research_id):
+def predictleadsevents_task(research_id):
     research = Research.objects.get(pk=research_id)
-    PredictLeads(research).execute('events')
+    predictleads.PredictLeads(research).execute('events')
 
 @task(max_retries=3)
-def predictleadsjobs(research_id):
+def predictleadsjobs_task(research_id):
     research = Research.objects.get(pk=research_id)
-    PredictLeads(research).execute('job_openings')
+    predictleads.PredictLeads(research).execute('job_openings')
 
 @task(max_retries=3)
-def featuredcustomers(research_id):
+def featuredcustomers_task(research_id):
     research = Research.objects.get(pk=research_id)
-    FeaturedCustomers(research).execute()
+    featuredcustomers.FeaturedCustomers(research).execute()
 
 @task(max_retries=3)
 def finish(results, research_id):
