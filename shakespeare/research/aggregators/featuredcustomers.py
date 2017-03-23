@@ -1,16 +1,14 @@
-import requests
-import json
+import requests, json
 from bs4 import BeautifulSoup
 from django.conf import settings
-from research.models import Research, Piece, Nugget
+from .aggregator import AbstractAggregator
 
 RESOURCE_DOMAIN = 'https://www.featuredcustomers.com'
 
-class FeaturedCustomers(object):
+class FeaturedCustomers(AbstractAggregator):
 
     def __init__(self, research):
-        self.research = research
-        self.companyName = self.research.individual.companyname
+        super().__init__(research)
 
     def execute(self):
         self.format_company_name() # Normalize the company name
@@ -50,27 +48,18 @@ class FeaturedCustomers(object):
         review_block = soup.find_all('div', {'class' : 'review_companies'})
         if self.companyName is not None:
             if len(review_block) > 0: # Only create research if we find reviews for this company
-                research_piece = {
+                self.create_piece({
                     'aggregator' : 'FeaturedCustomers',
                     'title' : 'Customer Testimonials',
                     'author' : 'Misc. Authors'
-                }
-                newPiece = Piece(research=self.research, **research_piece)
-                newPiece.save()
-
+                })
                 for item in review_block:
-                    # print(item.find_all('span', {'class' : 'subtitle'})[0].text)
-                    reviewerFullName = item.find_all('h2', {'itemprop' : 'name'})[0].text
-                    reviewerCompanyName = item.find_all('span', {'class' : 'subtitle'})[0].text
-                    reviewerTitle = item.find_all('a')[0].get('title')
-                    testimonial = item.find_all('div', {'itemprop' : 'reviewBody'})[0].text
-                    nugget = {
-                        'body' : testimonial,
+                    self.create_nugget({
+                        'body' : item.find_all('div', {'itemprop' : 'reviewBody'})[0].text,
                         'category' : 'testimonial',
                         'additionaldata' : { 
-                            'name' : reviewerFullName, 
-                            'company' : reviewerCompanyName,
-                            'title' : reviewerTitle 
+                            'name' : item.find_all('h2', {'itemprop' : 'name'})[0].text, 
+                            'company' : item.find_all('span', {'class' : 'subtitle'})[0].text,
+                            'title' : item.find_all('a')[0].get('title')
                         }
-                    }
-                    Nugget(piece=newPiece, **nugget).save()
+                    })
