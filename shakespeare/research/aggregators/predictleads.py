@@ -1,102 +1,89 @@
 import requests, json, re
-
 from django.conf import settings
 from research.models import Research, Piece, Nugget
+from .aggregator import AbstractAggregator
+
+RESOURCE_DOMAIN = 'https://predictleads.com/api/v1'
+
+class PredictLeads(AbstractAggregator):
+    
+    def __init__(self, research):
+        self.headers = {
+            'X-User-Token': settings.PREDICT_LEADS_X_USER_TOKEN, # Include in Django settings
+            'X-User-Email': settings.PREDICT_LEADS_X_USER_EMAIL # Include in Django settings
+        }
+        super().__init__(research)
+
+    def request(self, signal_type):
+        prospectDomain = self.research.individual.company.domain
+        url = '{}/companies/{}/{}'.format(RESOURCE_DOMAIN, prospectDomain, signal_type)
+        response = requests.get(url, headers=self.headers).json()
+        setattr(self, signal_type, response['data'])
 
 
-# TO DO: this lives both here and in storyzy, it will move into an aggregator utils at some stage
-# This function strips of the period at the end of an article title if there is one
-def reformat_article_title(title):
-    try:
-        if title.endswith('.') or title.endswith(',') or title.endswith(';'):
-            title = title[:-1]
-    except:
-        pass
-    return title
+    # TO DO: this lives both here and in storyzy, it will move into an aggregator utils at some stage
+    # This function strips of the period at the end of an article title if there is one
+    def reformat_article_title(self, title):
+        try:
+            if title.endswith('.') or title.endswith(',') or title.endswith(';'):
+                title = title[:-1]
+        except:
+            pass
+        return title
 
 
-# PredictLeads often throws a date on the end of the title, this function removes it
-def remove_date_from_pl_title(title):
-    title = re.sub(r'\son\s(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May?|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)(\s\d{1,2}(th?|st?|nd?))?(\s\d{2}\')?', '', title)
-    return title
+    # PredictLeads often throws a date on the end of the title, this function removes it
+    def remove_date_from_pl_title(self, title):
+        title = re.sub(r'\son\s(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May?|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)(\s\d{1,2}(th?|st?|nd?))?(\s\d{2}\')?', '', title)
+        return title
 
 
-def do_predictleads_events(research):
-	company = research.individual.company # Get the domain name of the company for this research
+    def execute(self, signal_type):
+        if self.research.individual.company is not None:
+            if (signal_type == "events"):
+                self.do_predictleads_events()
+            if (signal_type == "job_openings"):
+                self.do_predictleads_jobopenings()
 
-	if company is not None:
-		headers = {
-			'X-User-Token': settings.PREDICT_LEADS_X_USER_TOKEN, # Include in Django settings
-			'X-User-Email': settings.PREDICT_LEADS_X_USER_EMAIL # Include in Django settings
-		}
-		url = 'https://predictleads.com/api/v1/companies/' + company.domain + '/events'
-		response = requests.get(url, headers=headers).json()
-
-		data = response['data']
-
-		for datum in data:
-			research_piece = {
-				'aggregator' : 'predictleads',
-				'title' : reformat_article_title(remove_date_from_pl_title(datum['attributes']['title'])),
-			    # 'body' : '',
-			    'url' : datum['attributes']['url'],
-			    'publisheddate' : datum['attributes']['found_at']
-			}
-			newPiece = Piece(research=research, **research_piece)
-			newPiece.save()
-			additionaldata = datum['attributes']['additional_data']
-			additionaldata['title'] = remove_date_from_pl_title(datum.get('attributes').get('title'))
-			nugget = {
-				'additionaldata' : additionaldata
-			}
-			try:
-				nugget.update({
-				'category' : datum['attributes']['categories'][0]
-				})
-			except:
-				nugget.update({
-				'category' : ''
-				})
-			Nugget(piece=newPiece, **nugget).save()
+    def do_predictleads_events(self):
+        self.request('events')
+        for datum in self.events:
+            attributes = datum.get('attributes')
+            if attributes is not None:
+                self.create_piece({
+                    'aggregator' : 'PredictLeads',
+                    'title' : self.reformat_article_title(self.remove_date_from_pl_title(attributes.get('title'))),
+                    'url' : attributes.get('url'),
+                    'publisheddate' : attributes.get('found_at')
+                })
+                additionaldata = attributes.get('additional_data')
+                if additionaldata is not None:
+                    additionaldata['title'] = self.remove_date_from_pl_title(attributes.get('title'))
+                    try:
+                        self.create_nugget({
+                            'additionaldata' : additionaldata,
+                            'category' : attributes['categories'][0]
+                        })
+                    except:
+                        print("No Category, no nugget")
 
 
 
-def do_predictleads_jobopenings(research):
-	company = research.individual.company # Get the domain name of the company for this research
-
-	if company is not None:
-		headers = {
-			'X-User-Token': settings.PREDICT_LEADS_X_USER_TOKEN, # Include in Django settings
-			'X-User-Email': settings.PREDICT_LEADS_X_USER_EMAIL # Include in Django settings
-		}
-		url = 'https://predictleads.com/api/v1/companies/' + company.domain + '/job_openings'
-		response = requests.get(url, headers=headers).json()
-
-		research_piece = {
-				'aggregator' : 'PredictLeads',
-				'title' : 'Job Openings',
-			    # 'body' : '',
-			    # 'url' : '',
-			    'author' : company.name
-			    # 'source' : '',
-			}
-		newPiece = Piece(research=research, **research_piece)
-		newPiece.save()
-
-		data = response['data']
-
-		for datum in data:
-			nugget = {
-				'body' : datum['attributes']['title'],
-				'additionaldata' : datum['attributes']['additional_data']
-				# 'entity'
-			}
-			try:
-				nugget.update({
-				'category' : datum['attributes']['categories'][0]
-				})
-			except:
-				nugget.update({
-				'category' : ''
-				})
-			Nugget(piece=newPiece, **nugget).save()
+    def do_predictleads_jobopenings(self):
+        self.request('job_openings')
+        self.create_piece({
+            'aggregator' : 'PredictLeads',
+            'title' : 'Job Openings',
+            'author' : self.research.individual.company.name
+        })
+        for datum in self.job_openings:
+            attributes = datum.get('attributes')
+            additionaldata = attributes.get('additional_data')
+            try:
+                self.create_nugget({
+                    'body' : attributes.get('title'),
+                    'additionaldata' : additionaldata,
+                    'category' : attributes['categories'][0]
+                })
+            except:
+                print("No Category, no nugget")

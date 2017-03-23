@@ -1,6 +1,6 @@
 from celery import shared_task, task, signature, chord
 from research.models import Research
-from research.aggregators.predictleads import do_predictleads_events
+from research.aggregators.predictleads import PredictLeads
 from research.aggregators.storyzy import do_storyzy
 from research.aggregators.featuredcustomers import FeaturedCustomers
 from django.conf import settings
@@ -10,13 +10,15 @@ def collect_research(research):
     if settings.PERFORM_ASYNCHRONOUS:
         chord([
             storyzy.s(research.id),
-            predictleads.s(research.id),
+            predictleadsevents.s(research.id),
+            predictleadsjobs.s(research.id),
             featuredcustomers.s(research.id)
         ])(finish.s(research.id).set(link_error=['error_callback']))
     else:
         #do_storyzy(research)
-        #do_predictleads_events(research)
-        FeaturedCustomers(research).execute()
+        #PredictLeads(research).execute('job_openings')
+        PredictLeads(research).execute('events')
+        #FeaturedCustomers(research).execute()
         research.complete = True # Mark as complete
         research.save()
 
@@ -26,14 +28,19 @@ def storyzy(research_id):
     do_storyzy(research)
 
 @task(max_retries=3)
-def predictleads(research_id):
+def predictleadsevents(research_id):
     research = Research.objects.get(pk=research_id)
-    do_predictleads_events(research)
+    PredictLeads(research).execute('events')
+
+@task(max_retries=3)
+def predictleadsjobs(research_id):
+    research = Research.objects.get(pk=research_id)
+    PredictLeads(research).execute('job_openings')
 
 @task(max_retries=3)
 def featuredcustomers(research_id):
     research = Research.objects.get(pk=research_id)
-    do_featuredcustomers(research)
+    FeaturedCustomers(research).execute()
 
 @task(max_retries=3)
 def finish(results, research_id):
