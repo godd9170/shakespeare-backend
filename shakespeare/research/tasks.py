@@ -1,7 +1,7 @@
 from celery import shared_task, task, signature, chord
 from research.models import Research
 from research.aggregators.predictleads import PredictLeads
-from research.aggregators.storyzy import do_storyzy
+from research.aggregators.storyzy import Storyzy
 from research.aggregators.featuredcustomers import FeaturedCustomers
 from django.conf import settings
                   
@@ -17,15 +17,16 @@ def collect_research(research):
     else:
         #do_storyzy(research)
         #PredictLeads(research).execute('job_openings')
-        PredictLeads(research).execute('events')
+        #PredictLeads(research).execute('events')
         #FeaturedCustomers(research).execute()
+        #Storyzy(research).execute()
         research.complete = True # Mark as complete
         research.save()
 
 @task(max_retries=3)
 def storyzy(research_id):
     research = Research.objects.get(pk=research_id)
-    do_storyzy(research)
+    Storyzy(research).execute()
 
 @task(max_retries=3)
 def predictleadsevents(research_id):
