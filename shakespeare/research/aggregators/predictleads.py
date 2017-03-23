@@ -21,17 +21,6 @@ class PredictLeads(AbstractAggregator):
         setattr(self, signal_type, response['data'])
 
 
-    # TO DO: this lives both here and in storyzy, it will move into an aggregator utils at some stage
-    # This function strips of the period at the end of an article title if there is one
-    def reformat_article_title(self, title):
-        try:
-            if title.endswith('.') or title.endswith(',') or title.endswith(';'):
-                title = title[:-1]
-        except:
-            pass
-        return title
-
-
     # PredictLeads often throws a date on the end of the title, this function removes it
     def remove_date_from_pl_title(self, title):
         title = re.sub(r'\son\s(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May?|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)(\s\d{1,2}(th?|st?|nd?))?(\s\d{2}\')?', '', title)

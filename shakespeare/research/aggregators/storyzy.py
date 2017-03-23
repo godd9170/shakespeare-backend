@@ -42,16 +42,6 @@ class Storyzy(AbstractAggregator):
             pass
         return p.sub('', body)
 
-    # TO DO: this lives both here and in predictleads, it will move into an aggregator utils at some stage
-    # This function strips of the period at the end of an article title if there is one
-    def reformat_article_title(self, title):
-        try:
-            if title.endswith('.') or title.endswith(',') or title.endswith(';'):
-                title = title[:-1]
-        except:
-            pass
-        return title
-
     # This function removes any stock ticker symbols from quotes
     def remove_stock_ticker(self, quote):
         quote = re.sub(r'\s\(?((?i)AMEX?|NYSE?|NASDAQ?|FTSE?|DOW?|TSX?|SSE?|SZSE?|OMX?|DAX?|ASX?):\s?\w+\)?', '', quote)
