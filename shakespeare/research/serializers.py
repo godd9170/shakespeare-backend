@@ -6,7 +6,7 @@ class CompanySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Company
-        fields = ( 'domain', 'created', 'name', 'industry', 'sector', 'crunchbase', 'description', 'logo')
+        fields = ( 'domain', 'created', 'name', 'cleanedname', 'industry', 'sector', 'crunchbase', 'description', 'logo')
 
 class IndividualSerializer(serializers.ModelSerializer):
     company = CompanySerializer(read_only=True)

@@ -13,6 +13,7 @@ class Company(TimeStampedModel):
     domain = models.CharField(unique=True, max_length=100) # Ensure the domain is unique
     clearbit = models.UUIDField() # The clearbit UUID
     name = models.CharField(max_length=100, blank=True, null=True)
+    cleanedname = models.CharField(max_length=100, blank=True, null=True)
     industry = models.CharField(max_length=100, blank=True, null=True)
     sector = models.CharField(max_length=100, blank=True, null=True)
     crunchbase = models.CharField(max_length=100, blank=True, null=True)

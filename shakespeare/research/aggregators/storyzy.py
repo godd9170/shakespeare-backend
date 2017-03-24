@@ -52,7 +52,7 @@ class Storyzy(AbstractAggregator):
 
     # This function removes any stock ticker symbols from quotes
     def remove_stock_ticker(self, quote):
-        quote = re.sub(r'\s\(?((?i)AMEX?|NYSE?|NASDAQ?|FTSE?|DOW?|TSX?|SSE?|SZSE?|OMX?|DAX?|ASX?):\s?\w+\)?', '', quote)
+        quote = re.sub(r'(?i)\s?\(?((AMEX)|(NYSE)|(NASDAQ)|(FTSE)|(DOW)|(TSX)|(SSE)|(SZSE)|(OMX)|(DAX)|(ASX)):\s?\w+\)?', '', quote)
         return quote
 
     # Generate the following data structure
@@ -85,7 +85,7 @@ class Storyzy(AbstractAggregator):
             else:
                 category = "quote_from_company"
             
-            if (speaker.get('from') == self.research.individual.companyname):
+            if (speaker.get('from') == self.research.individual.companyname):# Storyzy often mixes up some quotes where the speaker for a quote_about is actually from the company. This fixes this.
                 category = "quote_from_company"
 
             nugget = {

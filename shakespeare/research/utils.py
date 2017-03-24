@@ -1,5 +1,5 @@
 import uuid
-
+import re
 import clearbit
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -26,6 +26,11 @@ def reformat_job_title(title):
         return ' '.join(updated_words)
     return title
 
+
+def clean_company_name(company_name):
+    if company_name is not None:
+        company_name = re.sub(r'(?i)\,?\s+(?:corp(?:oration)?|inc(?:orporated)?|(gmbh)|(llc)|(ltd)|(lllp))\.?', '', company_name)
+    return company_name
 
 
 def get_clearbit_person(response, email):
@@ -74,6 +79,7 @@ def get_clearbit_company(response):
             organization.update({
                 'domain': company['domain'],
                 'name': company['name'],
+                'cleanedname': clean_company_name(company['name']),
                 'description': company['description'],
                 'industry': category['industry'],
                 'sector': category['sector'],
