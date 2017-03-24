@@ -66,6 +66,7 @@ class PredictLeads(AbstractAggregator):
 	            'aggregator' : 'PredictLeads',
 	            'title' : 'Job Openings',
 	            'author' : self.research.individual.company.name,
+	            'publisheddate' : self.job_openings[0]['attributes']['found_at'],
 	            'group': 'job_position' #can only every be job position
 	        })
         for datum in self.job_openings:
