@@ -61,12 +61,13 @@ class PredictLeads(AbstractAggregator):
 
     def do_predictleads_jobopenings(self):
         self.request('job_openings')
-        self.create_piece({
-            'aggregator' : 'PredictLeads',
-            'title' : 'Job Openings',
-            'author' : self.research.individual.company.name,
-            'group': 'job_position' #can only every be job position
-        })
+        if (len(self.job_openings) > 0): # Only create research if there are job openings
+	        self.create_piece({
+	            'aggregator' : 'PredictLeads',
+	            'title' : 'Job Openings',
+	            'author' : self.research.individual.company.name,
+	            'group': 'job_position' #can only every be job position
+	        })
         for datum in self.job_openings:
             attributes = datum.get('attributes')
             additionaldata = attributes.get('additional_data')
