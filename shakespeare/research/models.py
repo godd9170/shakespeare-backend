@@ -86,7 +86,7 @@ class Piece(TimeStampedModel):
     research = models.ForeignKey('research.Research', related_name='piece', on_delete=models.CASCADE) #Lookup the research instance that spawned this
     
     def __str__(self):
-        return self.title
+        return "{}: {} ({})".format(str(self.id), str(self.title), str(self.group))
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -102,7 +102,7 @@ class Nugget(TimeStampedModel):
     """
     An NLP extracted 'snippet' of quotable/interesting/relevant material found within the body of a 'Piece'
     """
-    category = models.CharField(max_length=100, choices=NUGGET_TEMPLATE_CATEGORIES, default='quote')
+    category = models.CharField(max_length=100, choices=NUGGET_TEMPLATE_CATEGORIES, default='none')
     body = models.CharField(max_length=1000, blank=True, default='') #The body of text comprising the nugget
     piece = models.ForeignKey('research.Piece', related_name='nugget', on_delete=models.CASCADE) #Lookup the research instance that spawned this
     additionaldata = JSONField(null=True) # all the varying values to be merged into a wrapper
