@@ -3,10 +3,13 @@ from django.db import models
 from django.contrib.postgres.fields import JSONField, ArrayField # JSON + Array Fields
 from model_utils.models import TimeStampedModel
 from django.template import Context, Template
-from .categories import NUGGET_TEMPLATE_CATEGORIES
+from .categories import NUGGET_TEMPLATE_CATEGORIES, PIECE_GROUPS
 
 
 class Company(TimeStampedModel):
+    """
+    The company to which an individual can belong to.
+    """
     domain = models.CharField(unique=True, max_length=100) # Ensure the domain is unique
     clearbit = models.UUIDField() # The clearbit UUID
     name = models.CharField(max_length=100, blank=True, null=True)
@@ -79,6 +82,7 @@ class Piece(TimeStampedModel):
     body = models.CharField(max_length=1000, blank=True, default='')
     source = JSONField(blank=True, null=True) # The actual place on the web we got this from. We'll make this a JSON field for now. Ideally it's a lookup to a 'Data Source' table in the future
     url = models.TextField(blank=True, default='')
+    group = models.CharField(max_length=100, choices=PIECE_GROUPS, default='article')
     research = models.ForeignKey('research.Research', related_name='piece', on_delete=models.CASCADE) #Lookup the research instance that spawned this
     
     def __str__(self):
