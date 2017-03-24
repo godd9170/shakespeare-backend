@@ -107,7 +107,8 @@ class Storyzy(AbstractAggregator):
                     'publisheddate' : datetime.utcfromtimestamp(int(quote['date']/1000)).replace(tzinfo=pytz.utc),
                     'nuggets' : [nugget],
                     'source' : this_source,
-                    'aggregator' : 'storyzy'
+                    'aggregator' : 'storyzy',
+                    'group' : 'article' #TODO: fit into a more descriptive category (NLP?)
                 })
             else: #we've already created the piece, grab it
                 this_research_piece[0]['nuggets'].append(nugget)

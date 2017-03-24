@@ -43,7 +43,8 @@ class PredictLeads(AbstractAggregator):
                     'aggregator' : 'PredictLeads',
                     'title' : self.reformat_article_title(self.remove_date_from_pl_title(attributes.get('title'))),
                     'url' : attributes.get('url'),
-                    'publisheddate' : attributes.get('found_at')
+                    'publisheddate' : attributes.get('found_at'),
+                    'group': self.category_to_group(attributes['categories'][0])
                 })
                 additionaldata = attributes.get('additional_data')
                 if additionaldata is not None:
@@ -63,7 +64,8 @@ class PredictLeads(AbstractAggregator):
         self.create_piece({
             'aggregator' : 'PredictLeads',
             'title' : 'Job Openings',
-            'author' : self.research.individual.company.name
+            'author' : self.research.individual.company.name,
+            'group': 'job_position' #can only every be job position
         })
         for datum in self.job_openings:
             attributes = datum.get('attributes')
