@@ -79,6 +79,10 @@ class Storyzy(AbstractAggregator):
         self.research_pieces = []
         for quote in allquotes:
             this_source = quote['source']
+            if (this_source is not None and this_source.get('uri', None) is not None) :
+                this_source['domain'] = self.parse_domain(this_source['uri'])
+
+
             speaker = quote['speakers'][0] ###ASSUMING 1st speak is the only speaker
             if (speaker.get('name') == (self.research.individual.firstname + " " + self.research.individual.lastname)):
                 category = "quote_from_individual"

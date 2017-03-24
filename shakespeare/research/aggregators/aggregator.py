@@ -1,5 +1,7 @@
 from research.models import Research, Piece, Nugget
 from research.categories import category_to_group
+from urllib.parse import urlparse
+import re
 
 class AbstractAggregator(object):
     
@@ -17,6 +19,9 @@ class AbstractAggregator(object):
 
     def category_to_group(self, category):
         return category_to_group(category)
+
+    def parse_domain(self, url):
+        return re.sub(r"(www.)", "", urlparse(url).netloc)
 
 
 

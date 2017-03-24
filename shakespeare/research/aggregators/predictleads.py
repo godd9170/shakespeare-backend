@@ -44,7 +44,11 @@ class PredictLeads(AbstractAggregator):
                     'title' : self.reformat_article_title(self.remove_date_from_pl_title(attributes.get('title'))),
                     'url' : attributes.get('url'),
                     'publisheddate' : attributes.get('found_at'),
-                    'group': self.category_to_group(attributes['categories'][0])
+                    'group': self.category_to_group(attributes['categories'][0]),
+                    'source' : {
+                        'uri' : attributes.get('url'),
+                        'domain' : self.parse_domain(attributes.get('url'))
+                    }
                 })
                 additionaldata = attributes.get('additional_data')
                 if additionaldata is not None:
