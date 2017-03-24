@@ -13,11 +13,11 @@ def collect_research(research):
             featuredcustomers_task.s(research.id)
         ])(finish.s(research.id).set(link_error=['error_callback']))
     else:
-        #do_storyzy(research)
-        #PredictLeads(research).execute('job_openings')
-        #PredictLeads(research).execute('events')
-        #FeaturedCustomers(research).execute()
-        #Storyzy(research).execute()
+        # do_storyzy(research)
+        # PredictLeads(research).execute('job_openings')
+        # PredictLeads(research).execute('events')
+        # FeaturedCustomers(research).execute()
+        # Storyzy(research).execute()
         research.complete = True # Mark as complete
         research.save()
 

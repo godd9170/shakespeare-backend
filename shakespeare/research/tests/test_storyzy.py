@@ -18,7 +18,15 @@ class StoryzyTests(APITestCase):
         self._mock_response = _mock_response
         self.user = User.objects.create_user('john', 'john@snow.com', 'johnpassword')
         # Create Individual
+        self.company = Company(
+                domain='saasli.com', 
+                clearbit=uuid.uuid4(), 
+                name='ACME Inc.',
+                location='Toronto',
+                cleanedname='ACME')
+        self.company.save()
         self.individual = Individual(
+                company=self.company,
                 email='hgoddard@saasli.com', 
                 clearbit=uuid.uuid4(), 
                 companyname='ACME',

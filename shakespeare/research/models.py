@@ -13,12 +13,13 @@ class Company(TimeStampedModel):
     domain = models.CharField(unique=True, max_length=100) # Ensure the domain is unique
     clearbit = models.UUIDField() # The clearbit UUID
     name = models.CharField(max_length=100, blank=True, null=True)
+    cleanedname = models.CharField(max_length=100, blank=True, null=True)
     industry = models.CharField(max_length=100, blank=True, null=True)
     sector = models.CharField(max_length=100, blank=True, null=True)
     crunchbase = models.CharField(max_length=100, blank=True, null=True)
     description = models.CharField(max_length=1000, blank=True, null=True)
     logo = models.CharField(max_length=500, blank=True, null=True)
-    location = JSONField() #json representation of location
+    location = JSONField(null=True) #json representation of location
 
     def __str__(self):
         return "{} ({})".format(str(self.name), str(self.domain))
