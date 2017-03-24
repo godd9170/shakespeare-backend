@@ -51,7 +51,8 @@ class FeaturedCustomers(AbstractAggregator):
                 self.create_piece({
                     'aggregator' : 'FeaturedCustomers',
                     'title' : 'Customer Testimonials',
-                    'author' : 'Misc. Authors'
+                    'author' : 'Misc. Authors',
+                    'group' : 'testimonial' #can only every be a testimonial
                 })
                 for item in review_block:
                     self.create_nugget({
