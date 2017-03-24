@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from research.categories import GROUPS
 from research.models import Company, Individual, Research, Piece, Nugget
 from faker import Factory
-import uuid, pytz
+import uuid, pytz, random
 
 
 class Command(BaseCommand):
@@ -61,7 +61,7 @@ class Command(BaseCommand):
 
     def generate_research_pieces(self):
         for group, categories in GROUPS.items():
-            url = self.fake.url()
+            url = self.get_publisher_domain()
             newPiece = Piece(**{
                 "research" : self.research,
                 "aggregator" : "storyzy",
@@ -73,7 +73,8 @@ class Command(BaseCommand):
                     "uri": url,
                     "publisher": self.fake.company(),
                     "author": self.fake.name(),
-                    "title": self.fake.bs()
+                    "title": self.fake.bs(),
+                    "domain" : self.get_publisher_domain
                 },
                 "url" : url,
                 "group" : group,
@@ -87,7 +88,6 @@ class Command(BaseCommand):
                     "body" : self.fake.bs(),
                     "additionaldata" : self.generate_additionaldata_for_category(category)
                 }).save()
-
 
 
     def generate_additionaldata_for_category(self, category):
@@ -104,4 +104,14 @@ class Command(BaseCommand):
                 "publisher": self.fake.url()
             }
         return additionaldata
+
+    def get_publisher_domain(self):
+        return random.choice([
+            "thestar.com",
+            "theguardian.com",
+            "nytimes.com",
+            "huffingtonpost.com",
+            "financialpost.com"
+        ])
+
 
