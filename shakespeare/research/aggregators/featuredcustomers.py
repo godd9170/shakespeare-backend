@@ -60,7 +60,8 @@ class FeaturedCustomers(AbstractAggregator):
                         'category' : 'testimonial',
                         'additionaldata' : { 
                             'name' : item.find_all('h2', {'itemprop' : 'name'})[0].text, 
-                            'company' : item.find_all('span', {'class' : 'subtitle'})[0].text,
-                            'title' : item.find_all('a')[0].get('title')
+                            'company' : item.find_all('a')[0].get('title'),
+                            'title' : item.find_all('span', {'class' : 'subtitle'})[0].text
                         }
                     })
+                    

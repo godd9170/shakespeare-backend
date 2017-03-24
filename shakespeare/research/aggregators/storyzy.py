@@ -12,7 +12,7 @@ class Storyzy(AbstractAggregator):
         super().__init__(research)
 
     def request(self):
-        url = "{}/searchData?q={}".format(RESOURCE_DOMAIN, self.research.individual.companyname) #get
+        url = "{}/searchData?q={}%20{}%20{}".format(RESOURCE_DOMAIN, self.research.individual.companyname, self.research.individual.firstname, self.research.individual.lastname) #get
         resp = requests.get(url)
         resp.raise_for_status()
         self.quotes = resp.json()['searchResponse']
@@ -83,7 +83,7 @@ class Storyzy(AbstractAggregator):
             if (speaker.get('name') == (self.research.individual.firstname + " " + self.research.individual.lastname)):
                 category = "quote_from_individual"
             else:
-                category = "quote_from_company"
+                category = "quote_from_company" # SHOULD THIS BE 'quote_about' THEN THE FOLLOWING IF TAKES CARE OF THOSE THAT NEED TO SWITCH?
             
             if (speaker.get('from') == self.research.individual.companyname):# Storyzy often mixes up some quotes where the speaker for a quote_about is actually from the company. This fixes this.
                 category = "quote_from_company"
