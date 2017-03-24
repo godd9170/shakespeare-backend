@@ -19,7 +19,7 @@ class Company(TimeStampedModel):
     crunchbase = models.CharField(max_length=100, blank=True, null=True)
     description = models.CharField(max_length=1000, blank=True, null=True)
     logo = models.CharField(max_length=500, blank=True, null=True)
-    location = JSONField() #json representation of location
+    location = JSONField(null=True) #json representation of location
 
     def __str__(self):
         return "{} ({})".format(str(self.name), str(self.domain))
