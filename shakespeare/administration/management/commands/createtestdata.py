@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from research.categories import GROUPS
 from research.models import Company, Individual, Research, Piece, Nugget
 from faker import Factory
-import uuid, pytz, random
+import uuid, pytz, random, json
 
 
 class Command(BaseCommand):
@@ -28,7 +28,7 @@ class Command(BaseCommand):
             "created": "2017-03-19T02:50:04.091604Z",
             "name": "Axonify",
             "location" : "Waterloo",
-            #"cleanedname": "Axonify",
+            "cleanedname": "Axonify",
             "industry": "Internet Software & Services",
             "sector": "Information Technology",
             "crunchbase": "organization/axonify",
@@ -74,7 +74,7 @@ class Command(BaseCommand):
                     "publisher": self.fake.company(),
                     "author": self.fake.name(),
                     "title": self.fake.bs(),
-                    "domain" : self.get_publisher_domain
+                    "domain" : self.get_publisher_domain()
                 },
                 "url" : url,
                 "group" : group,
@@ -89,13 +89,49 @@ class Command(BaseCommand):
                     "additionaldata" : self.generate_additionaldata_for_category(category)
                 }).save()
 
-
+    # The additional data for each category is a bit different
     def generate_additionaldata_for_category(self, category):
+        additionaldata = {}
         if category == "quote_from_company":
             additionaldata = {
                 "company": self.fake.company(),
                 "name": self.fake.name(),
                 "publisher": self.fake.url()
+            }
+        elif category == "expands_offices_to":
+            additionaldata = {
+               "assets": "office",
+               "location": "Berlin, Germany",
+               "location_data": {
+                  "country": "Germany",
+                  "fuzzy_match": False
+               }
+            }
+        elif category == "recognized_as":
+            additionaldata = {
+               "recognition": "best customer relationship management software"
+            }
+        elif category == "launches":
+            additionaldata  = {
+               "product": "HubSpot Sales Referral Program",
+               "product_tags":[
+                  "programs"
+               ],
+               "date": "2017-02-06T18:17:00Z"
+            }
+        elif category == "hires":
+            additionaldata = {
+               "contact": "Katie Burke",
+               "job_title": "Chief People Officer",
+               "date": "2017-01-30T22:00:00Z"
+            }
+        elif category in ["invests_into", "receives_financing"]:
+            additionaldata = {
+              "financing_type": "funding round",
+              "financing_type_tags": [
+                "equity"
+              ],
+              "amount": 20000000
             }
         else:
             additionaldata = {
