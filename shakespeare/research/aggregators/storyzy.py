@@ -88,7 +88,7 @@ class Storyzy(AbstractAggregator):
             if (speaker.get('name') == (self.research.individual.firstname + " " + self.research.individual.lastname)):
                 category = "quote_from_individual"
             elif ((speaker.get('from') == self.research.individual.companyname) or (speaker.get('from') == self.research.individual.company.name) or (speaker.get('from') == self.research.individual.company.cleanedname)):
-                category = "quote_from company" 
+                category = "quote_from_company" 
             else:
                 category = "quote_about"
 
