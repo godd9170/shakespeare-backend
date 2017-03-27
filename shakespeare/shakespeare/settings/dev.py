@@ -74,4 +74,4 @@ LOGGING = {
 # -------------
 # Celery
 # -------------
-PERFORM_ASYNCHRONOUS = False #True #Run the asyncronous tasks (i.e. research fetching)
+PERFORM_ASYNCHRONOUS = True #True #Run the asyncronous tasks (i.e. research fetching)
