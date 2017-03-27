@@ -85,7 +85,7 @@ class Command(BaseCommand):
                 Nugget(**{
                     "piece" : newPiece,
                     "category" : category,
-                    "body" : self.fake.bs(),
+                    "body" : self.fake.text(max_nb_chars=random.randint(20,300)),
                     "additionaldata" : self.generate_additionaldata_for_category(category)
                 }).save()
 
