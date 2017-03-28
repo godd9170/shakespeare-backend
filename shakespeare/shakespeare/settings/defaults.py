@@ -261,7 +261,8 @@ REDIS_PORT = '6379'
 # CLEARBIT_KEY = 'sk_886efa2d89a51d9fc048d5d04023d09a' # Henry's first account
 # CLEARBIT_KEY = 'sk_a1bf7f2daff22c076f07080a660ebddd' # Richard's first account
 # CLEARBIT_KEY = 'sk_e4f319623ed71b0d786865a8d4184c5d' # Iain's first account
-CLEARBIT_KEY = 'sk_fb6a20b97e00b59b1c66b406d26c1ffa' #Cam's key
+# CLEARBIT_KEY = 'sk_fb6a20b97e00b59b1c66b406d26c1ffa' #Cam's key
+CLEARBIT_KEY = 'sk_ee825c041f0d61a8da0f980b6d9f8070' #new Mansour Key
 
 # CELERY related settings
 
