@@ -12,12 +12,17 @@ class Storyzy(AbstractAggregator):
         super().__init__(research)
 
     def request(self):
-
-        url = "{}/searchData?q={}%20{}%20{}".format(RESOURCE_DOMAIN, self.research.individual.companyname, self.research.individual.firstname, self.research.individual.lastname) #get
+        # Create URL to search for company name + individual first name + individual last name
+        url = "{}/searchData?q={}%20{}%20{}".format(RESOURCE_DOMAIN, self.research.individual.companyname, self.research.individual.firstname, self.research.individual.lastname)
         resp = requests.get(url)
         resp.raise_for_status()
         self.quotes = resp.json()['searchResponse']
-
+        # Check to see if this provided any results first. If not, perform a new search just for the company.
+        if ((len(self.quotes.get('quotesAbout')) == 0) and (len(self.quotes.get('quotesFrom')) == 0)):
+            url = "{}/searchData?q={}".format(RESOURCE_DOMAIN, self.research.individual.companyname)
+            resp = requests.get(url)
+            resp.raise_for_status()
+            self.quotes = resp.json()['searchResponse']
 
 
     def execute(self):
@@ -33,6 +38,7 @@ class Storyzy(AbstractAggregator):
                         self.create_nugget(nugget)
             except HTTPError as e:
                 print('Storyzy is Down: {}'.format(e))
+
 
     # This function removes double quotes throughout the quote
     def remove_double_quotes(self, body): 
@@ -50,6 +56,7 @@ class Storyzy(AbstractAggregator):
         except:
             pass
         return p.sub('', body)
+
 
     # This function removes any stock ticker symbols from quotes
     def remove_stock_ticker(self, quote):
