@@ -18,7 +18,7 @@ class Storyzy(AbstractAggregator):
         resp.raise_for_status()
         self.quotes = resp.json()['searchResponse']
         # Check to see if this provided any results first. If not, perform a new search just for the company.
-        if ((len(self.quotes.get('quotesAbout')) == 0) and (len(self.quotes.get('quotesFrom')) == 0)):
+        if (((self.quotes.get('quotesAbout') is None) or (len(self.quotes.get('quotesAbout')) == 0)) and ((self.quotes.get('quotesFrom') is None) or (len(self.quotes.get('quotesFrom')) == 0))):
             url = "{}/searchData?q={}".format(RESOURCE_DOMAIN, self.research.individual.companyname)
             resp = requests.get(url)
             resp.raise_for_status()
