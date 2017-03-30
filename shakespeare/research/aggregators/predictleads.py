@@ -27,6 +27,14 @@ class PredictLeads(AbstractAggregator):
         return title
 
 
+    # PredictLeads doesn't format dollar amounts well, this function inserts commas for each thousand
+    # NEEDS TO BE UPDATED TO CONSIDER CURRENCY: PREDICT LEADS CURRENTLY DOES NOT RETURN THIS INFO HOWEVER
+    def reformat_amount(self, amount_string):
+        int_dollars = int(amount_string) # Cast to integer
+        new_amount =  '$'+'{0:,}'.format(int_dollars) # Reformat and return
+        return new_amount
+
+
     def execute(self, signal_type):
         if self.research.individual.company is not None:
             if (signal_type == "events"):
@@ -53,6 +61,10 @@ class PredictLeads(AbstractAggregator):
                 additionaldata = attributes.get('additional_data')
                 if additionaldata is not None:
                     additionaldata['title'] = self.remove_date_from_pl_title(attributes.get('title'))
+                    try:
+                        additionaldata['amount'] = self.reformat_amount(additionaldata['amount'])
+                    except:
+                        pass
                     try:
                         self.create_nugget({
                             'additionaldata' : additionaldata,
