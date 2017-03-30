@@ -63,6 +63,18 @@ class Storyzy(AbstractAggregator):
         quote = re.sub(r'(?i)\s?\(?((AMEX)|(NYSE)|(NASDAQ)|(FTSE)|(DOW)|(TSX)|(SSE)|(SZSE)|(OMX)|(DAX)|(ASX)):\s?\w+\)?', '', quote)
         return quote
 
+
+    # When Storyzy returns large quotes, often the first sentence is good enough. This is our hackjob until we have more
+    # sophisticated NLP means of looking at quote text
+    def extract_first_sentence(self, text):
+        if text[-1] == '.':
+            text += ' ' # Add extra space after final period. Fixes situation where there is only one sentence.
+        sentences = text.split(". ") # Break apart sentences
+        # sentences = [sentence + '.' for sentence in sentences] # Finishes all sentences with periods
+        return sentences[0] + '.' # Put period at end of final sentence
+
+
+
     # Generate the following data structure
     # research_pieces = [ 
     #     {
@@ -100,7 +112,7 @@ class Storyzy(AbstractAggregator):
                 category = "quote_about"
 
             nugget = {
-                'body' : self.remove_stock_ticker(self.remove_double_quotes(self.remove_html_tags(quote['quote']))),
+                'body' : self.extract_first_sentence(self.remove_stock_ticker(self.remove_double_quotes(self.remove_html_tags(quote['quote'])))),
                 'category' : category,
                 'additionaldata' : {
                     'name' : speaker.get('name'),
