@@ -180,9 +180,6 @@ SOCIAL_AUTH_PIPELINE = (
 
     # ???
     'social_core.pipeline.debug.debug',
-
-    # Chuck the popup the information it needs to continue
-    # 'administration.pipeline.supply_popup_with_token', Don't do this for now
 )
 
 AUTHENTICATION_BACKENDS = (
