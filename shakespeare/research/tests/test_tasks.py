@@ -29,19 +29,23 @@ class ResearchTasksTests(APITestCase):
         self.research = Research(individual=self.individual, owner=self.user)
         self.research.save() #create research
 
+    @patch('research.tasks.extract_article_bodies_task.s')
     @patch('research.tasks.featuredcustomers_task.s')
     @patch('research.tasks.predictleadsjobs_task.s')
     @patch('research.tasks.predictleadsevents_task.s')
     @patch('research.tasks.storyzy_task.s')
+    @patch('research.tasks.chain')
     @patch('research.tasks.chord')
     @patch('research.utils.clearbit.Enrichment.find') # Patch clearbit so not to burn credits 
     def test_tasks_called(self, 
             mock_find, 
             mock_chord, 
+            mock_chain,
             storyzy_task, 
             predictleadsevents_task, 
             predictleadsjobs_task, 
-            featuredcustomers_task):
+            featuredcustomers_task,
+            extract_article_bodies_task):
         self.client.login(username='john', password='johnpassword')
         self.client.force_authenticate(user=self.user)
         url = reverse('create_research')
@@ -51,8 +55,8 @@ class ResearchTasksTests(APITestCase):
         self.client.post(url, data, format='json')
         mock_chord.assert_called_once_with(
             [
-                storyzy_task(self.research.id),
-                predictleadsevents_task(self.research.id), 
+                mock_chain(storyzy_task(self.research.id), extract_article_bodies_task(self.research.id)),
+                mock_chain(predictleadsevents_task(self.research.id), extract_article_bodies_task(self.research.id)),
                 predictleadsjobs_task(self.research.id), 
                 featuredcustomers_task(self.research.id)
             ]

@@ -80,7 +80,7 @@ class Piece(TimeStampedModel):
     publisheddate = models.DateTimeField(blank=True, null=True)
     title = models.TextField(blank=True, default='')
     author = models.CharField(max_length=1000, blank=True, default='')
-    body = models.CharField(max_length=1000, blank=True, default='')
+    body = models.TextField(blank=True, default=None, null=True)
     source = JSONField(blank=True, null=True) # The actual place on the web we got this from. We'll make this a JSON field for now. Ideally it's a lookup to a 'Data Source' table in the future
     url = models.TextField(blank=True, default='')
     group = models.CharField(max_length=100, choices=PIECE_GROUPS, default='article')
@@ -104,7 +104,7 @@ class Nugget(TimeStampedModel):
     An NLP extracted 'snippet' of quotable/interesting/relevant material found within the body of a 'Piece'
     """
     category = models.CharField(max_length=100, choices=NUGGET_TEMPLATE_CATEGORIES, default='none')
-    body = models.CharField(max_length=1000, blank=True, default='') #The body of text comprising the nugget
+    body = models.TextField(blank=True, default='') #The body of text comprising the nugget
     piece = models.ForeignKey('research.Piece', related_name='nugget', on_delete=models.CASCADE) #Lookup the research instance that spawned this
     additionaldata = JSONField(null=True) # all the varying values to be merged into a wrapper
     
