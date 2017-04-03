@@ -1,1 +1,1 @@
-__all__ = ['featuredcustomers', 'storyzy', 'predictleads']
+__all__ = ['aggregator', 'featuredcustomers', 'storyzy', 'predictleads']

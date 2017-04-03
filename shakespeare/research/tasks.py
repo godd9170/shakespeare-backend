@@ -1,14 +1,15 @@
-from celery import shared_task, task, signature, chord
+from celery import shared_task, task, signature, chord, chain
 from research.models import Research
 from django.conf import settings
 from .aggregators import * #get all of our aggregator classes
+# from .aggregators import aggregator
 
 
 def collect_research(research):
     if settings.PERFORM_ASYNCHRONOUS:
         chord([
-            storyzy_task.s(research.id),
-            predictleadsevents_task.s(research.id),
+            chain(storyzy_task.s(research.id), extract_article_bodies.s(research.id)),
+            chain(predictleadsevents_task.s(research.id), extract_article_bodies.s(research.id)),
             predictleadsjobs_task.s(research.id),
             featuredcustomers_task.s(research.id)
         ])(finish.s(research.id).set(link_error=['error_callback']))
@@ -40,6 +41,11 @@ def predictleadsjobs_task(research_id):
 def featuredcustomers_task(research_id):
     research = Research.objects.get(pk=research_id)
     featuredcustomers.FeaturedCustomers(research).execute()
+
+@task(max_retries=3)
+def extract_article_bodies(results, research_id):
+    research = Research.objects.get(pk=research_id)
+    aggregator.AbstractAggregator(research).get_article_bodies()
 
 @task(max_retries=3)
 def finish(results, research_id):
