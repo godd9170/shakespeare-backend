@@ -8,8 +8,8 @@ from .aggregators import * #get all of our aggregator classes
 def collect_research(research):
     if settings.PERFORM_ASYNCHRONOUS:
         chord([
-            chain(storyzy_task.s(research.id), extract_article_bodies.s(research.id)),
-            chain(predictleadsevents_task.s(research.id), extract_article_bodies.s(research.id)),
+            chain(storyzy_task.s(research.id), extract_article_bodies_task.s(research.id)),
+            chain(predictleadsevents_task.s(research.id), extract_article_bodies_task.s(research.id)),
             predictleadsjobs_task.s(research.id),
             featuredcustomers_task.s(research.id)
         ])(finish.s(research.id).set(link_error=['error_callback']))
@@ -43,7 +43,7 @@ def featuredcustomers_task(research_id):
     featuredcustomers.FeaturedCustomers(research).execute()
 
 @task(max_retries=3)
-def extract_article_bodies(results, research_id):
+def extract_article_bodies_task(results, research_id):
     research = Research.objects.get(pk=research_id)
     aggregator.AbstractAggregator(research).get_article_bodies()
 
