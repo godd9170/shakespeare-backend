@@ -44,6 +44,12 @@ CORS_ORIGIN_ALLOW_ALL = True #We'll leave this true for now, but should be toggl
 #     '127.0.0.1:9000'
 # )
 
+# -------------
+# Oauth 
+# -------------
+OAUTH_APPLICATION_NAME = "shakespeare-prod"
+ACCESS_TOKEN_EXPIRE_SECONDS = 2592000 #One Month
+
 # ------------
 # Logging
 # ------------

@@ -40,6 +40,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 # -------------
 # Oauth 
 # -------------
+OAUTH_APPLICATION_NAME = "django-app-test"
 ACCESS_TOKEN_EXPIRE_SECONDS = 2592000 #One Month
 
 # ------------
