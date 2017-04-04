@@ -1,5 +1,6 @@
 import os
 from .defaults import *
+print(">>>>>>>>>>>>>>>>>>>>>>>>OS.ENVIRON>>>>>>>{}".format(os.environ))
 
 DEBUG = True #Just for now
 
