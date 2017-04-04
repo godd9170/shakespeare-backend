@@ -91,7 +91,7 @@ LOGGING = {
 PERFORM_ASYNCHRONOUS = True #Run the asyncronous tasks (i.e. research fetching)
 
 # REDIS related settings
-REDIS_HOST = 'redis-production.u7sr1d.0001.use1.cache.amazonaws.com'
+REDIS_HOST = 'redis-dev.u7sr1d.ng.0001.use1.cache.amazonaws.com'
 REDIS_PORT = '6379'
 
 # CELERY related settings
