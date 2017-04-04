@@ -46,7 +46,7 @@ kombu==4.0.2
 Markdown==2.6.8
 MarkupSafe==0.23
 mementos==1.2.6
-newspaper3k==0.1.9
+newspaper3k==0.1.5
 nltk==3.2.2
 nulltype==2.2.9
 oauth2client==4.0.0
