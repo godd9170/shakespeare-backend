@@ -4,8 +4,11 @@ branch-defaults:
     group_suffix: null
 environment-defaults:
   production:
-    branch: null
-    repository: null
+    branch: master
+    repository: shakespeare-backend
+  development:
+    branch: dev
+    repository: shakespeare-backend
 global:
   application_name: Shakespeare
   default_ec2_keyname: shakespeare
