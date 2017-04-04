@@ -22,6 +22,10 @@ deployment:
     branch: master
     commands:
       - eb deploy --profile default
+  development:
+    branch: dev
+    commands:
+      - eb deploy --profile default
 
 test:
   override:
