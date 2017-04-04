@@ -7,10 +7,10 @@ branch-defaults:
 environment-defaults:
   development:
     branch: dev
-    repository: shakespeare-backend
+    repository: null
   production:
     branch: master
-    repository: shakespeare-backend
+    repository: null
 global:
   application_name: Shakespeare
   default_ec2_keyname: shakespeare
