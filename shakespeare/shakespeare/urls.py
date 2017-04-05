@@ -31,9 +31,9 @@ urlpatterns = [
     # url(r'^invitations/', include(invitation_backend().get_urls())),
 ]
 
-import newspaper
+#import newspaper
 import clearbit
-from newspaper import settings as newspaper_settings
-newspaper_settings.DATA_DIRECTORY = os.path.join(settings.BASE_DIR, '.newspaper')
+#from newspaper import settings as newspaper_settings
+#newspaper_settings.DATA_DIRECTORY = os.path.join(settings.BASE_DIR, '.newspaper')
 
 clearbit.key = settings.CLEARBIT_KEY
