@@ -30,5 +30,6 @@ urlpatterns = [
     # url(r'^invitations/', include(invitation_backend().get_urls())),
 ]
 
+import newspaper
 import clearbit
 clearbit.key = settings.CLEARBIT_KEY
