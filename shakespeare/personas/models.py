@@ -17,7 +17,7 @@ class Persona(TimeStampedModel):
         ordering = ('created',)
 
 class ValueProposition(TimeStampedModel):
-    body = models.CharField(max_length=1000, blank=True, default='')
+    body = models.TextField(blank=True, default='')
     title = models.CharField(max_length=100, blank=True, default='')
     personas = models.ManyToManyField(Persona, related_name='value_proposition_personas') #related name is how Persona will refer to it's ValuePropositions
     #persona = models.ForeignKey('personas.Persona', related_name='value_propositions', on_delete=models.CASCADE)
@@ -32,7 +32,7 @@ class ValueProposition(TimeStampedModel):
 
 
 class CallToAction(TimeStampedModel):
-    title = models.CharField(max_length=100, blank=True, default='')
+    title = models.TextField(blank=True, default='')
     personas = models.ManyToManyField(Persona, related_name='call_to_action_personas')
     #persona = models.ForeignKey('personas.Persona', related_name='calls_to_action', on_delete=models.CASCADE)
 
