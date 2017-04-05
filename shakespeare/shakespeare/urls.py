@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+import os
 from django.conf.urls import include, url
 from django.contrib import admin
 from administration import views
@@ -32,4 +33,7 @@ urlpatterns = [
 
 import newspaper
 import clearbit
+from newspaper import settings as newspaper_settings
+newspaper_settings.DATA_DIRECTORY = os.path.join(settings.BASE_DIR, '.newspaper')
+
 clearbit.key = settings.CLEARBIT_KEY
