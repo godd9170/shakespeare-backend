@@ -33,7 +33,16 @@ STATIC_URL = '/static/'
 # ------------
 # CORS Settings
 # ------------
+CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_HEADERS = (
+'x-requested-with',
+'content-type',
+'accept',
+'origin',
+'authorization',
+'X-CSRFToken'
+)
 #CORS_ORIGIN_WHITELIST = ()
 
 
