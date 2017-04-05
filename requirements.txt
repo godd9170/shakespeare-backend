@@ -1,6 +1,6 @@
 amqp==2.1.4
 ansicolors==1.0.2
-appdirs==1.4.3
+appdirs==1.4.2
 appnope==0.1.0
 awsebcli==3.10.0
 beautifulsoup4==4.5.3
