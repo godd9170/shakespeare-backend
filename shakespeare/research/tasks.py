@@ -1,8 +1,8 @@
 from celery import shared_task, task, signature, chord, chain
 from research.models import Research
 from django.conf import settings
-from .aggregators import * #get all of our aggregator classes
-# from .aggregators import aggregator
+from research.aggregators import * #get all of our aggregator classes
+from research.aggregators import aggregator
 
 
 def collect_research(research):
