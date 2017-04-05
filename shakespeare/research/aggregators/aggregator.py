@@ -1,7 +1,7 @@
 from research.models import Research, Piece, Nugget
 from research.categories import category_to_group
 from urllib.parse import urlparse
-#from newspaper import Article
+from newspaper import Article
 import re
 
 class AbstractAggregator(object):
@@ -30,10 +30,10 @@ class AbstractAggregator(object):
         for piece in pieces:
             try:
                 print(piece)
-                # article = Article(piece.url)
-                # article.download()
-                # article.parse()
-                # piece.body = article.text
+                article = Article(piece.url)
+                article.download()
+                article.parse()
+                piece.body = article.text
             except:
                 piece.body = ''
             piece.save()
