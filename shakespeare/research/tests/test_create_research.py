@@ -71,14 +71,12 @@ class ResearchTests(APITestCase):
 
         response = self.client.post(url, data, format='json')
 
-        newObject = Research.objects.get()
-
-        self.assertEqual(Research.objects.count(), 1) #Check for a new research piece
-        self.assertEqual(Individual.objects.count(), 1) #Check a new Individual
+        self.assertEqual(Research.objects.count(), 0) #Check for a new research piece
+        self.assertEqual(Individual.objects.count(), 0) #Check a new Individual
         self.assertEqual(Company.objects.count(), 0) #Check no new Company
         
         #Check for the proper response
-        self.assertEqual(response.data, {'id': str(newObject.id)})
+        self.assertEqual(response.data, SHAKESPEARE_NO_PERSON_RESPONSE)
 
     @patch('research.utils.clearbit.Enrichment.find') #Fake the clearbit call
     def test_create_research_existing_individual(self, mock_get):
