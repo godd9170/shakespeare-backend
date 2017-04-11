@@ -35,12 +35,12 @@ def clean_company_name(company_name):
 
 def get_clearbit_person(response, email):
     ## Individual
-    person = response['person']  # clearbit DOES THIS NEED A TRY? OR DOES THIS PART OF THE PAYLOAD ALWAYS EXIST?
-    individual = {'email': email}  # shakespeare
-    if person is None:  # if Clearbit can't find anyone, raise an exception
+    try:
+        person = response['person']
+        individual = {'email': email}
+    except:
         raise ContactNotFoundException
-        # Try to get individual info
-
+    # Try to get individual info
     if person['avatar'] is None: # If we can't find a picture for the individual, show the company logo
         avatar = response['company']['logo']
     else:
@@ -67,11 +67,12 @@ def get_clearbit_person(response, email):
 
 def get_clearbit_company(response):
     ## Company
-    company = response['company']  # clearbit DOES THIS NEED A TRY? OR DOES THIS PART OF THE PAYLOAD ALWAYS EXIST?
-    organization = {}  # shakespeare -> I'm calling the placeholder for what we return `organization`. Yes I realize this is confusing. Sue me.
-    # if company is None: #if Clearbit can't find anyone, raise an exception
-    if (company is None) or (company.get('domain', None) is None):
-        return None
+    try:
+        company = response['company']  # clearbit DOES THIS NEED A TRY? OR DOES THIS PART OF THE PAYLOAD ALWAYS EXIST?
+        organization = { 'domain' : company['domain'] }  # shakespeare -> I'm calling the placeholder for what we return `organization`. Yes I realize this is confusing. Sue me.
+    except:
+        raise ContactNotFoundException # TO DO: HANDLE COMPANY NOT FOUND APPROPRIATELY
+
     # Try to get company info
     try:
         try:
@@ -147,7 +148,7 @@ def update_individual(email):
 # Creates a new individual, and may also either update or create a company.
 def create_individual(email):
     response = clearbit.Enrichment.find(email=email, stream=True)  # get the clearbit person/company
-
+    print(">>>>>>>>>>RESPONSE: ", response)
     individual = get_clearbit_person(response, email)
 
     organization = get_clearbit_company(response)

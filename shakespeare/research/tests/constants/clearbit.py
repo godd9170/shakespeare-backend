@@ -75,11 +75,9 @@ CLEARBIT_RESPONSE_NO_PERSON = {
         },
         "logo": "http://domain.com/logo.png",
         "name": "Saasli"
-    },
-    "person": None
+    }
 }
 CLEARBIT_RESPONSE_NO_COMPANY = {
-    "company": None,
     "person": {
         "id": "173cc909-a42b-4294-a6ba-712c2ccf73db",
         "avatar": "http://domain.com/avatar.png",
