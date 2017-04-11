@@ -42,6 +42,9 @@ CLEARBIT_RESPONSE_GOOD = {
         "name": {
             "familyName": "Locke",
             "givenName": "Charlie"
+        },
+        "linkedin": {
+            "handle": "in/clocke"
         }
     }
 }
@@ -90,6 +93,9 @@ CLEARBIT_RESPONSE_NO_COMPANY = {
         "name": {
             "familyName": "Locke",
             "givenName": "Charlie"
+        },
+        "linkedin": {
+            "handle": "in/clocke"
         }
     }
 }

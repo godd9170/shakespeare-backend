@@ -39,6 +39,7 @@ class Individual(TimeStampedModel):
     lastname = models.CharField(max_length=100, blank=True, null=True)
     jobtitle = models.CharField(max_length=200, blank=True, null=True)
     role = models.CharField(max_length=200, blank=True, null=True)
+    linkedinhandle = models.TextField(blank=True, null=True, default=None)
     avatar = models.CharField(max_length=500, blank=True, null=True) #URL to an avatar
     company = models.ForeignKey('research.Company', related_name='individual', null=True, on_delete=models.CASCADE) #null=True is because and Individual doesn't have to have a company
     companyname = models.CharField(max_length=200, blank=True, null=True) #We have a company name too, as it's possible for there to be no `company` result from Clearbit, however the person has a 'company name'

@@ -56,7 +56,8 @@ def get_clearbit_person(response, email):
             'jobtitle': reformat_job_title(employment['title']),
             'role': employment['role'],
             'companyname': employment['name'],
-            'clearbit': uuid.UUID(person['id'])
+            'clearbit': uuid.UUID(person['id']),
+            'linkedinhandle': person['linkedin']['handle']
         })
         return individual
     except Exception as e:
