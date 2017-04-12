@@ -3,5 +3,5 @@
 # --------------------------
 
 SHAKESPEARE_NO_PERSON_RESPONSE = {
-  "detail": "Unable to find a contact by that email."
+  "detail": "Sorry, we were unable to find a contact by that email."
 }
