@@ -2,6 +2,7 @@ from research.models import Research, Piece, Nugget
 from research.categories import category_to_group
 from urllib.parse import urlparse
 # from newspaper import Article
+
 import re
 
 class AbstractAggregator(object):
