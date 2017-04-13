@@ -69,22 +69,25 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
-        },
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': '/var/log/app_logs/django_debug.log',
-            'formatter': 'simple'
         }
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,
         },
     }
 }
+
+MIDDLEWARE.append('rollbar.contrib.django.middleware.RollbarNotifierMiddleware')
+ROLLBAR = {
+    'access_token': '38b1269535074f1a9b4c7da6a8142502',
+    'environment': 'development',
+    'root': BASE_DIR,
+}
+import rollbar
+rollbar.init(**ROLLBAR)
 
 # -------------
 # Celery
