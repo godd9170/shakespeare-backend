@@ -55,10 +55,10 @@ class ResearchTasksTests(APITestCase):
         self.client.post(url, data, format='json')
         mock_chord.assert_called_once_with(
             [
-                mock_chain(predictleadsevents_task(self.research.id), extract_article_bodies_task(self.research.id)),
                 mock_chain(storyzy_task(self.research.id), extract_article_bodies_task(self.research.id)),
                 predictleadsjobs_task(self.research.id), 
-                featuredcustomers_task(self.research.id)
+                featuredcustomers_task(self.research.id),
+                mock_chain(predictleadsevents_task(self.research.id), extract_article_bodies_task(self.research.id))
             ]
         )
 
