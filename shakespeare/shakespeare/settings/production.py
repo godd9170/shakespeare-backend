@@ -37,6 +37,7 @@ STATIC_URL = '/static/'
 # ------------
 # CORS Settings
 # ------------
+CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = True #We'll leave this true for now, but should be toggled of in the future
 # CORS_ORIGIN_WHITELIST = (
 #     'google.com',
