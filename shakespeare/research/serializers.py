@@ -13,7 +13,7 @@ class IndividualSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Individual
-        fields = ( 'email', 'created', 'firstname', 'lastname', 'jobtitle', 'role', 'avatar', 'company', 'companyname')
+        fields = ( 'email', 'created', 'firstname', 'lastname', 'jobtitle', 'role', 'avatar', 'company', 'companyname', 'linkedinhandle')
 
 
 class NuggetSerializer(serializers.ModelSerializer):
