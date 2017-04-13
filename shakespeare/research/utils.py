@@ -42,7 +42,10 @@ def get_clearbit_person(response, email):
         raise ContactNotFoundException
     # Try to get individual info
     if person['avatar'] is None: # If we can't find a picture for the individual, show the company logo
-        avatar = response['company']['logo']
+        if response['company']['logo'] is not None: # ...assuming that a company payload exists that is
+            avatar = response['company']['logo']
+        else:
+            avatar = 'https://s3.amazonaws.com/shakespeare-images/default_avatar.png'
     else:
         avatar = person['avatar']
 
@@ -148,38 +151,40 @@ def update_individual(email):
 # Creates a new individual, and may also either update or create a company.
 def create_individual(email):
     response = clearbit.Enrichment.find(email=email, stream=True)  # get the clearbit person/company
-    print(">>>>>>>>>>RESPONSE: ", response)
-    individual = get_clearbit_person(response, email)
+    if (response['person'] is not None) and (response['company'] is not None):
+        individual = get_clearbit_person(response, email)
 
-    organization = get_clearbit_company(response)
-    company = response['company']
+        organization = get_clearbit_company(response)
+        company = response['company']
 
-    # If no company was returned from Clearbit, only create an individual.
-    if organization is None:
-        newIndividual = Individual(**individual)
-        newIndividual.save()
-        return newIndividual  # Create the new individual without a company
+        # If no company was returned from Clearbit, only create an individual.
+        if organization is None:
+            newIndividual = Individual(**individual)
+            newIndividual.save()
+            return newIndividual  # Create the new individual without a company
 
-    # If a company was returned, check to see if it already exists in the database. If not, create a new company, then individual.
-    try:
-        # If company was found, it should be updated in the database.
-        updatedCompany = Company.objects.get(domain=company['domain'])
-        organization.update({'id': updatedCompany.id, 'created': updatedCompany.created})
-        # Update company
-        updatedCompany = Company(**organization)
-        # for (key, value) in organization.items():
-        # setattr(updatedCompany, key, value)
-        updatedCompany.save()
+        # If a company was returned, check to see if it already exists in the database. If not, create a new company, then individual.
+        try:
+            # If company was found, it should be updated in the database.
+            updatedCompany = Company.objects.get(domain=company['domain'])
+            organization.update({'id': updatedCompany.id, 'created': updatedCompany.created})
+            # Update company
+            updatedCompany = Company(**organization)
+            # for (key, value) in organization.items():
+            # setattr(updatedCompany, key, value)
+            updatedCompany.save()
 
-        newIndividual = Individual(company=updatedCompany, **individual)
-        newIndividual.save()
-    except ObjectDoesNotExist:
-        # Create company
-        newCompany = Company(**organization)
-        newCompany.save()
-        # Create individual
-        newIndividual = Individual(company=newCompany,
-                                   **individual)  # Create individual, and connect to the company we just made.
-        newIndividual.save()
+            newIndividual = Individual(company=updatedCompany, **individual)
+            newIndividual.save()
+        except ObjectDoesNotExist:
+            # Create company
+            newCompany = Company(**organization)
+            newCompany.save()
+            # Create individual
+            newIndividual = Individual(company=newCompany,
+                                       **individual)  # Create individual, and connect to the company we just made.
+            newIndividual.save()
 
-    return newIndividual
+        return newIndividual
+    else:
+        raise ContactNotFoundException
