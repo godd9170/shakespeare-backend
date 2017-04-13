@@ -35,6 +35,7 @@ GROUPS = {
     'investment' : [
         ('receives_financing', 'Receives Financing'),
         ('invests_into', 'Invests Into'),
+        ('invests_into_assets', 'Invests Into Assets'),
         ('goes_public', 'Goes Public')
     ],
     'cost_cutting' : [
