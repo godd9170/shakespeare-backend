@@ -9,9 +9,9 @@ def collect_research(research):
     if settings.PERFORM_ASYNCHRONOUS:
         chord([
             chain(predictleadsevents_task.s(research.id), extract_article_bodies_task.s(research.id)),
-            chain(storyzy_task.s(research.id), extract_article_bodies_task.s(research.id)),
             predictleadsjobs_task.s(research.id),
-            featuredcustomers_task.s(research.id)
+            featuredcustomers_task.s(research.id),
+            chain(storyzy_task.s(research.id), extract_article_bodies_task.s(research.id))
         ])(finish.s(research.id).set(link_error=['error_callback']))
     else:
         # do_storyzy(research)
