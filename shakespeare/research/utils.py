@@ -42,9 +42,9 @@ def get_clearbit_person(response, email):
         raise ContactNotFoundException
     # Try to get individual info
     if person['avatar'] is None: # If we can't find a picture for the individual, show the company logo
-        if response['company']['logo'] is not None: # ...assuming that a company payload exists that is
+        try: # ...assuming that a company payload exists that is
             avatar = response['company']['logo']
-        else:
+        except:
             avatar = 'https://s3.amazonaws.com/shakespeare-images/default_avatar.png'
     else:
         avatar = person['avatar']
@@ -151,7 +151,7 @@ def update_individual(email):
 # Creates a new individual, and may also either update or create a company.
 def create_individual(email):
     response = clearbit.Enrichment.find(email=email, stream=True)  # get the clearbit person/company
-    if (response['person'] is not None) and (response['company'] is not None):
+    if (response is not None):
         individual = get_clearbit_person(response, email)
 
         organization = get_clearbit_company(response)
