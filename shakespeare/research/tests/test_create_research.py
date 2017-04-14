@@ -1,4 +1,5 @@
-import research.tests.constants as constants
+import research.tests.constants.clearbit as constants
+from research.tests.constants.shakespeare import SHAKESPEARE_NO_PERSON_RESPONSE
 from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework import status
@@ -14,30 +15,6 @@ class ResearchTests(APITestCase):
         self.user = User.objects.create_user('john', 'john@snow.com', 'johnpassword')
         self.client.login(username='john', password='johnpassword')
         self.client.force_authenticate(user=self.user) #auth as the new user
-
-    # Thanks https://gist.github.com/evansde77/45467f5a7af84d2a2d34f3fcb357449c
-    def _mock_response(
-            self,
-            status=200,
-            json_data=None,
-            raise_for_status=None):
-        """
-        since we typically test a bunch of different
-        requests calls for a service, we are going to do
-        a lot of mock responses, so its usually a good idea
-        to have a helper function that builds these things
-        """
-        mock_resp = Mock()
-        # mock raise_for_status call w/optional error
-        mock_resp.raise_for_status = Mock()
-        if raise_for_status:
-            mock_resp.raise_for_status.side_effect = raise_for_status
-        # set status code and content
-        mock_resp.status_code = status
-        # add json data if provided
-        if json_data:
-            mock_resp.json.return_value = json_data
-        return mock_resp
 
     @patch('research.utils.clearbit.Enrichment.find') #Fake the clearbit call
     def test_create_research_new_individual(self, mock_find):
@@ -82,7 +59,7 @@ class ResearchTests(APITestCase):
         self.assertEqual(Individual.objects.count(), 0) #Check no new Individual
         self.assertEqual(Company.objects.count(), 0) #Check no new Company
         
-        self.assertEqual(response.data, constants.SHAKESPEARE_NO_PERSON_RESPONSE) #Check for the proper no person response
+        self.assertEqual(response.data, SHAKESPEARE_NO_PERSON_RESPONSE) #Check for the proper no person response
 
     @patch('research.utils.clearbit.Enrichment.find') #Fake the clearbit call
     def test_create_research_new_individual_no_company(self, mock_get):
@@ -94,14 +71,12 @@ class ResearchTests(APITestCase):
 
         response = self.client.post(url, data, format='json')
 
-        newObject = Research.objects.get()
-
-        self.assertEqual(Research.objects.count(), 1) #Check for a new research piece
-        self.assertEqual(Individual.objects.count(), 1) #Check a new Individual
+        self.assertEqual(Research.objects.count(), 0) #Check for a new research piece
+        self.assertEqual(Individual.objects.count(), 0) #Check a new Individual
         self.assertEqual(Company.objects.count(), 0) #Check no new Company
         
         #Check for the proper response
-        self.assertEqual(response.data, {'id': str(newObject.id)})
+        self.assertEqual(response.data, SHAKESPEARE_NO_PERSON_RESPONSE)
 
     @patch('research.utils.clearbit.Enrichment.find') #Fake the clearbit call
     def test_create_research_existing_individual(self, mock_get):

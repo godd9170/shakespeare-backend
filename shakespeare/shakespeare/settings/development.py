@@ -1,6 +1,5 @@
 import os
 from .defaults import *
-print(">>>>>>>>>>>>>>>>>>>>>>>>OS.ENVIRON>>>>>>>{}".format(os.environ))
 
 DEBUG = True #Just for now
 
@@ -8,8 +7,8 @@ DEBUG = True #Just for now
 # Allowed Hosts
 # --------------
 ALLOWED_HOSTS = [
-    'production.sfpvwpungj.us-east-1.elasticbeanstalk.com',
-    'app.shakespeare.ai',
+    'shakespeare-development.us-east-1.elasticbeanstalk.com',
+    'dev.shakespeare.ai',
     'localhost'
 ]
 
@@ -49,7 +48,7 @@ CORS_ORIGIN_ALLOW_ALL = True #We'll leave this true for now, but should be toggl
 # -------------
 # Oauth 
 # -------------
-OAUTH_APPLICATION_NAME = "shakespeare-prod"
+OAUTH_APPLICATION_NAME = "shakespeare-dev"
 ACCESS_TOKEN_EXPIRE_SECONDS = 2592000 #One Month
 
 # ------------
@@ -70,32 +69,25 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
-        },
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': '/var/log/app_logs/django_debug.log',
-            'formatter': 'simple'
         }
     },
     'loggers': {
         'django': {
-            'handlers': ['console', 'file'],
+            'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,
         },
     }
 }
+
 MIDDLEWARE.append('rollbar.contrib.django.middleware.RollbarNotifierMiddleware')
 ROLLBAR = {
     'access_token': '38b1269535074f1a9b4c7da6a8142502',
-    'environment': 'production',
+    'environment': 'development',
     'root': BASE_DIR,
 }
 import rollbar
 rollbar.init(**ROLLBAR)
-
-
 
 # -------------
 # Celery
@@ -103,7 +95,7 @@ rollbar.init(**ROLLBAR)
 PERFORM_ASYNCHRONOUS = True #Run the asyncronous tasks (i.e. research fetching)
 
 # REDIS related settings
-REDIS_HOST = 'redis-production.u7sr1d.0001.use1.cache.amazonaws.com'
+REDIS_HOST = 'redis-dev.u7sr1d.ng.0001.use1.cache.amazonaws.com'
 REDIS_PORT = '6379'
 
 # CELERY related settings

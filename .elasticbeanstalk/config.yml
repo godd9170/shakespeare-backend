@@ -1,10 +1,15 @@
 branch-defaults:
+  dev:
+    environment: development
   master:
     environment: production
     group_suffix: null
 environment-defaults:
+  development:
+    branch: dev
+    repository: null
   production:
-    branch: null
+    branch: master
     repository: null
 global:
   application_name: Shakespeare

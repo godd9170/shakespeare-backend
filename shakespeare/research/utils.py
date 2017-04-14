@@ -1,40 +1,46 @@
 import uuid
-
+import re
 import clearbit
 from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Individual, Company
 from .exceptions import ContactNotFoundException, UnexpectedClearbitPersonPayload, UnexpectedClearbitCompanyPayload
-from .aggregators.storyzy import do_storyzy
-from .aggregators.predictleads import do_predictleads_events, do_predictleads_jobopenings
-from .aggregators.featuredcustomers import do_featuredcustomers
-
-
-def get_research_pieces(research):
-    """
-    Run the various 3rd party services and enrich a research.models.Research model
-    :param research: research.models.Research
-    :return: None
-    """
-    do_storyzy(research) # Fetch + Build Research Pieces + Nuggets from Storyzy
-    do_predictleads_events(research) # Get events from Predict Leads and build research pieces
-    # do_predictleads_jobopenings(research) # Get job openings from PredictLeads and build research pieces and nuggets
-    # do_featuredcustomers(research) # Get reviews from Featured Customers and build research pieces and nuggets
 
 
 ################################################################################################################
 # TO DO LIST:
 # - Company domain none and error considerations?  
 
+# This function makes sure that job titles are appropriately capitalised for presentation in browser. Clearbit has proved not great in this regard.
+def reformat_job_title(title):
+    if title is not None:
+        original_words = title.split(" ")
+        updated_words =[]
+        stop_words = ['of', 'and']
+
+        for word in original_words:
+            if word not in stop_words:
+                word = word.capitalize()
+            updated_words.append(word)
+
+        return ' '.join(updated_words)
+    return title
+
+
+def clean_company_name(company_name):
+    if company_name is not None:
+        company_name = re.sub(r'(?i)\,?\s+(?:corp(?:oration)?|inc(?:orporated)?|(gmbh)|(llc)|(ltd)|(lllp))\.?', '', company_name)
+    return company_name
+
 
 def get_clearbit_person(response, email):
     ## Individual
-    person = response['person']  # clearbit DOES THIS NEED A TRY? OR DOES THIS PART OF THE PAYLOAD ALWAYS EXIST?
-    individual = {'email': email}  # shakespeare
-    if person is None:  # if Clearbit can't find anyone, raise an exception
+    try:
+        person = response['person']
+        individual = {'email': email}
+    except:
         raise ContactNotFoundException
-        # Try to get individual info
-
+    # Try to get individual info
     if person['avatar'] is None: # If we can't find a picture for the individual, show the company logo
         avatar = response['company']['logo']
     else:
@@ -47,24 +53,26 @@ def get_clearbit_person(response, email):
             'lastname': name['familyName'],
             'firstname': name['givenName'],
             'avatar': avatar,
-            'jobtitle': employment['title'],
+            'jobtitle': reformat_job_title(employment['title']),
             'role': employment['role'],
             'companyname': employment['name'],
-            'clearbit': uuid.UUID(person['id'])
+            'clearbit': uuid.UUID(person['id']),
+            'linkedinhandle': person['linkedin']['handle']
         })
         return individual
     except Exception as e:
-        # print('Error in person response for {}: {}'.format(email, e))
-        raise UnexpectedClearbitPersonPayload
+        print('Error in person response for {}: {}'.format(email, e))
+        # raise UnexpectedClearbitPersonPayload
 
 
 def get_clearbit_company(response):
     ## Company
-    company = response['company']  # clearbit DOES THIS NEED A TRY? OR DOES THIS PART OF THE PAYLOAD ALWAYS EXIST?
-    organization = {}  # shakespeare -> I'm calling the placeholder for what we return `organization`. Yes I realize this is confusing. Sue me.
-    # if company is None: #if Clearbit can't find anyone, raise an exception
-    if (company is None) or (company.get('domain', None) is None):
-        return None
+    try:
+        company = response['company']  # clearbit DOES THIS NEED A TRY? OR DOES THIS PART OF THE PAYLOAD ALWAYS EXIST?
+        organization = { 'domain' : company['domain'] }  # shakespeare -> I'm calling the placeholder for what we return `organization`. Yes I realize this is confusing. Sue me.
+    except:
+        raise ContactNotFoundException # TO DO: HANDLE COMPANY NOT FOUND APPROPRIATELY
+
     # Try to get company info
     try:
         try:
@@ -73,6 +81,7 @@ def get_clearbit_company(response):
             organization.update({
                 'domain': company['domain'],
                 'name': company['name'],
+                'cleanedname': clean_company_name(company['name']),
                 'description': company['description'],
                 'industry': category['industry'],
                 'sector': category['sector'],
@@ -139,7 +148,7 @@ def update_individual(email):
 # Creates a new individual, and may also either update or create a company.
 def create_individual(email):
     response = clearbit.Enrichment.find(email=email, stream=True)  # get the clearbit person/company
-
+    print(">>>>>>>>>>RESPONSE: ", response)
     individual = get_clearbit_person(response, email)
 
     organization = get_clearbit_company(response)

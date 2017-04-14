@@ -6,14 +6,14 @@ class CompanySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Company
-        fields = ( 'domain', 'created', 'name', 'industry', 'sector', 'crunchbase', 'description', 'logo')
+        fields = ( 'domain', 'created', 'name', 'cleanedname', 'industry', 'sector', 'crunchbase', 'description', 'logo')
 
 class IndividualSerializer(serializers.ModelSerializer):
     company = CompanySerializer(read_only=True)
 
     class Meta:
         model = Individual
-        fields = ( 'email', 'created', 'firstname', 'lastname', 'jobtitle', 'role', 'avatar', 'company', 'companyname')
+        fields = ( 'email', 'created', 'firstname', 'lastname', 'jobtitle', 'role', 'avatar', 'company', 'companyname', 'linkedinhandle')
 
 
 class NuggetSerializer(serializers.ModelSerializer):
@@ -51,7 +51,7 @@ class PieceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Piece
-        fields = ('id', 'title', 'body', 'author', 'aggregator', 'publisheddate', 'created', 'source', 'nuggets')
+        fields = ('id', 'title', 'body', 'author', 'aggregator', 'publisheddate', 'created', 'source', 'group', 'nuggets')
 
 class ResearchSerializer(serializers.ModelSerializer):
     pieces = PieceSerializer(many=True, source='piece', read_only=True)

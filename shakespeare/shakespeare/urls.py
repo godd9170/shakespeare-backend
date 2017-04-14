@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+import os
 from django.conf.urls import include, url
 from django.contrib import admin
 from administration import views
@@ -24,12 +25,16 @@ urlpatterns = [
     url(r'^auth/', include('rest_framework_social_oauth2.urls')),
     url(r'^administration/', include('administration.urls')),
     url(r'^research/', include('research.urls')),
-    # url(r'^emails/', include('emails.urls')),
+    url(r'^emails/', include('emails.urls')),
+    url(r'^personas/', include('personas.urls'))
     # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     # url(r'^accounts/', include('organizations.urls')),
     # url(r'^invitations/', include(invitation_backend().get_urls())),
 ]
 
+#import newspaper
 import clearbit
+#from newspaper import settings as newspaper_settings
+#newspaper_settings.DATA_DIRECTORY = os.path.join(settings.BASE_DIR, '.newspaper')
 
 clearbit.key = settings.CLEARBIT_KEY

@@ -25,7 +25,7 @@ SECRET_KEY = 'c$f9v76$n!@h=r2bfa&n2um*#8ibxe66q4nryb6o@l)_ilq(u&'
 
 # Google Oauth
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '17899710816-u7u7qscddvv0and0m2siteomikh7hl6e.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'yDJwJL-i3S6Yr4uiB2GXsbIi'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'yDJwJL-i3S6Yr4uiB2GXsbIi' #???
 
 # Django Organizations https://github.com/bennylope/django-organizations
 #ORGS_INVITATION_BACKEND = 'shakespeare.backends.MyInvitationBackend'
@@ -115,8 +115,8 @@ TEMPLATES = [
     },
 ]
 # Social Auth
-LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/done/'
+#LOGIN_URL = '/auth/login/'
+LOGIN_REDIRECT_URL = '/administration/chrome-extension/'
 SOCIAL_AUTH_STRATEGY = 'social_django.strategy.DjangoStrategy'
 SOCIAL_AUTH_STORAGE = 'social_django.models.DjangoStorage'
 # SOCIAL_AUTH_STORAGE = 'app.models.CustomDjangoStorage'
@@ -149,7 +149,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_user',
 
     # ???
-    'administration.pipeline.require_email',
+    # 'administration.pipeline.require_email', I think this fucks up the standard flow
 
     # Make up a username for this person, appends a random string at the end if
     # there's any collision.
@@ -180,7 +180,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.user_details',
 
     # ???
-    'social_core.pipeline.debug.debug'
+    'social_core.pipeline.debug.debug',
 )
 
 AUTHENTICATION_BACKENDS = (
@@ -233,6 +233,7 @@ USE_TZ = True
 ## Used for REST API Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
         'oauth2_provider.ext.rest_framework.OAuth2Authentication',
         'rest_framework_social_oauth2.authentication.SocialAuthentication',
     ),
@@ -258,11 +259,15 @@ PREDICT_LEADS_X_USER_EMAIL = 'charlie@shakespeare.ai'
 REDIS_HOST = 'localhost'
 REDIS_PORT = '6379'
 
+
+# CLEARBIT_KEY = 'sk_886efa2d89a51d9fc048d5d04023d09a' # Henry's first account
+# CLEARBIT_KEY = 'sk_a1bf7f2daff22c076f07080a660ebddd' # Richard's first account
+# CLEARBIT_KEY = 'sk_e4f319623ed71b0d786865a8d4184c5d' # Iain's first account 
+# CLEARBIT_KEY = 'sk_fb6a20b97e00b59b1c66b406d26c1ffa' #Cam's key
+CLEARBIT_KEY = 'sk_ee825c041f0d61a8da0f980b6d9f8070' #new Mansour Key
+
 # CELERY related settings
 
 BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
 CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
-
-# CLEARBIT_KEY = 'sk_886efa2d89a51d9fc048d5d04023d09a' # Henry's first account
-CLEARBIT_KEY = 'sk_a1bf7f2daff22c076f07080a660ebddd' # Richard's first account

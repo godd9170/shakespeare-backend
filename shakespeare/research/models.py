@@ -2,19 +2,24 @@ import uuid, re
 from django.db import models
 from django.contrib.postgres.fields import JSONField, ArrayField # JSON + Array Fields
 from model_utils.models import TimeStampedModel
-from .categories import NUGGET_TEMPLATE_CATEGORIES
+from django.template import Context, Template
+from .categories import NUGGET_TEMPLATE_CATEGORIES, PIECE_GROUPS
 
 
 class Company(TimeStampedModel):
+    """
+    The company to which an individual can belong to.
+    """
     domain = models.CharField(unique=True, max_length=100) # Ensure the domain is unique
     clearbit = models.UUIDField() # The clearbit UUID
     name = models.CharField(max_length=100, blank=True, null=True)
+    cleanedname = models.CharField(max_length=100, blank=True, null=True)
     industry = models.CharField(max_length=100, blank=True, null=True)
     sector = models.CharField(max_length=100, blank=True, null=True)
     crunchbase = models.CharField(max_length=100, blank=True, null=True)
     description = models.CharField(max_length=1000, blank=True, null=True)
     logo = models.CharField(max_length=500, blank=True, null=True)
-    location = JSONField() #json representation of location
+    location = JSONField(null=True) #json representation of location
 
     def __str__(self):
         return "{} ({})".format(str(self.name), str(self.domain))
@@ -34,6 +39,7 @@ class Individual(TimeStampedModel):
     lastname = models.CharField(max_length=100, blank=True, null=True)
     jobtitle = models.CharField(max_length=200, blank=True, null=True)
     role = models.CharField(max_length=200, blank=True, null=True)
+    linkedinhandle = models.TextField(blank=True, null=True, default=None)
     avatar = models.CharField(max_length=500, blank=True, null=True) #URL to an avatar
     company = models.ForeignKey('research.Company', related_name='individual', null=True, on_delete=models.CASCADE) #null=True is because and Individual doesn't have to have a company
     companyname = models.CharField(max_length=200, blank=True, null=True) #We have a company name too, as it's possible for there to be no `company` result from Clearbit, however the person has a 'company name'
@@ -75,13 +81,14 @@ class Piece(TimeStampedModel):
     publisheddate = models.DateTimeField(blank=True, null=True)
     title = models.TextField(blank=True, default='')
     author = models.CharField(max_length=1000, blank=True, default='')
-    body = models.CharField(max_length=1000, blank=True, default='')
+    body = models.TextField(blank=True, default=None, null=True)
     source = JSONField(blank=True, null=True) # The actual place on the web we got this from. We'll make this a JSON field for now. Ideally it's a lookup to a 'Data Source' table in the future
     url = models.TextField(blank=True, default='')
+    group = models.CharField(max_length=100, choices=PIECE_GROUPS, default='article')
     research = models.ForeignKey('research.Research', related_name='piece', on_delete=models.CASCADE) #Lookup the research instance that spawned this
     
     def __str__(self):
-        return self.title
+        return "{}: {} ({})".format(str(self.id), str(self.title), str(self.group))
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -97,8 +104,8 @@ class Nugget(TimeStampedModel):
     """
     An NLP extracted 'snippet' of quotable/interesting/relevant material found within the body of a 'Piece'
     """
-    category = models.CharField(max_length=100, choices=NUGGET_TEMPLATE_CATEGORIES, default='quote')
-    body = models.CharField(max_length=1000, blank=True, default='') #The body of text comprising the nugget
+    category = models.CharField(max_length=100, choices=NUGGET_TEMPLATE_CATEGORIES, default='none')
+    body = models.TextField(blank=True, default='') #The body of text comprising the nugget
     piece = models.ForeignKey('research.Piece', related_name='nugget', on_delete=models.CASCADE) #Lookup the research instance that spawned this
     additionaldata = JSONField(null=True) # all the varying values to be merged into a wrapper
     
@@ -137,29 +144,9 @@ class NuggetTemplate(TimeStampedModel):
         self.mergefields = list(set(merges)) #unique them
         super(TimeStampedModel, self).save(*args, **kwargs)
 
-
-    # TODO: Investigate DRY way to merge in any arbitrary model using Model = apps.get_model(app_label='research', model_name=model)
     # template is the string template to have values merged into it.
     def merge(self, template, nugget):
-        models = list(set(re.findall("{{(.*?)\.", template))) #get all the unique models that will be merged
-        if 'Individual' in models:
-            fields = list(set(re.findall("{{Individual.(.*?)}}", template)))
-            for field in fields:
-                template = re.sub(r"{{Individual."+field+"}}", getattr(nugget.piece.research.individual, field), template)
-        if ('Company' in models) and (nugget.piece.research.individual.company is not None):
-            fields = list(set(re.findall("{{Company.(.*?)}}", template)))
-            for field in fields:
-                template = re.sub(r"{{Company."+field+"}}", getattr(nugget.piece.research.individual.company, field), template)
-        if 'Nugget' in models:
-            fields = list(set(re.findall("{{Nugget\.(.*?)(?:}}|\.)", template))) 
-            for field in fields:
-                if field == 'additionaldata':
-                    additionaldatafields = list(set(re.findall("{{Nugget.additionaldata\.(.*?)}}", template)))
-                    for additionaldatafield in additionaldatafields:
-                        template = re.sub(r"{{Nugget.additionaldata."+additionaldatafield+"}}", str(nugget.additionaldata[additionaldatafield]), template)
-                else:
-                    template = re.sub(r"{{Nugget."+field+"}}", getattr(nugget, field), template)
-        return template
+        return Template(template).render(Context({"Nugget" : nugget}))
 
     def __str__(self):
         return "{} ({})".format(str(self.subject), str(self.category))

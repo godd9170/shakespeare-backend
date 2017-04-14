@@ -1,16 +1,27 @@
 import json
+from urllib.parse import parse_qs
+from django.views import View
 
 from .decorators import render_to
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.http import HttpResponse, HttpResponseBadRequest
-from django.shortcuts import redirect
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
+from django.shortcuts import redirect, render, reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout, login, get_user_model
 from social_core.backends.oauth import BaseOAuth1, BaseOAuth2
 from social_django.utils import psa, load_strategy
-
+from .tools import get_access_token
 User = get_user_model()
+
+
+class ChromeExtensionRedirectView(View):
+
+    def get(self, request, *args, **kwargs):  
+        shakespeareAccessToken = get_access_token(request.user)
+        # assign the response to a variable and set the access token as a url param in the response
+        return HttpResponseRedirect(reverse('done') + "?access_token={}".format(shakespeareAccessToken))
+
 
 
 @api_view(['GET'])
@@ -25,8 +36,13 @@ def logout(request):
 
 @render_to('shakespeare.html')
 def shakespeare(request):
-    """Home view, displays login mechanism"""
     pass
+
+@render_to('invite-only.html')
+def inviteonly(request):
+    pass
+
+
 
 @render_to('home.html')
 def home(request):
@@ -36,7 +52,7 @@ def home(request):
 
 
 @login_required
-@render_to('home.html')
+@render_to('shakespeare.html')
 def done(request):
     """Login complete view, displays user data"""
     pass
