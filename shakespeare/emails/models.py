@@ -2,20 +2,22 @@ import uuid
 from django.db import models
 from django.contrib.postgres.fields import JSONField, ArrayField # JSON + Array Fields
 from model_utils.models import TimeStampedModel
-from research.models import Research, Nugget
+from research.models import Nugget
 from personas.models import ValueProposition, CallToAction
 
 
 class Email(TimeStampedModel):
-    # research = models.OneToOneField('research.Research', related_name='email', null=True, on_delete=models.SET_NULL) # May not need this if can get at research through nugget
+    # housekeeping fields
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    owner = models.ForeignKey('auth.User', related_name='emails', on_delete=models.CASCADE)
     
     # Fields to allow us to find/identify the email
     gmailid = models.TextField(blank=False) # The unique identifier of the email that was sent
 
     # Fields that show us what in the app was (in theory) used in this email
-    selectednugget = models.OneToOneField('research.Nugget', related_name='selectednugget', null=True, on_delete=models.SET_NULL)
-    selectedvalueproposition = models.OneToOneField('personas.ValueProposition', related_name='selectedvalueproposition', null=True, on_delete=models.SET_NULL)
-    selectedcalltoaction = models.OneToOneField('personas.CallToAction', related_name='selectedcalltoaction', null=True, on_delete=models.SET_NULL)
+    selectednugget = models.ForeignKey('research.Nugget', related_name='selectednugget', null=True, on_delete=models.SET_NULL)
+    selectedvalueproposition = models.ForeignKey('personas.ValueProposition', related_name='selectedvalueproposition', null=True, on_delete=models.SET_NULL)
+    selectedcalltoaction = models.ForeignKey('personas.CallToAction', related_name='selectedcalltoaction', null=True, on_delete=models.SET_NULL)
 
     # Fields that provide information about what was sent in the body of the email
     emailto = models.EmailField() # to address of email # SHOULD THIS BE AN ARRAY FIELD TOO? PROBABLY
@@ -32,9 +34,9 @@ class Email(TimeStampedModel):
     calltoaction = models.TextField(blank=True, default='')
     signature = models.TextField(blank=True, default='')
 
-    introductionwordcount = models.IntegerField(blank=True)
-    valuepropositionwordcount = models.IntegerField(blank=True)
-    calltoactionwordcount = models.IntegerField(blank=True)
+    introductionwordcount = models.IntegerField(blank=True, null=True)
+    valuepropositionwordcount = models.IntegerField(blank=True, null=True)
+    calltoactionwordcount = models.IntegerField(blank=True, null=True)
 
     # Fields that hold open/reply information
     numberofopens = models.IntegerField(blank=False, default=0)
@@ -47,12 +49,12 @@ class Email(TimeStampedModel):
     
     # On save action that does a word count of the various email pieces for example
     def save(self, *args, **kwargs):
-        introductionwordcount = word_count(introduction)
-        valuepropositionwordcount = word_count(valueproposition)
-        calltoactionwordcount = word_count(calltoaction)
+        # introductionwordcount = self.word_count(self.introduction)
+        # valuepropositionwordcount = self.word_count(self.valueproposition)
+        # calltoactionwordcount = self.word_count(self.calltoaction)
         super(TimeStampedModel, self).save(*args, **kwargs)
 
-    def word_count(string):
+    def word_count(self, string):
         word_list = string.split(" ")
         while '-' in word_list:
             word_list.remove('-')
