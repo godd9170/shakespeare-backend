@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from emails.models import Email
+from .models import Email
 from django.contrib.auth.models import User
 
 class EmailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Email
-        fields = ('')
+        fields = ('id', 'subject')
