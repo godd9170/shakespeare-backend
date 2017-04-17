@@ -6,5 +6,6 @@ from .data.nuggettemplates import TEMPLATES
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        for nugget in TEMPLATES:
-            NuggetTemplate(**nugget).save()
+        if (Nugget.objects.all().count() < 1):
+            for nugget in TEMPLATES:
+                NuggetTemplate(**nugget).save()
