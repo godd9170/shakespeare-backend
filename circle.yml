@@ -22,7 +22,8 @@ deployment:
     branch: master
     commands:
       - eb deploy --profile default
-      - curl https://api.rollbar.com/api/1/deploy/ \
+      - |
+        curl https://api.rollbar.com/api/1/deploy/ \
         -F access_token=38b1269535074f1a9b4c7da6a8142502 \
         -F environment=production \
         -F revision=$CIRCLE_SHA1 \
@@ -31,7 +32,8 @@ deployment:
     branch: dev
     commands:
       - eb deploy --profile default
-      - curl https://api.rollbar.com/api/1/deploy/ \
+      - |
+        curl https://api.rollbar.com/api/1/deploy/ \
         -F access_token=38b1269535074f1a9b4c7da6a8142502 \
         -F environment=development \
         -F revision=$CIRCLE_SHA1 \
