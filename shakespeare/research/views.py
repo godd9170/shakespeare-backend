@@ -55,7 +55,7 @@ class ResearchDetail(APIView):
         research.save()
         # 
         # Aggregate some sources for this person
-        #
+
         collect_research(research)
 
         return Response({'id': str(research.id)})

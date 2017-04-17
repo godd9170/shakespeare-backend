@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     #'administration.apps.AdministrationConfig',
     #'research.apps.ResearchConfig',
     'administration',
+    'emails',
     'personas',
     'research',
     'corsheaders',
