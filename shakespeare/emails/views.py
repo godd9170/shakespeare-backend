@@ -51,9 +51,9 @@ class EmailDetail(APIView):
         }
         """
         data = request.data
-        nugget = self.get_object(data.pop('selectednugget'), 'research', 'Nugget')
-        valueprop = self.get_object(data.pop('selectedvalueproposition'), 'personas', 'ValueProposition')
-        calltoaction = self.get_object(data.pop('selectedcalltoaction'), 'personas', 'CallToAction')
+        nugget = self.get_object(data.pop('selectednugget', None), 'research', 'Nugget')
+        valueprop = self.get_object(data.pop('selectedvalueproposition', None), 'personas', 'ValueProposition')
+        calltoaction = self.get_object(data.pop('selectedcalltoaction', None), 'personas', 'CallToAction')
         email = Email(
             owner=self.request.user, 
             selectednugget=nugget,
