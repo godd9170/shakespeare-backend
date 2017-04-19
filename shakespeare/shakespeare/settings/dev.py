@@ -81,6 +81,15 @@ LOGGING = {
     }
 }
 
+# MIDDLEWARE.append('rollbar.contrib.django.middleware.RollbarNotifierMiddleware')
+# ROLLBAR = {
+#     'access_token': '38b1269535074f1a9b4c7da6a8142502',
+#     'environment': 'local',
+#     'root': BASE_DIR,
+# }
+# import rollbar
+# rollbar.init(**ROLLBAR)
+
 # -------------
 # Celery
 # -------------
