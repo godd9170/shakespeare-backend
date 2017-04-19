@@ -146,7 +146,10 @@ class NuggetTemplate(TimeStampedModel):
 
     # template is the string template to have values merged into it.
     def merge(self, template, nugget):
-        return Template(template).render(Context({"Nugget" : nugget}))
+        merges = Template(template).render(Context({"Nugget" : nugget}))
+        merges = re.sub(r'&#39;', "'", merges)
+        merges = re.sub(r'&amp;', "'", merges)
+        return merges
 
     def __str__(self):
         return "{} ({})".format(str(self.subject), str(self.category))
