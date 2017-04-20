@@ -151,8 +151,8 @@ def update_individual(email):
 
 # Creates a new individual, and may also either update or create a company.
 def create_individual(email):
-    response = clearbit.Enrichment.find(email=email, stream=True)  # get the clearbit person/company
-    if (response is not None and response['person'] is not None):
+    response = dict(clearbit.Enrichment.find(email=email, stream=True))  # get the clearbit person/company
+    if (response is not None and response.get('person')):
         individual = get_clearbit_person(response, email)
         organization = get_clearbit_company(response)
 
