@@ -55,7 +55,7 @@ def finish(results, research_id):
     research.save()
     #Notify Rollbar if no results showed up
     if Piece.objects.filter(research=research_id).count() < 1:
-        rollbar.report_message('[No Research] No research results found.', 'warning', payload_data={'person' : { 'id' : str(research.owner.id) }}) #See https://github.com/rollbar/pyrollbar/blob/97623876abeb200182bcc98b4f598dd93f9efcfe/rollbar/logger.py#L102 
+        rollbar.report_message('[No Research] No research results found.', 'warning', payload_data={'person' : { 'id' : str(research.owner.id) }}, extra_data={ 'individual_id' : research.individual.id }) #See https://github.com/rollbar/pyrollbar/blob/97623876abeb200182bcc98b4f598dd93f9efcfe/rollbar/logger.py#L102 
 
 @task(max_retries=3, name='error_callback')
 def finish_with_errors(results):
