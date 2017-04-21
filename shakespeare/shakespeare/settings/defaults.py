@@ -35,6 +35,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'yDJwJL-i3S6Yr4uiB2GXsbIi' #???
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -53,19 +54,18 @@ INSTALLED_APPS = [
     'administration',
     'emails',
     'personas',
-    'research',
-    'corsheaders',
+    'research'
 ]
 
 MIDDLEWARE = [
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
 
 ROOT_URLCONF = 'shakespeare.urls'
@@ -115,8 +115,8 @@ TEMPLATES = [
     },
 ]
 # Social Auth
-#LOGIN_URL = '/auth/login/'
-LOGIN_REDIRECT_URL = '/administration/chrome-extension/'
+LOGIN_URL = '/administration/invite-only/'
+LOGIN_REDIRECT_URL = '/administration/done/'
 SOCIAL_AUTH_STRATEGY = 'social_django.strategy.DjangoStrategy'
 SOCIAL_AUTH_STORAGE = 'social_django.models.DjangoStorage'
 # SOCIAL_AUTH_STORAGE = 'app.models.CustomDjangoStorage'
@@ -140,6 +140,9 @@ SOCIAL_AUTH_PIPELINE = (
     # the unique identifier of the given user in the provider.
     'social_core.pipeline.social_auth.social_uid',
 
+    # Bounce the user off to a 'Sorry we're in beta' if we can't match them with someone in the system.
+    'administration.pipeline.reject_user_if_non_existent',
+
     # Verifies that the current auth process is valid within the current
     # project, this is where emails and domains whitelists are applied (if
     # defined).
@@ -147,6 +150,7 @@ SOCIAL_AUTH_PIPELINE = (
 
     # Checks if the current social-account is already associated in the site.
     'social_core.pipeline.social_auth.social_user',
+
 
     # ???
     # 'administration.pipeline.require_email', I think this fucks up the standard flow
@@ -184,14 +188,14 @@ SOCIAL_AUTH_PIPELINE = (
 )
 
 AUTHENTICATION_BACKENDS = (
+    # Django
+    'django.contrib.auth.backends.ModelBackend',
+
     # Google OAuth2
     'social_core.backends.google.GoogleOAuth2',
 
     # django-rest-framework-social-oauth2
-    'rest_framework_social_oauth2.backends.DjangoOAuth2',
-
-    # Django
-    'django.contrib.auth.backends.ModelBackend',
+    'rest_framework_social_oauth2.backends.DjangoOAuth2'
 )
 
 WSGI_APPLICATION = 'shakespeare.wsgi.application'
@@ -234,7 +238,7 @@ USE_TZ = True
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
-        'oauth2_provider.ext.rest_framework.OAuth2Authentication',
+        #'oauth2_provider.ext.rest_framework.OAuth2Authentication',
         'rest_framework_social_oauth2.authentication.SocialAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (

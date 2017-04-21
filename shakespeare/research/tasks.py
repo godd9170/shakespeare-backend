@@ -1,8 +1,9 @@
 from celery import shared_task, task, signature, chord, chain
-from research.models import Research
+from research.models import Research, Piece
 from django.conf import settings
 from research.aggregators import * #get all of our aggregator classes
 from research.aggregators import aggregator, storyzy, predictleads, featuredcustomers
+import rollbar
 
 
 def collect_research(research):
@@ -52,10 +53,16 @@ def finish(results, research_id):
     research = Research.objects.get(pk=research_id)
     research.complete = True
     research.save()
+    #Notify Rollbar if no results showed up
+    if Piece.objects.filter(research=research_id).count() < 1:
+        rollbar.report_message('[No Research] No research results found.', 'warning', payload_data={'person' : { 'id' : str(research.owner.id) }}, extra_data={ 'individual_id' : research.individual.id }) #See https://github.com/rollbar/pyrollbar/blob/97623876abeb200182bcc98b4f598dd93f9efcfe/rollbar/logger.py#L102 
 
 @task(max_retries=3, name='error_callback')
-def finish_with_errors(results, research_id):
+def finish_with_errors(results):
     print('>>>>>>>>>>>ARGS>>>>>>>>>>>>>{}'.format(results))
     research = Research.objects.get(pk=research_id)
     research.complete = True
     research.save()
+    #Notify Rollbar of failure
+    rollbar.report_exc_info()
+

@@ -166,5 +166,11 @@ TEMPLATES = [
         "segue" : "Expansions offer a world of possibility.",
         "category" : "expands_facilities",
         "subject" : "Your expansion to {{Nugget.additionaldata.location}}"
+    },
+            { 
+        "intro" : "I stumbled upon an article mentioning {{Nugget.piece.research.individual.company.name}}.  After reading {{Nugget.additionaldata.name}}'s quote \"{{Nugget.body}}\", I felt compelled to reach out to you directly.",
+        "segue" : "The reason {{Nugget.additionaldata.name}}'s quote stood out is that it alluded to something we strongly believe in.",
+        "category" : "quote_about",
+        "subject" : "{{Nugget.additionaldata.name}}'s quote on {{Nugget.piece.research.individual.company.name}}"
     }
 ]

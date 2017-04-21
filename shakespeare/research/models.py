@@ -116,9 +116,14 @@ class Nugget(TimeStampedModel):
         return self.additionaldata.keys() if (self.additionaldata is not None) else []
         #return self.additionaldata.keys() # The keys of the additionaldata are the mergefields in the NuggetTemplate
 
+    def clean_additionaldata(self):
+        empty_keys = [k for k,v in self.additionaldata.items() if not v]
+        for k in empty_keys:
+            del self.additionaldata[k]
 
     def save(self, *args, **kwargs):
         self.full_clean()
+        self.clean_additionaldata()
         super(TimeStampedModel, self).save(*args, **kwargs)
 
 
