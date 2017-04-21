@@ -43,7 +43,7 @@ CORS_ALLOW_HEADERS = (
 'authorization',
 'X-CSRFToken'
 )
-#CORS_ORIGIN_WHITELIST = ()
+#CORS_ORIGIN_WHITELIST = ('null') #chrome-extensions use null
 
 
 # -------------
