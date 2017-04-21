@@ -17,10 +17,11 @@ class Persona(TimeStampedModel):
         ordering = ('created',)
 
 class ValueProposition(TimeStampedModel):
+    title = models.TextField(blank=True, default='')
     body = models.TextField(blank=True, default='')
-    title = models.CharField(max_length=100, blank=True, default='')
-    personas = models.ManyToManyField(Persona, related_name='value_proposition_personas') #related name is how Persona will refer to it's ValuePropositions
-    #persona = models.ForeignKey('personas.Persona', related_name='value_propositions', on_delete=models.CASCADE)
+    # personas = models.ManyToManyField(Persona, related_name='value_proposition_personas') #related name is how Persona will refer to it's ValuePropositions
+    active = models.BooleanField(default=True)
+    owner = models.ForeignKey('auth.User', related_name='valueprops', on_delete=models.CASCADE, default=1)
     
     def __str__(self):
         return self.title
@@ -33,8 +34,10 @@ class ValueProposition(TimeStampedModel):
 
 class CallToAction(TimeStampedModel):
     title = models.TextField(blank=True, default='')
-    personas = models.ManyToManyField(Persona, related_name='call_to_action_personas')
-    #persona = models.ForeignKey('personas.Persona', related_name='calls_to_action', on_delete=models.CASCADE)
+    body = models.TextField(blank=True, default='')
+    # personas = models.ManyToManyField(Persona, related_name='call_to_action_personas')
+    active = models.BooleanField(default=True)
+    owner = models.ForeignKey('auth.User', related_name='calltoactions', on_delete=models.CASCADE, default=1)
 
     def __str__(self):
         return self.title

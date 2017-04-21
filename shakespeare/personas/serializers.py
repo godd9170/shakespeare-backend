@@ -4,21 +4,21 @@ from .models import Persona, ValueProposition, CallToAction
 
 
 class ValuePropositionSerializer(serializers.HyperlinkedModelSerializer):
-    personas = serializers.HyperlinkedRelatedField(many=True, view_name='persona-detail',
-                                                   queryset=Persona.objects.all())
+    # personas = serializers.HyperlinkedRelatedField(many=True, view_name='persona-detail',
+    #                                                queryset=Persona.objects.all())
 
     class Meta:
         model = ValueProposition
-        fields = ('id', 'body', 'title', 'created', 'personas')
+        fields = ('id', 'title', 'body', 'active', 'created')
 
 
 class CallToActionSerializer(serializers.HyperlinkedModelSerializer):
-    personas = serializers.HyperlinkedRelatedField(many=True, view_name='persona-detail',
-                                                   queryset=Persona.objects.all())
+    # personas = serializers.HyperlinkedRelatedField(many=True, view_name='persona-detail',
+    #                                                queryset=Persona.objects.all())
 
     class Meta:
         model = CallToAction
-        fields = ('id', 'title', 'personas')
+        fields = ('id', 'title', 'body', 'active', 'created')
 
 
 class PersonaSerializer(serializers.HyperlinkedModelSerializer):

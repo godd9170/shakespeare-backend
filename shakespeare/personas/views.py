@@ -49,6 +49,9 @@ class ValuePropositionList(generics.ListCreateAPIView):  # NOTE: Using the list 
         return models.ValueProposition.objects.all()
         #return ValueProposition.objects.filter(persona=self.request.user) #Only show the user objects they are owners of
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 
 class ValuePropositionDetail(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -56,6 +59,7 @@ class ValuePropositionDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = models.ValueProposition.objects.all()
     serializer_class = serializers.ValuePropositionSerializer
+
 
 
 class CallToActionList(generics.ListCreateAPIView):  # NOTE: Using the list generic
@@ -68,6 +72,9 @@ class CallToActionList(generics.ListCreateAPIView):  # NOTE: Using the list gene
         return models.CallToAction.objects.all()
         #return ValueProposition.objects.filter(persona=self.request.user) #Only show the user objects they are owners of
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 
 class CallToActionDetail(generics.RetrieveUpdateDestroyAPIView):
     """
@@ -75,3 +82,4 @@ class CallToActionDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = models.CallToAction.objects.all()
     serializer_class = serializers.CallToActionSerializer
+
