@@ -46,8 +46,8 @@ class ValuePropositionList(generics.ListCreateAPIView):  # NOTE: Using the list 
     serializer_class = serializers.ValuePropositionSerializer
 
     def get_queryset(self):
-        return models.ValueProposition.objects.all()
-        #return ValueProposition.objects.filter(persona=self.request.user) #Only show the user objects they are owners of
+        # return models.ValueProposition.objects.all()
+        return models.ValueProposition.objects.filter(owner=self.request.user) #Only show the user objects they are owners of
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -69,8 +69,8 @@ class CallToActionList(generics.ListCreateAPIView):  # NOTE: Using the list gene
     serializer_class = serializers.CallToActionSerializer
 
     def get_queryset(self):
-        return models.CallToAction.objects.all()
-        #return ValueProposition.objects.filter(persona=self.request.user) #Only show the user objects they are owners of
+        # return models.CallToAction.objects.all()
+        return models.CallToAction.objects.filter(owner=self.request.user) #Only show the user objects they are owners of
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
