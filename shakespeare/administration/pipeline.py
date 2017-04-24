@@ -16,8 +16,6 @@ def require_email(strategy, details, user=None, is_new=False, *args, **kwargs):
                 '/email?partial_token={0}'.format(current_partial.token) #if there is no email, tell the user they're out of luck
             )
 
-
-@partial
 def reject_user_if_non_existent(strategy, details, user=None, is_new=False, *args, **kwargs):
     if user is None:
         # We want to know if someone can't get in.
@@ -27,4 +25,4 @@ def reject_user_if_non_existent(strategy, details, user=None, is_new=False, *arg
             extra_data={'fullname' : details['fullname'], 'email' : details['email'] }
         )
         print('REJECTING USER: {}'.format(details))
-        return strategy.redirect('/administration/invite-only/')
+        return strategy.redirect('/administration/invite-only/?email={}'.format(details['email']))

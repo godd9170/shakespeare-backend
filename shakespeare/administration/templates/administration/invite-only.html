@@ -1,0 +1,8 @@
+{% extends './error-base.html' %}
+{% block content %}
+      {% if request.GET.email %}
+        <h1>Sorry</h1>
+        <h3><b>{{request.GET.email}}</b> isn't part of our beta.</h3>
+        <h5>If you believe this to be an error, please contact <a href="mailto:charlie@shakespeare.ai.">charlie@shakespeare.ai</a></h5>
+      {% endif %}
+{% endblock %}

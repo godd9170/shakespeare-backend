@@ -72,39 +72,13 @@ ROOT_URLCONF = 'shakespeare.urls'
 
 TEMPLATES = [
     {
-        'BACKEND': 'django_jinja.backend.Jinja2',
-        'APP_DIRS': False,
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'administration', 'templates')
         ],
-        'OPTIONS': {
-            'match_extension': '.html',
-            'match_regex': r'^(?!admin/).*',
-            'filters': {
-                'backend_name': 'administration.filters.backend_name',
-                'backend_class': 'administration.filters.backend_class',
-                'icon_name': 'administration.filters.icon_name',
-                'social_backends': 'administration.filters.social_backends',
-                'legacy_backends': 'administration.filters.legacy_backends',
-                'oauth_backends': 'administration.filters.oauth_backends',
-                'filter_backends': 'administration.filters.filter_backends',
-                'slice_by': 'administration.filters.slice_by'
-            },
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect',
-            ],
-        }
-    },
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
+            #'match_regex': r'^(?!admin/).*',
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -115,7 +89,7 @@ TEMPLATES = [
     },
 ]
 # Social Auth
-LOGIN_URL = '/administration/invite-only/'
+LOGIN_URL = '/administration/login/'
 LOGIN_REDIRECT_URL = '/administration/done/'
 SOCIAL_AUTH_STRATEGY = 'social_django.strategy.DjangoStrategy'
 SOCIAL_AUTH_STORAGE = 'social_django.models.DjangoStorage'
@@ -128,6 +102,9 @@ SOCIAL_AUTH_EMAIL_FORM_HTML = 'email_signup.html'
 SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'app.mail.send_validation'
 SOCIAL_AUTH_EMAIL_VALIDATION_URL = '/email-sent/'
 SOCIAL_AUTH_USERNAME_FORM_HTML = 'username_signup.html'
+SOCIAL_AUTH_GOOGLE_OAUTH2_AUTH_EXTRA_ARGUMENTS = {
+    'prompt': 'select_account'
+}
 
 SOCIAL_AUTH_PIPELINE = (
     # Get the information we can about the user and return it in a simple
@@ -139,9 +116,6 @@ SOCIAL_AUTH_PIPELINE = (
     # Get the social uid from whichever service we're authing thru. The uid is
     # the unique identifier of the given user in the provider.
     'social_core.pipeline.social_auth.social_uid',
-
-    # Bounce the user off to a 'Sorry we're in beta' if we can't match them with someone in the system.
-    'administration.pipeline.reject_user_if_non_existent',
 
     # Verifies that the current auth process is valid within the current
     # project, this is where emails and domains whitelists are applied (if
@@ -166,6 +140,10 @@ SOCIAL_AUTH_PIPELINE = (
     # Associates the current social details with another user account with
     # a similar email address.
     'social_core.pipeline.social_auth.associate_by_email',
+
+
+    # Bounce the user off to a 'Sorry we're in beta' if we can't match them with someone in the system.
+    'administration.pipeline.reject_user_if_non_existent',
 
     # Create a user account if we haven't found one yet. DISABLED FOR MVP
     #'social_core.pipeline.user.create_user', #we're not creating any new users with this
