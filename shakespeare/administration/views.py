@@ -1,10 +1,8 @@
 import json
-from urllib.parse import parse_qs
-from django.views import View
-
-from .decorators import render_to
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.views import View
+from .decorators import render_to
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect, render, reverse
 from django.contrib.auth.decorators import login_required
@@ -22,18 +20,16 @@ def logout(request):
     auth_logout(request)
     return redirect('/')
 
-
-@render_to('shakespeare.html')
+@render_to('administration/shakespeare.html')
 def shakespeare(request):
     pass
 
-@render_to('invite-only.html')
+
+@render_to('administration/invite-only.html')
 def inviteonly(request):
     pass
 
-
-
-@render_to('home.html')
+@render_to('administration/home.html')
 def home(request):
     """Home view, displays login mechanism"""
     if request.user.is_authenticated():
@@ -41,13 +37,13 @@ def home(request):
 
 
 @login_required
-@render_to('home.html')
+@render_to('administration/home.html')
 def done(request):
     """Login complete view, displays user data"""
     pass
 
 
-@render_to('home.html')
+@render_to('administration/home.html')
 def validation_sent(request):
     """Email validation sent confirmation page"""
     return {
@@ -56,7 +52,7 @@ def validation_sent(request):
     }
 
 
-@render_to('home.html')
+@render_to('administration/home.html')
 def require_email(request):
     """Email required page"""
     strategy = load_strategy()
