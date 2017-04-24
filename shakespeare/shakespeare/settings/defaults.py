@@ -140,9 +140,6 @@ SOCIAL_AUTH_PIPELINE = (
     # the unique identifier of the given user in the provider.
     'social_core.pipeline.social_auth.social_uid',
 
-    # Bounce the user off to a 'Sorry we're in beta' if we can't match them with someone in the system.
-    'administration.pipeline.reject_user_if_non_existent',
-
     # Verifies that the current auth process is valid within the current
     # project, this is where emails and domains whitelists are applied (if
     # defined).
@@ -166,6 +163,10 @@ SOCIAL_AUTH_PIPELINE = (
     # Associates the current social details with another user account with
     # a similar email address.
     'social_core.pipeline.social_auth.associate_by_email',
+
+
+    # Bounce the user off to a 'Sorry we're in beta' if we can't match them with someone in the system.
+    'administration.pipeline.reject_user_if_non_existent',
 
     # Create a user account if we haven't found one yet. DISABLED FOR MVP
     #'social_core.pipeline.user.create_user', #we're not creating any new users with this
