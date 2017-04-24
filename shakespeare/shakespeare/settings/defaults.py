@@ -72,37 +72,10 @@ ROOT_URLCONF = 'shakespeare.urls'
 
 TEMPLATES = [
     {
-        'BACKEND': 'django_jinja.backend.Jinja2',
-        'APP_DIRS': False,
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'administration', 'templates')
         ],
-        'OPTIONS': {
-            'match_extension': '.html',
-            'match_regex': r'^(?!admin/).*',
-            'filters': {
-                'backend_name': 'administration.filters.backend_name',
-                'backend_class': 'administration.filters.backend_class',
-                'icon_name': 'administration.filters.icon_name',
-                'social_backends': 'administration.filters.social_backends',
-                'legacy_backends': 'administration.filters.legacy_backends',
-                'oauth_backends': 'administration.filters.oauth_backends',
-                'filter_backends': 'administration.filters.filter_backends',
-                'slice_by': 'administration.filters.slice_by'
-            },
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect',
-            ],
-        }
-    },
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -115,7 +88,7 @@ TEMPLATES = [
     },
 ]
 # Social Auth
-LOGIN_URL = '/administration/invite-only/'
+LOGIN_URL = '/administration/login/'
 LOGIN_REDIRECT_URL = '/administration/done/'
 SOCIAL_AUTH_STRATEGY = 'social_django.strategy.DjangoStrategy'
 SOCIAL_AUTH_STORAGE = 'social_django.models.DjangoStorage'
