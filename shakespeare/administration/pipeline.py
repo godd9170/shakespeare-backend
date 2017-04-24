@@ -16,8 +16,6 @@ def require_email(strategy, details, user=None, is_new=False, *args, **kwargs):
                 '/email?partial_token={0}'.format(current_partial.token) #if there is no email, tell the user they're out of luck
             )
 
-
-@partial
 def reject_user_if_non_existent(strategy, details, user=None, is_new=False, *args, **kwargs):
     if user is None:
         # We want to know if someone can't get in.
