@@ -27,4 +27,4 @@ def reject_user_if_non_existent(strategy, details, user=None, is_new=False, *arg
             extra_data={'fullname' : details['fullname'], 'email' : details['email'] }
         )
         print('REJECTING USER: {}'.format(details))
-        return strategy.redirect('/administration/invite-only/')
+        return strategy.redirect('/administration/invite-only/?email={}'.format(details['email']))
