@@ -28,7 +28,7 @@ DATABASES = {
 # Static
 # ------------
 STATIC_URL = '/static/'
-
+STATIC_ROOT = '../www/static/'
 
 # ------------
 # CORS Settings
