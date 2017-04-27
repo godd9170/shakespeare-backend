@@ -38,7 +38,6 @@ class ResearchAdmin(admin.ModelAdmin):
             return u'<a href="%s">%s</a>' % (link,obj.individual)
     link_individual.allow_tags = True
 
-        # Cross Object Links
     def piece_count(self, obj):
         return Piece.objects.filter(research=obj.id).count()
 
