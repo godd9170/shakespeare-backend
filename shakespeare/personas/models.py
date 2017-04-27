@@ -22,9 +22,12 @@ class ValueProposition(TimeStampedModel):
     # personas = models.ManyToManyField(Persona, related_name='value_proposition_personas') #related name is how Persona will refer to it's ValuePropositions
     active = models.BooleanField(default=True)
     owner = models.ForeignKey('auth.User', related_name='valueprops', on_delete=models.CASCADE, default=1)
-    
+
     def __str__(self):
-        return self.title
+        title = str(self.title)
+        if len(title) > 15:
+            title = "{}...".format(str(self.title)[0:15])
+        return "{}".format(title)
 
     class Meta:
         verbose_name = "value proposition"
@@ -40,7 +43,10 @@ class CallToAction(TimeStampedModel):
     owner = models.ForeignKey('auth.User', related_name='calltoactions', on_delete=models.CASCADE, default=1)
 
     def __str__(self):
-        return self.title
+        title = str(self.title)
+        if len(title) > 15:
+            title = "{}...".format(str(self.title)[0:15])
+        return "{}".format(title)
 
     class Meta:
         verbose_name = "call to action"
