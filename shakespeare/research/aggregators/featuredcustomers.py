@@ -45,23 +45,22 @@ class FeaturedCustomers(AbstractAggregator):
         BeautifulSoup the html markup into something a little more usable
         """
         soup = BeautifulSoup(self.content, "html.parser")#, 'html.parser')
-        review_block = soup.find_all('div', {'class' : 'review_companies'})
+        review_block = soup.find_all('div', {'class' : 'testi_box'})
         if self.companyName is not None:
             if len(review_block) > 0: # Only create research if we find reviews for this company
                 self.create_piece({
                     'aggregator' : 'FeaturedCustomers',
                     'title' : 'Customer Testimonials',
                     'author' : 'Misc. Authors',
-                    'group' : 'testimonial' #can only every be a testimonial
+                    'group' : 'testimonial' #can only ever be a testimonial
                 })
                 for item in review_block:
                     self.create_nugget({
-                        'body' : item.find_all('div', {'itemprop' : 'reviewBody'})[0].text,
+                        'body' : item.find_all('div', {'itemprop' : 'description'})[0].text,
                         'category' : 'testimonial',
                         'additionaldata' : { 
-                            'name' : item.find_all('h2', {'itemprop' : 'name'})[0].text, 
-                            'company' : item.find_all('a')[0].get('title'),
-                            'title' : item.find_all('span', {'class' : 'subtitle'})[0].text
+                            'name' : item.find_all('h5', {'itemprop' : 'name'})[0].text, 
+                            'company' : item.find('a', {'class' : 'vendor_logo'})['title'],
+                            'title' : item.find_all('span', {'itemprop' : 'jobTitle'})[0].text
                         }
                     })
-                    
