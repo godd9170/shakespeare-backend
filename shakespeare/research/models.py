@@ -11,7 +11,7 @@ class Company(TimeStampedModel):
     The company to which an individual can belong to.
     """
     domain = models.CharField(unique=True, max_length=100) # Ensure the domain is unique
-    clearbit = models.UUIDField() # The clearbit UUID
+    clearbit = models.UUIDField(blank=True, null=True) # The clearbit UUID
     name = models.CharField(max_length=100, blank=True, null=True)
     cleanedname = models.CharField(max_length=100, blank=True, null=True)
     industry = models.CharField(max_length=100, blank=True, null=True)
@@ -43,7 +43,7 @@ class Individual(TimeStampedModel):
     avatar = models.CharField(max_length=500, blank=True, null=True) #URL to an avatar
     company = models.ForeignKey('research.Company', related_name='individual', null=True, on_delete=models.CASCADE) #null=True is because and Individual doesn't have to have a company
     companyname = models.CharField(max_length=200, blank=True, null=True) #We have a company name too, as it's possible for there to be no `company` result from Clearbit, however the person has a 'company name'
-    clearbit = models.UUIDField() # The clearbit UUID
+    clearbit = models.UUIDField(blank=True, null=True) # The clearbit UUID
 
     def __str__(self):
         return "{} {} ({})".format(str(self.firstname),str(self.lastname), str(self.email))
