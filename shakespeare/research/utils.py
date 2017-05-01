@@ -210,6 +210,7 @@ def create_indiviual_without_clearbit(individualObject, companyObject):
         'email' : individualObject['email'],
         'firstname' : individualObject['firstname'],
         'lastname' : individualObject['lastname'],
+        'jobtitle' : individualObject['jobtitle'],
         'companyname' : companyObject['companyname']
     }
     newIndividual = Individual(company=company, **individual)
