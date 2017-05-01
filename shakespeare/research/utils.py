@@ -150,7 +150,11 @@ def update_individual(email):
 
 # Creates a new individual, and may also either update or create a company.
 def create_individual(email):
-    response = dict(clearbit.Enrichment.find(email=email, stream=True))  # get the clearbit person/company
+    try:
+        response = dict(clearbit.Enrichment.find(email=email, stream=True))  # get the clearbit person/company
+    except:
+        raise ContactNotFoundException
+
     if (response is not None and response.get('person')):
         individual = get_clearbit_person(response, email)
         organization = get_clearbit_company(response)
@@ -181,10 +185,33 @@ def create_individual(email):
             newCompany = Company(**organization)
             newCompany.save()
             # Create individual
-            newIndividual = Individual(company=newCompany,
-                                       **individual)  # Create individual, and connect to the company we just made.
+            newIndividual = Individual(company=newCompany, **individual)  # Create individual, and connect to the company we just made.
             newIndividual.save()
 
         return newIndividual
     else:
         raise ContactNotFoundException
+
+
+# Create an individual from individual and company data objects manually entered on the frontend
+def create_indiviual_without_clearbit(individualObject, companyObject):
+    try:
+        company = Company.objects.get(domain=companyObject['companydomain'])
+    except:
+        organization = {
+            'domain': companyObject['companydomain'],
+            'name': companyObject['companyname'],
+            'cleanedname': clean_company_name(companyObject['companyname'])
+        }
+        company = Company(**organization)
+        company.save()
+
+    individual = {
+        'email' : individualObject['email'],
+        'firstname' : individualObject['firstname'],
+        'lastname' : individualObject['lastname'],
+        'companyname' : companyObject['companyname']
+    }
+    newIndividual = Individual(company=company, **individual)
+    newIndividual.save()
+    return newIndividual
