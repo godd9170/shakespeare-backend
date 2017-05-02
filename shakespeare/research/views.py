@@ -40,8 +40,8 @@ class ResearchDetail(APIView):
             email = data['email']
             try:  # See if we have this individual already
                 individual = Individual.objects.get(email=email)
-                # if individual.modified < (timezone.now() - timedelta(days=settings.INDIVIDUAL_REFRESH_MAX_AGE)):
-                individual = utils.update_individual(email)
+                if individual.modified < (timezone.now() - timedelta(days=settings.INDIVIDUAL_REFRESH_MAX_AGE)):
+                    individual = utils.update_individual(email)
 
             except ObjectDoesNotExist:
                 # We don't have this individual, let's get Clearbit to try
