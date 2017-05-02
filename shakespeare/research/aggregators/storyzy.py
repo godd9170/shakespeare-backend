@@ -24,9 +24,8 @@ class Storyzy(AbstractAggregator):
             resp.raise_for_status()
             self.quotes = resp.json()['searchResponse']
 
-
     def execute(self):
-        if ((self.research.individual.companyname is not None) and (self.research.individual.company is not None)):
+        if ((self.research.individual.companyname is not None) and (len(self.research.individual.companyname)>0) and (self.research.individual.company is not None)):
             try:
                 self.request()
                 self.reshape_payload()

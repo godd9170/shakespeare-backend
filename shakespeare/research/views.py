@@ -32,7 +32,7 @@ class ResearchDetail(APIView):
 
     def post(self, request, format=None):
         data = request.data
-
+        
         # 
         # Get the person we're dealing with
         #
@@ -42,7 +42,6 @@ class ResearchDetail(APIView):
                 individual = Individual.objects.get(email=email)
                 if individual.modified < (timezone.now() - timedelta(days=settings.INDIVIDUAL_REFRESH_MAX_AGE)):
                     individual = utils.update_individual(email)
-
             except ObjectDoesNotExist:
                 # We don't have this individual, let's get Clearbit to try
                 individual = utils.create_individual(email)
