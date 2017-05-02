@@ -197,7 +197,7 @@ def create_individual(email):
 
 
 # Create an individual from individual and company data objects manually entered on the frontend
-def create_indiviual_without_clearbit(individualObject, companyObject):
+def create_individual_without_clearbit(individualObject, companyObject):
     try:
         company = Company.objects.get(domain=companyObject['companydomain'])
     except:

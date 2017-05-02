@@ -47,7 +47,7 @@ class ResearchDetail(APIView):
                 # We don't have this individual, let's get Clearbit to try
                 individual = utils.create_individual(email)
         else : # If Clearbit was no good, create an individual and company and perform research based on the user-supplied information
-            individual = utils.create_indiviual_without_clearbit(data['individualObject'], data['companyObject'])
+            individual = utils.create_individual_without_clearbit(data['individualObject'], data['companyObject'])
         
         # 
         # Create a new research 
