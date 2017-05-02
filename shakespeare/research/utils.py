@@ -202,20 +202,14 @@ def create_individual_without_clearbit(individualObject, companyObject):
         company = Company.objects.get(domain=companyObject['companydomain'])
     except:
         organization = {
-            'domain': companyObject['companydomain'],
-            'name': companyObject['companyname'],
-            'cleanedname': clean_company_name(companyObject['companyname'])
+            'domain': companyObject.get('companydomain'),
+            'name': companyObject.get('companyname'),
+            'cleanedname': clean_company_name(companyObject.get('companyname'))
         }
         company = Company(**organization)
         company.save()
 
-    individual = {
-        'email' : individualObject['email'],
-        'firstname' : individualObject['firstname'],
-        'lastname' : individualObject['lastname'],
-        'jobtitle' : individualObject['jobtitle'],
-        'companyname' : companyObject['companyname']
-    }
-    newIndividual = Individual(company=company, **individual)
+
+    newIndividual = Individual(company=company, **individualObject)
     newIndividual.save()
     return newIndividual
