@@ -105,8 +105,11 @@ def update_individual(email):
     updatedIndividual = Individual.objects.get(email=email)  # Find the existing individual
     response = clearbit.Enrichment.find(email=email, stream=True)  # get the clearbit person/company from previous id
 
-    individual = get_clearbit_person(response, email)
-    individual.update({'id': updatedIndividual.id, 'created': updatedIndividual.created})
+    try:
+        individual = get_clearbit_person(response, email)
+        individual.update({'id': updatedIndividual.id, 'created': updatedIndividual.created})
+    except:
+        return updatedIndividual
 
     if individual is None:
         return  # Clearbit no longer has this person. Abort rest of the function.
