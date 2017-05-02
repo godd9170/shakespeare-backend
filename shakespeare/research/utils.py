@@ -105,8 +105,11 @@ def update_individual(email):
     updatedIndividual = Individual.objects.get(email=email)  # Find the existing individual
     response = clearbit.Enrichment.find(email=email, stream=True)  # get the clearbit person/company from previous id
 
-    individual = get_clearbit_person(response, email)
-    individual.update({'id': updatedIndividual.id, 'created': updatedIndividual.created})
+    try:
+        individual = get_clearbit_person(response, email)
+        individual.update({'id': updatedIndividual.id, 'created': updatedIndividual.created})
+    except:
+        return updatedIndividual
 
     if individual is None:
         return  # Clearbit no longer has this person. Abort rest of the function.
@@ -150,7 +153,11 @@ def update_individual(email):
 
 # Creates a new individual, and may also either update or create a company.
 def create_individual(email):
-    response = dict(clearbit.Enrichment.find(email=email, stream=True))  # get the clearbit person/company
+    try:
+        response = dict(clearbit.Enrichment.find(email=email, stream=True))  # get the clearbit person/company
+    except:
+        raise ContactNotFoundException
+
     if (response is not None and response.get('person')):
         individual = get_clearbit_person(response, email)
         organization = get_clearbit_company(response)
@@ -181,10 +188,28 @@ def create_individual(email):
             newCompany = Company(**organization)
             newCompany.save()
             # Create individual
-            newIndividual = Individual(company=newCompany,
-                                       **individual)  # Create individual, and connect to the company we just made.
+            newIndividual = Individual(company=newCompany, **individual)  # Create individual, and connect to the company we just made.
             newIndividual.save()
 
         return newIndividual
     else:
         raise ContactNotFoundException
+
+
+# Create an individual from individual and company data objects manually entered on the frontend
+def create_individual_without_clearbit(individualObject, companyObject):
+    try:
+        company = Company.objects.get(domain=companyObject['companydomain'])
+    except:
+        organization = {
+            'domain': companyObject.get('companydomain'),
+            'name': companyObject.get('companyname'),
+            'cleanedname': clean_company_name(companyObject.get('companyname'))
+        }
+        company = Company(**organization)
+        company.save()
+
+
+    newIndividual = Individual(company=company, **individualObject)
+    newIndividual.save()
+    return newIndividual

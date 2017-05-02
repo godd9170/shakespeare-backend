@@ -29,25 +29,26 @@ class ResearchDetail(APIView):
         serializer = ResearchSerializer(research)
         return Response(serializer.data)
 
+
     def post(self, request, format=None):
         data = request.data
-        email = data['email']
 
         # 
         # Get the person we're dealing with
         #
-        try:  # See if we've got this individual already
-            individual = Individual.objects.get(email=email)
-            if individual.modified < (timezone.now() - timedelta(days=settings.INDIVIDUAL_REFRESH_MAX_AGE)):
-                # if (datetime.timedelta(datetime.datetime.now() - individual.modified) > settings.INDIVIDUAL_REFRESH_MAX_AGE):
-                # if (individual.modified + settings.INDIVIDUAL_REFRESH_MAX_AGE > datetime.datetime.now()):
+        if ('individualObject' not in data): # If the first name not supplied in the request, go try to find the individual normally via the database or Clearbit
+            email = data['email']
+            try:  # See if we have this individual already
+                individual = Individual.objects.get(email=email)
+                # if individual.modified < (timezone.now() - timedelta(days=settings.INDIVIDUAL_REFRESH_MAX_AGE)):
                 individual = utils.update_individual(email)
 
-
-        except ObjectDoesNotExist:
-            # We don't have this individual, let's get Clearbit to try
-            individual = utils.create_individual(email)
-
+            except ObjectDoesNotExist:
+                # We don't have this individual, let's get Clearbit to try
+                individual = utils.create_individual(email)
+        else : # If Clearbit was no good, create an individual and company and perform research based on the user-supplied information
+            individual = utils.create_individual_without_clearbit(data['individualObject'], data['companyObject'])
+        
         # 
         # Create a new research 
         #
@@ -59,3 +60,4 @@ class ResearchDetail(APIView):
         collect_research(research)
 
         return Response({'id': str(research.id)})
+            
