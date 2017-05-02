@@ -209,7 +209,6 @@ def create_individual_without_clearbit(individualObject, companyObject):
         company = Company(**organization)
         company.save()
 
-
     newIndividual = Individual(company=company, **individualObject)
     newIndividual.save()
     return newIndividual
