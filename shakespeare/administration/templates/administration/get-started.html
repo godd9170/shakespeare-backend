@@ -1,0 +1,8 @@
+{% extends './base.html' %}
+{% block extrahead %}
+	<link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/kkigdgpkeimbmdlkfakiacplnhnnoadl">
+{% endblock %}
+{% block content %}
+    <h1>Welcome {{request.GET.name}}!</h1>
+    <h3>In order to begin, you must download the chrome extension below</h3>
+{% endblock %}

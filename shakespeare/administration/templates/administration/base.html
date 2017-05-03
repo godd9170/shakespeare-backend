@@ -1,13 +1,13 @@
 {% load static %}
 <html>
     <head>
-        {% block head %}
         <link rel="stylesheet" href="{% static "administration/shakespeare.css" %}" />
         <title>{% block title %}{% endblock %} - Shakespeare</title>
+        {% block extrahead %}
         {% endblock %}
     </head>
     <body>
-        <div class="error-container">
+        <div class="container">
             {% block content %}
             {% endblock %}
         </div>
