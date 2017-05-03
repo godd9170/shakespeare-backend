@@ -1,5 +1,5 @@
 from research.models import Research, Piece, Nugget
-from research.categories import category_to_group
+from research.categories import category_to_group, category_exists
 from urllib.parse import urlparse
 # from newspaper import Article
 
@@ -18,13 +18,14 @@ class AbstractAggregator(object):
     def create_nugget(self, nugget):
         Nugget(piece=self.currentPiece, **nugget).save()
 
-
     def category_to_group(self, category):
         return category_to_group(category)
 
+    def category_exists(self,category):
+        return category_exists(category)
+
     def parse_domain(self, url):
         return re.sub(r"(www\.)", "", urlparse(url).netloc)
-
 
     def get_article_bodies(self):
         pieces = Piece.objects.all().filter(research=self.research.id)
