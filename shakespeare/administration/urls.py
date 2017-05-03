@@ -5,7 +5,9 @@ from . import views
 urlpatterns = [
     url(r'^$', views.home),
     url(r'^isvalid/', views.isvalid),
-    url(r'^email-sent/', views.validation_sent),
+    url(r'^isvalid/', views.isvalid),
+    url(r'^get-started/', views.getstarted),
+    url(r'^create-user/', views.createuser),
     url(r'^login/$', views.home),
     url(r'^logout/$', views.logout),
     url(r'^done/$', views.done, name='done'),

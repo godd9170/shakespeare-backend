@@ -1,0 +1,31 @@
+{% extends './base.html' %}
+{% block extrahead %}
+    <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/kkigdgpkeimbmdlkfakiacplnhnnoadl">
+{% endblock %}
+{% block content %}
+    <div id="pre-install" style="display: block;">
+        <h1>Welcome {{request.GET.name}}!</h1>
+        <h3>In order to begin, you must download the chrome extension below</h3>
+        <button onclick="install()" id="install-button">Add to Chrome</button>
+    </div>
+    <div id="installed" style="display: none;">
+        <h1>Great!</h1>
+        <h3>Now head over to gmail to begin</h3>
+        <input type="submit" value="gmail" onclick="window.location='https://mail.google.com';" /> 
+    </div>
+    <script>
+        function install() {
+            chrome.webstore.install(
+                "https://chrome.google.com/webstore/detail/kkigdgpkeimbmdlkfakiacplnhnnoadl",
+                function onSuccess(resp) {
+                    console.log('SUCCESS!: ', resp);
+                    document.getElementById("pre-install").style.display = "none"; //turn of the install
+                    document.getElementById("installed").style.display = "block"; //turn on the redirect to gmail
+                },
+                function onFailure(resp) {
+                    console.log('FAILURE!: ', resp);
+                }
+            );
+        }
+    </script>
+{% endblock %}
