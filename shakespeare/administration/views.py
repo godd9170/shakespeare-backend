@@ -39,7 +39,6 @@ def getstarted(request):
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 def createuser(request):
-    print('GOTCHA: ', request.data)
     utils.create_user(request.data['form_response']['answers'][2]['email'])
     return Response(status=200)
 
