@@ -47,31 +47,33 @@ class PredictLeads(AbstractAggregator):
         for datum in self.events:
             attributes = datum.get('attributes')
             if attributes is not None:
-                self.create_piece({
-                    'aggregator' : 'PredictLeads',
-                    'title' : self.reformat_article_title(self.remove_date_from_pl_title(attributes.get('title'))),
-                    'url' : attributes.get('url'),
-                    'publisheddate' : attributes.get('found_at'),
-                    'group': self.category_to_group(attributes['categories'][0]),
-                    'source' : {
-                        'uri' : attributes.get('url'),
-                        'domain' : self.parse_domain(attributes.get('url'))
-                    }
-                })
-                additionaldata = attributes.get('additional_data')
-                if additionaldata is not None:
-                    additionaldata['title'] = self.remove_date_from_pl_title(attributes.get('title'))
-                    try:
-                        additionaldata['amount'] = self.reformat_amount(additionaldata['amount'])
-                    except:
-                        pass
-                    try:
-                        self.create_nugget({
-                            'additionaldata' : additionaldata,
-                            'category' : attributes['categories'][0]
-                        })
-                    except:
-                        print("No Category, no nugget")
+                # If category exists in our own list create the piece, otherwise don't
+                if self.category_exists(attributes['categories'][0]):
+                    self.create_piece({
+                        'aggregator' : 'PredictLeads',
+                        'title' : self.reformat_article_title(self.remove_date_from_pl_title(attributes.get('title'))),
+                        'url' : attributes.get('url'),
+                        'publisheddate' : attributes.get('found_at'),
+                        'group': self.category_to_group(attributes['categories'][0]),
+                        'source' : {
+                            'uri' : attributes.get('url'),
+                            'domain' : self.parse_domain(attributes.get('url'))
+                        }
+                    })
+                    additionaldata = attributes.get('additional_data')
+                    if additionaldata is not None:
+                        additionaldata['title'] = self.remove_date_from_pl_title(attributes.get('title'))
+                        try:
+                            additionaldata['amount'] = self.reformat_amount(additionaldata['amount'])
+                        except:
+                            pass
+                        try:
+                            self.create_nugget({
+                                'additionaldata' : additionaldata,
+                                'category' : attributes['categories'][0]
+                            })
+                        except:
+                            print("No Category, no nugget")
 
 
 

@@ -12,13 +12,13 @@ GROUPS = {
         ('hires', 'Hires'), # PredictLeads vvv
         ('promotes', 'Promotes'),
         ('leaves', 'Leaves'),
-        ('retires', 'Retires')
+        # ('retires', 'Retires')
     ],
 
     'aquisition' : [
         ('acquires', 'Aquires'),
         ('merges_with', 'Merges With'),
-        ('sells_assets_to', 'Sells Assets To')
+        # ('sells_assets_to', 'Sells Assets To')
     ],
     'expansion' : [
         ('expands_offices_to', 'Expands Offices To'),
@@ -35,12 +35,12 @@ GROUPS = {
     'investment' : [
         ('receives_financing', 'Receives Financing'),
         ('invests_into', 'Invests Into'),
-        ('invests_into_assets', 'Invests Into Assets'),
+        # ('invests_into_assets', 'Invests Into Assets'),
         ('goes_public', 'Goes Public')
     ],
     'cost_cutting' : [
-        ('closes_offices', 'Closes Offices'),
-        ('decreases_headcount_by', 'Decreases Headcount By')
+        # ('closes_offices', 'Closes Offices'),
+        # ('decreases_headcount_by', 'Decreases Headcount By')
     ],
     'partnership' : [
         ('partners_with', 'Partners With')
@@ -51,31 +51,31 @@ GROUPS = {
         ('signs_new_client', 'Signs New Client')
     ],
     'corporate_challenges' : [
-        ('files_suit_against', 'Files Suit Against'),
-        ('has_issues_with', 'Has Issues With')
+        # ('files_suit_against', 'Files Suit Against'),
+        # ('has_issues_with', 'Has Issues With')
     ],
     'job_position' : [
         ("none", "None"),
-        ("administration", "Administration"),
-        ("chairmen", "Chairmen"),
-        ("health_care", "Health Care"),
-        ("hospitality", "Hospitality"),
+        # ("administration", "Administration"),
+        # ("chairmen", "Chairmen"),
+        # ("health_care", "Health Care"),
+        # ("hospitality", "Hospitality"),
         ("engineering", "Engineering"),
-        ("education", "Education"),
-        ("maintenance", "Maintenance"),
+        # ("education", "Education"),
+        # ("maintenance", "Maintenance"),
         ("finance", "Finance"),
         ("information_technology", "Information Technology"),
         ("management", "Management"),
         ("operations", "Operations"),
         ("partnerships",  "Partnerships",),
         ("human_resources", "Human Resources"),
-        ("publishing", "Publishing"),
-        ("purchasing", "Purchasing"),
+        # ("publishing", "Publishing"),
+        # ("purchasing", "Purchasing"),
         ("sales", "Sales"),
         ("marketing", "Marketing"),
-        ("transportation", "Transportation"),
+        # ("transportation", "Transportation"),
         ("directors", "Directors"),
-        ("design", "Design"),
+        # ("design", "Design"),
         ("software_development", "Software Development"),
         ("general_technology", "General Technology"),
         ("business_analysis", "Business Analysis"),
@@ -91,3 +91,9 @@ def category_to_group(category):
             if dict(categories).get(category) is not None:
                 return group
         return 'article'
+
+def category_exists(category):
+        for group, categories in GROUPS.items():
+            if dict(categories).get(category) is not None:
+                return True
+        return False
