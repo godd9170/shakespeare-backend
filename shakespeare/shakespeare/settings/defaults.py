@@ -125,7 +125,6 @@ SOCIAL_AUTH_PIPELINE = (
     # Checks if the current social-account is already associated in the site.
     'social_core.pipeline.social_auth.social_user',
 
-
     # ???
     # 'administration.pipeline.require_email', I think this fucks up the standard flow
 

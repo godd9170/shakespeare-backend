@@ -172,5 +172,23 @@ TEMPLATES = [
         "segue" : "The reason {{Nugget.additionaldata.name}}'s quote stood out is that it alluded to something we strongly believe in.",
         "category" : "quote_about",
         "subject" : "{{Nugget.additionaldata.name}}'s quote on {{Nugget.piece.research.individual.company.name}}"
-    }
+    },
+            { 
+        "intro" : "I read that {{Nugget.additionaldata.contact}} was promoted recently and it compelled me to reach out.",
+        "segue" : "With any promotion, comes change.",
+        "category" : "promotes",
+        "subject" : "{{Nugget.additionaldata.contact}} moving into role of {{Nugget.additionaldata.job_title}}"
+    },
+            { 
+        "intro" : "I read that {{Nugget.additionaldata.contact}} left your company recently and it compelled me to reach out. ",
+        "segue" : "When someone leaves the company, it can sometimes mean that it's a good time to look at new ways to do things.",
+        "category" : "leaves",
+        "subject" : "{{Nugget.additionaldata.contact}} leaving the company"
+    },
+            { 
+        "intro" : "I noticed that you recently expanded your offices into {{Nugget.additionaldata.location}} and it compelled me to reach out. ",
+        "segue" : "With growth typically comes some challenges that we seek to rectify.",
+        "category" : "expands_offices_in",
+        "subject" : "your new office in {{Nugget.additionaldata.location}} "
+    },
 ]
