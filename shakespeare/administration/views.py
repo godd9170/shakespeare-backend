@@ -29,6 +29,10 @@ def shakespeare(request):
 def inviteonly(request):
     pass
 
+@render_to('administration/get-started.html')
+def getstarted(request):
+    pass
+
 @render_to('administration/home.html')
 def home(request):
     """Home view, displays login mechanism"""
