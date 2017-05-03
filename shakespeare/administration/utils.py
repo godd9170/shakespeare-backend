@@ -1,8 +1,9 @@
 from social_core.backends.google import GooglePlusAuth
 from social_core.backends.utils import load_backends
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from personas.models import ValueProposition, CallToAction
-from .data.defaults import DEFAULT_VALUE_PROPOSITIONS, DEFAULT_CALLS_TO_ACTION
+from .data.defaults import DEFAULT_CALLS_TO_ACTION  #, DEFAULT_VALUE_PROPOSITIONS 
 
 
 
@@ -16,9 +17,9 @@ def create_user(email):
             username=email,
             email=email
         )
-        #make the vps
-        for vp in DEFAULT_VALUE_PROPOSITIONS:
-            ValueProposition(owner=user, **vp).save()
+        # #make the vps
+        # for vp in DEFAULT_VALUE_PROPOSITIONS:
+        #     ValueProposition(owner=user, **vp).save()
 
         #make the ctas
         for cta in DEFAULT_CALLS_TO_ACTION:

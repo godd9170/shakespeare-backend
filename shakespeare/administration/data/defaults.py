@@ -1,13 +1,13 @@
-DEFAULT_VALUE_PROPOSITIONS = [
-	{
-		"title" : "Sample Value Proposition",
-		"body" : "shakespeare.ai is on a mission to reduce the time it takes sales people to research and compose highly personalized emails that tend to get higher response rates."
-	},
-    {
-        "title" : "Value Proposition Tutorial",
-        "body" : "PLEASE GO TO THIS LINK FOR QUICK TUTORIAL: http://bit.ly/2qyjPQJ"
-    }
-]
+# DEFAULT_VALUE_PROPOSITIONS = [
+# 	{
+# 		"title" : "Sample Value Proposition",
+# 		"body" : "shakespeare.ai is on a mission to reduce the time it takes sales people to research and compose highly personalized emails that tend to get higher response rates."
+# 	},
+#     {
+#         "title" : "Value Proposition Tutorial",
+#         "body" : "PLEASE GO TO THIS LINK FOR QUICK TUTORIAL: http://bit.ly/2qyjPQJ"
+#     }
+# ]
 
 DEFAULT_CALLS_TO_ACTION = [
     {
