@@ -1,5 +1,30 @@
 from social_core.backends.google import GooglePlusAuth
 from social_core.backends.utils import load_backends
+from django.contrib.auth.models import User
+from personas.models import ValueProposition, CallToAction
+from .data.defaults import DEFAULT_VALUE_PROPOSITIONS, DEFAULT_CALLS_TO_ACTION
+
+
+
+# Create and initialize a new user
+def create_user(email):
+    try:  # See if we've got this user already
+        user = User.objects.get(email=email)
+    except ObjectDoesNotExist:
+        # We don't have this user, let's make 'em
+        user = User.objects.create_user(
+            username=email,
+            email=email
+        )
+        #make the vps
+        for vp in DEFAULT_VALUE_PROPOSITIONS:
+            ValueProposition(owner=user, **vp).save()
+
+        #make the ctas
+        for cta in DEFAULT_CALLS_TO_ACTION:
+            CallToAction(owner=user, **cta).save()
+    return
+
 
 
 def is_authenticated(user):

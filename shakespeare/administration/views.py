@@ -1,5 +1,6 @@
 import json
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.views import View
 from .decorators import render_to
@@ -9,6 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout, login, get_user_model
 from social_core.backends.oauth import BaseOAuth1, BaseOAuth2
 from social_django.utils import psa, load_strategy
+
+from . import utils
 
 
 @api_view(['GET'])
@@ -32,6 +35,13 @@ def inviteonly(request):
 @render_to('administration/get-started.html')
 def getstarted(request):
     pass
+
+@api_view(['POST'])
+@permission_classes((AllowAny, ))
+def createuser(request):
+    print('GOTCHA: ', request.data)
+    utils.create_user(request.data['form_response']['answers'][2]['email'])
+    return Response(status=200)
 
 @render_to('administration/home.html')
 def home(request):
