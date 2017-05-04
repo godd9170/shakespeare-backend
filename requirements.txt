@@ -17,6 +17,7 @@ cssselect==1.0.1
 decorator==4.0.11
 defusedxml==0.5.0
 Django==1.10.5
+django-appconf==1.0.2
 django-braces==1.11.0
 django-cors-headers==2.0.2
 django-extensions==1.7.7
@@ -42,6 +43,7 @@ ipython-genutils==0.2.0
 jieba3k==0.35.1
 Jinja2==2.9.5
 jmespath==0.9.1
+jsonfield==1.0.3
 kombu==4.0.2
 lxml==3.7.3
 Markdown==2.6.8
@@ -59,6 +61,7 @@ pathspec==0.5.0
 pexpect==4.2.1
 pickleshare==0.7.4
 Pillow==4.1.0
+pinax-stripe==3.4.1
 prompt-toolkit==1.0.14
 psycopg2==2.6.2
 ptyprocess==0.5.1
@@ -86,6 +89,7 @@ simplere==1.2.11
 six==1.10.0
 social-auth-app-django==1.1.0
 social-auth-core==1.2.0
+stripe==1.55.0
 tabulate==0.7.5
 termcolor==1.1.0
 textdata==1.7.1
