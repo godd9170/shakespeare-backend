@@ -41,11 +41,12 @@
 
 {% block footerjs %}
 <script>
+    var price = {{SHAKESPEARE_MONTHLY_PRICE}}/100;
     var handler = StripeCheckout.configure({
         key: "{{ PINAX_STRIPE_PUBLIC_KEY }}",
         image: "{% static "administration/shakespeare128.png" %}",
         name: "Shakespeare",
-        description: "$0.18/email billed monthly",
+        description: "$" + price + "/email, {{SHAKESPEARE_BILLING_FREQUENCY}}",
         panelLabel: "Subscribe",
         allowRememberMe: false,
         token: function(resp, args){

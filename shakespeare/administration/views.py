@@ -13,6 +13,7 @@ from social_core.backends.oauth import BaseOAuth1, BaseOAuth2
 from social_django.utils import psa, load_strategy
 from django.conf import settings
 from emails.models import Email
+from pinax.stripe.models import Plan
 
 from . import utils
 
@@ -52,7 +53,13 @@ def inviteonly(request):
 @csrf_exempt
 def getstarted(request):
     if request.POST:
+        default_plan_info = Plan.objects.get(stripe_id=settings.PINAX_STRIPE_DEFAULT_PLAN).metadata #get default plan info
         user = utils.create_user(request.POST['email']) #make or fetch the user
+        print(">>>>>>>>>>>>>>>>>>>USER: {}".format(user.__dict__))
+        user.shakspeareuser.trialemails = default_plan_info['trialemails']
+        user.shakspeareuser.price = default_plan_info['price']
+        user.save()
+
         customer = utils.create_stripe_customer(user, request.POST['stripeToken']) #make a new stripe user
         return render(
             request, 
@@ -63,10 +70,16 @@ def getstarted(request):
 
 #@render_to('administration/subscribe.html')
 def subscribe(request):
+    default_plan_info = Plan.objects.get(stripe_id=settings.PINAX_STRIPE_DEFAULT_PLAN).metadata
+    print(default_plan_info['price'])
     return render(
         request, 
         'administration/subscribe.html', 
-        {'PINAX_STRIPE_PUBLIC_KEY' : settings.PINAX_STRIPE_PUBLIC_KEY}
+        {
+            'PINAX_STRIPE_PUBLIC_KEY' : settings.PINAX_STRIPE_PUBLIC_KEY,
+            'SHAKESPEARE_MONTHLY_PRICE' : default_plan_info['price'],
+            'SHAKESPEARE_BILLING_FREQUENCY' : default_plan_info['billing']
+        }
     )
 
 @api_view(['POST'])
