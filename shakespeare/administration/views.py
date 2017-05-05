@@ -7,9 +7,11 @@ from .decorators import render_to
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect, render, reverse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import logout as auth_logout, login, get_user_model
 from social_core.backends.oauth import BaseOAuth1, BaseOAuth2
 from social_django.utils import psa, load_strategy
+from django.conf import settings
 
 from . import utils
 
@@ -32,9 +34,26 @@ def shakespeare(request):
 def inviteonly(request):
     pass
 
-@render_to('administration/get-started.html')
+#@render_to('administration/get-started.html')
+@csrf_exempt
 def getstarted(request):
-    pass
+    if request.POST:
+        user = utils.create_user(request.POST['email']) #make or fetch the user
+        customer = utils.create_stripe_customer(user, request.POST['stripeToken']) #make a new stripe user
+        return render(
+            request, 
+            'administration/get-started.html'
+        )
+    else:
+        return redirect('subscribe')
+
+#@render_to('administration/subscribe.html')
+def subscribe(request):
+    return render(
+        request, 
+        'administration/subscribe.html', 
+        {'PINAX_STRIPE_PUBLIC_KEY' : settings.PINAX_STRIPE_PUBLIC_KEY}
+    )
 
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
