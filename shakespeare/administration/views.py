@@ -12,9 +12,9 @@ from django.contrib.auth import logout as auth_logout, login, get_user_model
 from social_core.backends.oauth import BaseOAuth1, BaseOAuth2
 from social_django.utils import psa, load_strategy
 from django.conf import settings
+from emails.models import Email
 
 from . import utils
-
 
 @api_view(['GET'])
 def isvalid(request):
@@ -28,6 +28,20 @@ def logout(request):
 @render_to('administration/shakespeare.html')
 def shakespeare(request):
     pass
+
+@api_view(['GET'])
+def me(request):
+    user = request.user
+    sent = Email.objects.filter(owner=request.user).count() #how many emails have been sent?
+    return Response(
+        {
+            "firstname": user.first_name,
+            "lastname": user.last_name,
+            "sent" : sent
+        }
+    )
+
+
 
 
 @render_to('administration/invite-only.html')
