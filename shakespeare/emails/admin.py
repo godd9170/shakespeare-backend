@@ -25,7 +25,7 @@ class EmailAdmin(admin.ModelAdmin):
     def link_selectedvalueproposition(self, obj):
         if obj.selectedvalueproposition_id is not None:
             link=urlresolvers.reverse("admin:personas_valueproposition_change", args=[obj.selectedvalueproposition_id]) #model name has to be lowercase
-            return u'<a href="%s">%s</a>' % (link,obj.valueproposition)
+            return u'<a href="%s">%s</a>' % (link,obj.selectedvalueproposition)
     link_selectedvalueproposition.allow_tags = True
 
     def link_selectedcalltoaction(self, obj):
