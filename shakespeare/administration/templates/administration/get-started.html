@@ -1,17 +1,19 @@
 {% extends './base.html' %}
+
 {% block extrahead %}
     <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/kkigdgpkeimbmdlkfakiacplnhnnoadl">
 {% endblock %}
+
 {% block content %}
     <div id="pre-install" style="display: block;">
-        <h1>Welcome {{request.GET.name}}!</h1>
+        <h1>Welcome {{request.POST.email}}!</h1>
         <h3>In order to begin, you must download the chrome extension below</h3>
         <button onclick="install()" id="install-button">Add to Chrome</button>
     </div>
     <div id="installed" style="display: none;">
         <h1>Great!</h1>
-        <h3>Now head over to gmail to begin</h3>
-        <input type="submit" value="gmail" onclick="window.location='https://mail.google.com';" /> 
+        <h3>Here's a short tutorial of what to expect in your gmail inbox.</h3>
+        <iframe src='//www.appdemostore.com/embed?id=4847017010397184' width='780' height='623.2390243902439' frameborder='0'></iframe>
     </div>
     <script>
         function install() {
