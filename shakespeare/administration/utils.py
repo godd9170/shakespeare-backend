@@ -5,6 +5,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from personas.models import ValueProposition, CallToAction
 from .data.defaults import DEFAULT_CALLS_TO_ACTION  #, DEFAULT_VALUE_PROPOSITIONS 
 
+# stripe libraries
+from pinax.stripe.actions.customers import create as customerCreate
+
+
+
+def create_stripe_customer(user, token):
+    return customerCreate(user, card=token)
 
 
 # Create and initialize a new user
@@ -24,7 +31,7 @@ def create_user(email):
         #make the ctas
         for cta in DEFAULT_CALLS_TO_ACTION:
             CallToAction(owner=user, **cta).save()
-    return
+    return user
 
 
 
