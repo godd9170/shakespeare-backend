@@ -5,7 +5,13 @@ from organizations.models import (Organization, OrganizationUser, OrganizationOw
 # Register your models here.
 admin.site.register(Account)
 admin.site.register(AccountUser)
-admin.site.register(ShakespeareUser)
+
+@admin.register(ShakespeareUser)
+class ShakespeareUserAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'trialemails', 'price')
+    list_display_links = ('id',)
+    search_fields = ('user__email',)
+    list_per_page = 20
 
 # Unregister the generic Orgs and use the proxies
 admin.site.unregister(Organization)
