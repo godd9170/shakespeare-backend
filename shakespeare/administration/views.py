@@ -55,8 +55,8 @@ def getstarted(request):
     if request.POST:
         default_plan_info = Plan.objects.get(stripe_id=settings.PINAX_STRIPE_DEFAULT_PLAN).metadata #get default plan info
         user = utils.create_user(request.POST['email']) #make or fetch the user
-        user.shakespeareuser.trialemails = default_plan_info['trialemails']
-        user.shakespeareuser.price = default_plan_info['price']
+        user.shakespeareuser.trialemails = int(default_plan_info['trialemails'])
+        user.shakespeareuser.price = int(default_plan_info['price'])
         user.save()
 
         customer = utils.create_stripe_customer(user, request.POST['stripeToken']) #make a new stripe user
