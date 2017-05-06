@@ -18,6 +18,9 @@ class ShakespeareUser(models.Model):
     def save_shakespeare_user(sender, instance, **kwargs):
         instance.shakespeareuser.save()
 
+    def __str__(self):
+        return str(self.user.email)
+
 
 class Account(Organization):
     class Meta:
