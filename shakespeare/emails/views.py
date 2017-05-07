@@ -64,8 +64,9 @@ class EmailDetail(APIView):
         )
         email.save()
 
-        if (Email.objects.filter(owner=request.user).count() > request.user.shakespeareuser.trialemails):
-            charge_email(request.user) #charge the user if they're over their trial count
+        if hasattr(request.user, 'customer'):
+            if (Email.objects.filter(owner=request.user).count() > request.user.shakespeareuser.trialemails):
+                charge_email(request.user) #charge the user if they're over their trial count
 
 
 
