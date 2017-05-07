@@ -38,7 +38,9 @@ def me(request):
         {
             "firstname": user.first_name,
             "lastname": user.last_name,
-            "sent" : sent
+            "email": user.email,
+            "sent" : sent,
+            "total" : user.shakespeareuser.trialemails
         }
     )
 
