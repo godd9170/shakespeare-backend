@@ -10,3 +10,7 @@ h1, h2, h3, h4, span {
     align-items: center; 
     text-align: center;
 }
+
+.logo-header {
+	width: 30%;
+}

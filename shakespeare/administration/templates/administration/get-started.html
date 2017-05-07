@@ -1,10 +1,12 @@
 {% extends './base.html' %}
+{% load static %}
 
 {% block extrahead %}
     <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/kkigdgpkeimbmdlkfakiacplnhnnoadl">
 {% endblock %}
 
 {% block content %}
+    <img class="logo-header" src="{% static "administration/shakespeare.png" %}" />
     <div id="pre-install" style="display: block;">
         <h1>Welcome {{request.POST.email}}!</h1>
         <h3>In order to begin, you must download the chrome extension below</h3>

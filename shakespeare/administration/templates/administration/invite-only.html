@@ -1,6 +1,8 @@
 {% extends './base.html' %}
+{% load static %}
 {% block content %}
       {% if request.GET.email %}
+      	<img class="logo-header" src="{% static "administration/shakespeare.png" %}" />
         <h1>Sorry</h1>
         <h3><b>{{request.GET.email}}</b> isn't part of our beta.</h3>
         <h5>Click the button below to request access.</h5>
