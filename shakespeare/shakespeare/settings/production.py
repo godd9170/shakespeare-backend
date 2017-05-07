@@ -104,3 +104,8 @@ REDIS_PORT = '6379'
 BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
 CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+
+# Production PINAX-STRIPE
+PINAX_STRIPE_PUBLIC_KEY = 'pk_live_GAVQpVttWYTk6paBN0HFHWa5'
+PINAX_STRIPE_SECRET_KEY = 'sk_live_79haVXtWnaJ6pLYqu3q57Tb0'
+PINAX_STRIPE_DEFAULT_PLAN = 'shakespeare-monthly'

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'social_django',
     'rest_framework_social_oauth2',
     'organizations',
+    'pinax.stripe',
 
     #'personas.apps.PersonasConfig',
     #'administration.apps.AdministrationConfig',
@@ -252,3 +253,10 @@ CLEARBIT_KEY = 'sk_ee825c041f0d61a8da0f980b6d9f8070' #new Mansour Key
 BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
 CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+
+
+# PINAX-STRIPE
+SITE_ID = 1
+PINAX_STRIPE_PUBLIC_KEY = 'pk_test_b2v8x37Tdp8DqU9PBFn0a1Hh'
+PINAX_STRIPE_SECRET_KEY = 'sk_test_kRbTWZaxjyTuFB68lEJi9LEr'
+PINAX_STRIPE_DEFAULT_PLAN = 'shakespeare-monthly'

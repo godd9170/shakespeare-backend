@@ -1,6 +1,6 @@
 {% load static %}
 <html>
-    <head>
+    <head>    
         <link rel="stylesheet" href="{% static "administration/shakespeare.css" %}" />
         <title>{% block title %}{% endblock %} - Shakespeare</title>
         {% block extrahead %}
@@ -11,5 +11,7 @@
             {% block content %}
             {% endblock %}
         </div>
+    {% block footerjs %}
+    {% endblock %}
     </body>
 </html>

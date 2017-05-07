@@ -7,12 +7,15 @@ from .decorators import render_to
 from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect
 from django.shortcuts import redirect, render, reverse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import logout as auth_logout, login, get_user_model
 from social_core.backends.oauth import BaseOAuth1, BaseOAuth2
 from social_django.utils import psa, load_strategy
+from django.conf import settings
+from emails.models import Email
+from pinax.stripe.models import Plan
 
 from . import utils
-
 
 @api_view(['GET'])
 def isvalid(request):
@@ -27,14 +30,55 @@ def logout(request):
 def shakespeare(request):
     pass
 
+@api_view(['GET'])
+def me(request):
+    user = request.user
+    sent = Email.objects.filter(owner=request.user).count() #how many emails have been sent?
+    return Response(
+        {
+            "firstname": user.first_name,
+            "lastname": user.last_name,
+            "sent" : sent
+        }
+    )
+
+
+
 
 @render_to('administration/invite-only.html')
 def inviteonly(request):
     pass
 
-@render_to('administration/get-started.html')
+#@render_to('administration/get-started.html')
+@csrf_exempt
 def getstarted(request):
-    pass
+    if request.POST:
+        default_plan_info = Plan.objects.get(stripe_id=settings.PINAX_STRIPE_DEFAULT_PLAN).metadata #get default plan info
+        user = utils.create_user(request.POST['email']) #make or fetch the user
+        user.shakespeareuser.trialemails = int(default_plan_info['trialemails'])
+        user.shakespeareuser.price = int(default_plan_info['price'])
+        user.save()
+
+        customer = utils.create_stripe_customer(user, request.POST['stripeToken']) #make a new stripe user
+        return render(
+            request, 
+            'administration/get-started.html'
+        )
+    else:
+        return redirect('subscribe')
+
+#@render_to('administration/subscribe.html')
+def subscribe(request):
+    default_plan_info = Plan.objects.get(stripe_id=settings.PINAX_STRIPE_DEFAULT_PLAN).metadata
+    return render(
+        request, 
+        'administration/subscribe.html', 
+        {
+            'PINAX_STRIPE_PUBLIC_KEY' : settings.PINAX_STRIPE_PUBLIC_KEY,
+            'SHAKESPEARE_MONTHLY_PRICE' : default_plan_info['price'],
+            'SHAKESPEARE_BILLING_FREQUENCY' : default_plan_info['billing']
+        }
+    )
 
 @api_view(['POST'])
 @permission_classes((AllowAny, ))

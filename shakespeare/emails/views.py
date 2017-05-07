@@ -8,6 +8,7 @@ from .models import Email
 from research.models import Nugget
 from personas.models import ValueProposition, CallToAction
 from .serializers import EmailSerializer
+from .utils import charge_email
 
 class EmailDetail(APIView):
     """
@@ -62,4 +63,10 @@ class EmailDetail(APIView):
             **data
         )
         email.save()
+
+        if (Email.objects.filter(owner=request.user).count() > request.user.shakespeareuser.trialemails):
+            charge_email(request.user) #charge the user if they're over their trial count
+
+
+
         return Response({'id': str(email.id)})
