@@ -16,6 +16,7 @@ class ResearchTasksTests(APITestCase):
         1) Authenticate a user
         """
         self.user = User.objects.create_user('john', 'john@snow.com', 'johnpassword')
+        self.user.shakespeareuser.trialemails = 10
         self.client.login(username='john', password='johnpassword')
         self.client.force_authenticate(user=self.user)
         self.individual = Individual(
