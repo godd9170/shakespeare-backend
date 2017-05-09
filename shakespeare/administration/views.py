@@ -8,12 +8,14 @@ from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedire
 from django.shortcuts import redirect, render, reverse
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import logout as auth_logout, login, get_user_model
+from django.contrib.auth import logout as auth_logout, get_user_model
+from django.contrib.auth import login
 from social_core.backends.oauth import BaseOAuth1, BaseOAuth2
 from social_django.utils import psa, load_strategy
 from django.conf import settings
 from emails.models import Email
 from pinax.stripe.models import Plan
+from .forms import SubscribeForm
 
 from . import utils
 
@@ -54,33 +56,36 @@ def inviteonly(request):
 #@render_to('administration/get-started.html')
 @csrf_exempt
 def getstarted(request):
-    if request.POST:
-        default_plan_info = Plan.objects.get(stripe_id=settings.PINAX_STRIPE_DEFAULT_PLAN).metadata #get default plan info
-        user = utils.create_user(request.POST['email']) #make or fetch the user
-        user.shakespeareuser.trialemails = int(default_plan_info['trialemails'])
-        user.shakespeareuser.price = int(default_plan_info['price'])
-        user.save()
-
-        customer = utils.create_stripe_customer(user, request.POST['stripeToken']) #make a new stripe user
+    try:
+        email = request.session['email']
         return render(
             request, 
-            'administration/get-started.html'
+            'administration/get-started.html',
+            {'email': email}
         )
-    else:
+    except:
         return redirect('subscribe')
 
 #@render_to('administration/subscribe.html')
 def subscribe(request):
-    default_plan_info = Plan.objects.get(stripe_id=settings.PINAX_STRIPE_DEFAULT_PLAN).metadata
-    return render(
-        request, 
-        'administration/subscribe.html', 
-        {
-            'PINAX_STRIPE_PUBLIC_KEY' : settings.PINAX_STRIPE_PUBLIC_KEY,
-            'SHAKESPEARE_MONTHLY_PRICE' : default_plan_info['price'],
-            'SHAKESPEARE_BILLING_FREQUENCY' : default_plan_info['billing']
-        }
-    )
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = SubscribeForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            default_plan_info = Plan.objects.get(stripe_id=settings.PINAX_STRIPE_DEFAULT_PLAN).metadata #get default plan info
+            user = utils.create_user(email) #make or fetch the user
+            user.shakespeareuser.trialemails = int(default_plan_info['trialemails'])
+            user.shakespeareuser.price = int(default_plan_info['price'])
+            user.save()
+            request.session['email'] = email
+            return redirect('getstarted')
+
+    else:
+        form = SubscribeForm()
+        # if a GET (or any other method) we'll create a blank form
+        return render(request, 'administration/subscribe.html', {'form' : form})
 
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
