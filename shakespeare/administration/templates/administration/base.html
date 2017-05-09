@@ -2,13 +2,16 @@
 <html>
     <head>    
         <link rel="stylesheet" href="{% static "administration/shakespeare.css" %}" />
-        <link rel="stylesheet" href="{% static "administration/mui.min.css" %}" />
+        {% include 'material/includes/material_css.html' %}
+        <script src="{% static 'material/js/jquery-2.2.0.js' %}"></script>
+        {% include 'material/includes/material_js.html' %}
         <title>{% block title %}{% endblock %} - Shakespeare</title>
         {% block extrahead %}
         {% endblock %}
     </head>
     <body>
         <div class="container">
+        <img class="logo-header" src="{% static "administration/shakespeare.png" %}" />
             {% block content %}
             {% endblock %}
         </div>
