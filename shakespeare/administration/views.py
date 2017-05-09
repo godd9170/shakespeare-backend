@@ -46,14 +46,30 @@ def me(request):
         }
     )
 
-
-
-
 @render_to('administration/invite-only.html')
 def inviteonly(request):
     pass
 
-#@render_to('administration/get-started.html')
+def pay(request):
+    if request.method == 'POST':
+        if not request.user.is_anonymous():
+            user = request.user
+        else:
+            user = utils.create_user(request.POST['email']) #make or fetch the user
+        utils.create_stripe_customer(user, request.POST['stripeToken']) #make a new stripe user
+        return redirect('https://mail.google.com')
+    else: 
+        default_plan_info = Plan.objects.get(stripe_id=settings.PINAX_STRIPE_DEFAULT_PLAN).metadata
+        return render(
+            request, 
+            'administration/pay.html', 
+            {
+                'PINAX_STRIPE_PUBLIC_KEY' : settings.PINAX_STRIPE_PUBLIC_KEY,
+                'SHAKESPEARE_MONTHLY_PRICE' : default_plan_info['price'],
+                'SHAKESPEARE_BILLING_FREQUENCY' : default_plan_info['billing']
+            }
+        )
+
 @csrf_exempt
 def getstarted(request):
     try:
@@ -66,7 +82,6 @@ def getstarted(request):
     except:
         return redirect('subscribe')
 
-#@render_to('administration/subscribe.html')
 def subscribe(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:

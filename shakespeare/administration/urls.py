@@ -5,7 +5,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.home),
     url(r'^isvalid/', views.isvalid),
-    url(r'^isvalid/', views.isvalid),
+    url(r'^pay/', views.pay),
     url(r'^get-started/', views.getstarted, name='getstarted'),
     url(r'^create-user/', views.createuser),
     url(r'^subscribe/', views.subscribe, name='subscribe'),

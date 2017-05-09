@@ -27,6 +27,7 @@ def reformat_job_title(title):
     return title
 
 
+
 def clean_company_name(company_name):
     if company_name is not None:
         company_name = re.sub(r'(?i)\,?\s+(?:corp(?:oration)?|inc(?:orporated)?|(gmbh)|(llc)|(ltd)|(lllp))\.?', '', company_name)
