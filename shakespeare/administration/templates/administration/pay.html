@@ -1,0 +1,63 @@
+{% extends './base.html' %}
+{% load static %}
+
+
+{% block extrahead %}
+    <script src="https://checkout.stripe.com/checkout.js"></script>
+{% endblock %}
+
+{% block content %}   
+    <h4>Trial Plan</h4>
+    <h3 id='price'></h3>
+    <div>Cancel Anytime</div>
+    <div>Billed Monthly</div>
+    <br>
+    <button class="btn" id="purchase" onClick=>Purchase</button>
+{% endblock %}
+
+{% block footerjs %}
+<script>
+    var price = {{SHAKESPEARE_MONTHLY_PRICE}}/100;
+    var priceMessage = "$" + price + "/email, {{SHAKESPEARE_BILLING_FREQUENCY}}";
+    document.getElementById("price").innerText = priceMessage;
+
+    var handler = StripeCheckout.configure({
+        key: "{{ PINAX_STRIPE_PUBLIC_KEY }}",
+        image: "{% static "administration/shakespeare128.png" %}",
+        name: "Shakespeare",
+        description: priceMessage,
+        panelLabel: "Purchase",
+        email: "{{request.user.email}}",
+        allowRememberMe: false,
+        token: function(resp, args){
+            //create a basic form
+            var form = document.createElement("form");
+            form.method = "POST";
+            form.action = "/administration/pay/";
+            form.style.display = 'none';
+            //create an csrf input and add it to the form
+            var csrf = document.createElement("input"); 
+            csrf.value="{{csrf_token}}";
+            csrf.name="csrfmiddlewaretoken";
+            form.appendChild(csrf);
+            //create an input for the token and add it to the form
+            var stripeToken = document.createElement("input"); 
+            stripeToken.value=resp.id;
+            stripeToken.name="stripeToken";
+            form.appendChild(stripeToken);
+            //create an input for the email and add it to the form
+            var email = document.createElement("input"); 
+            email.value=resp.email;
+            email.name="email";
+            form.appendChild(email);
+            //submit the form
+            document.body.appendChild(form);
+            form.submit();
+        }
+    });
+    document.getElementById('purchase').onclick = function(e) {
+	    handler.open();
+	    e.preventDefault();
+   	};
+</script>
+{% endblock %}

@@ -6,10 +6,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.conf import settings
 from django.utils import timezone
+from emails.models import Email
 
 from .models import Research, Individual
 from .serializers import ResearchSerializer
 from .tasks import collect_research
+from .exceptions import UserMustPayException
 from . import utils
 
 
@@ -29,10 +31,15 @@ class ResearchDetail(APIView):
         serializer = ResearchSerializer(research)
         return Response(serializer.data)
 
+    def valid_trial_or_payment(self):
+        request = self.request
+        if not hasattr(request.user, 'customer') and (Email.objects.filter(owner=request.user).count() >= request.user.shakespeareuser.trialemails):
+            raise UserMustPayException
+
 
     def post(self, request, format=None):
         data = request.data
-        
+        self.valid_trial_or_payment() #check that the user isn't past their trial limit.
         # 
         # Get the person we're dealing with
         #

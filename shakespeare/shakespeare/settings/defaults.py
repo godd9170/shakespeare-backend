@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'rest_framework_social_oauth2',
     'organizations',
     'pinax.stripe',
+    'material',
+    'material.frontend',
 
     #'personas.apps.PersonasConfig',
     #'administration.apps.AdministrationConfig',
