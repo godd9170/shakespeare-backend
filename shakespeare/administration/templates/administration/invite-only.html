@@ -3,6 +3,5 @@
 {% block content %}   
     <h1>Sorry</h1>
     <h3>{% if request.GET.email %}<b>{{request.GET.email}}</b> isn't{% else %}You aren't{% endif %} part of our beta.</h3>
-    <h5>Click the button below to request access.</h5>
-    <button class="btn" onclick="location.href = 'https://shakespeare.typeform.com/to/G0OxEx';">Give me Shakespeare!</button>
+    <a class="btn" href="/auth/login/google-oauth2?next=/administration/get-started">Authenticate with Google</a>
 {% endblock %}
