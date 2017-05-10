@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils import timezone
 from django.contrib.auth.models import User, Group
 from .models import Account, AccountUser, ShakespeareUser
-from research.models import Research
+from research.models import Research, Piece
 from personas.models import ValueProposition
 from emails.models import Email
 from organizations.models import (Organization, OrganizationUser, OrganizationOwner)
@@ -13,7 +13,7 @@ from organizations.models import (Organization, OrganizationUser, OrganizationOw
 
 @admin.register(ShakespeareUser)
 class ShakespeareUserAdmin(admin.ModelAdmin):
-    list_display = ('user', 'trialemails', 'price', 'research_performed', 'emails_sent', 'vp_count', 'date_joined', 'last_activity')
+    list_display = ('user', 'trialemails', 'price', 'research_performed', 'emails_sent', 'research_to_emails', 'vp_count', 'emails_per_day', 'pieces_per_research', 'date_joined', 'last_activity')
     list_display_links = ('user',)
     search_fields = ('user__email',)
     list_per_page = 20
@@ -35,9 +35,28 @@ class ShakespeareUserAdmin(admin.ModelAdmin):
 
     def emails_per_day(self, obj):
         total_emails = Email.objects.filter(owner=obj.user.id).count()
-        time_joined = timezone.now() - obj.user.date_joined
-        return time_joined
-        #timezone.now() - timedelta(days=settings.INDIVIDUAL_REFRESH_MAX_AGE)
+        days_joined = (timezone.now() - obj.user.date_joined).days
+        try:
+            return total_emails/days_joined
+        except ZeroDivisionError:
+            return total_emails
+
+    def pieces_per_research(self, obj):
+        total_research = Research.objects.filter(owner=obj.user.id).count()
+        total_pieces = Piece.objects.filter(research__owner=obj.user.id).count()
+        try:
+            return total_pieces/total_research
+        except ZeroDivisionError:
+            return total_pieces
+
+    def research_to_emails(self, obj):
+        total_research = Research.objects.filter(owner=obj.user.id).count()
+        total_emails = Email.objects.filter(owner=obj.user.id).count()
+        try:
+            return total_research/total_emails
+        except ZeroDivisionError:
+            return total_research
+
 
 
 # @admin.register(Research)
