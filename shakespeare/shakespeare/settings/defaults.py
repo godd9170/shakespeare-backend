@@ -129,11 +129,11 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_user',
 
     # ???
-    # 'administration.pipeline.require_email', I think this fucks up the standard flow
+    'administration.pipeline.require_email', #I think this fucks up the standard flow
 
     # Make up a username for this person, appends a random string at the end if
     # there's any collision.
-    #'social_core.pipeline.user.get_username',
+    'social_core.pipeline.user.get_username',
 
     # Send a validation email to the user to verify its email address.
     # Disabled by default.
@@ -145,10 +145,10 @@ SOCIAL_AUTH_PIPELINE = (
 
 
     # Bounce the user off to a 'Sorry we're in beta' if we can't match them with someone in the system.
-    'administration.pipeline.reject_user_if_non_existent',
+    # 'administration.pipeline.reject_user_if_non_existent',
 
     # Create a user account if we haven't found one yet. DISABLED FOR MVP
-    #'social_core.pipeline.user.create_user', #we're not creating any new users with this
+    'social_core.pipeline.user.create_user', #we're not creating any new users with this
 
     # Create the record that associates the social account with the user.
     'social_core.pipeline.social_auth.associate_user',

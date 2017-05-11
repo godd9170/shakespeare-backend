@@ -70,37 +70,21 @@ def pay(request):
             }
         )
 
-@csrf_exempt
 def getstarted(request):
-    try:
-        email = request.session['email']
+    if request.user.is_authenticated():
         return render(
             request, 
             'administration/get-started.html',
-            {'email': email}
+            {'firstname': request.user.first_name}
         )
-    except:
+    else:
         return redirect('subscribe')
 
 def subscribe(request):
-    if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = SubscribeForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            default_plan_info = Plan.objects.get(stripe_id=settings.PINAX_STRIPE_DEFAULT_PLAN).metadata #get default plan info
-            user = utils.create_user(email) #make or fetch the user
-            user.shakespeareuser.trialemails = int(default_plan_info['trialemails'])
-            user.shakespeareuser.price = int(default_plan_info['price'])
-            user.save()
-            request.session['email'] = email
-            return redirect('getstarted')
-
-    else:
-        form = SubscribeForm()
-        # if a GET (or any other method) we'll create a blank form
-        return render(request, 'administration/subscribe.html', {'form' : form})
+    return render(
+        request, 
+        'administration/subscribe.html'
+    )
 
 @api_view(['POST'])
 @permission_classes((AllowAny, ))

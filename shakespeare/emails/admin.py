@@ -7,7 +7,7 @@ from .models import Email
 class EmailAdmin(admin.ModelAdmin):
     list_display = ('id', 'owner', 'emailto', 'link_selectednugget', 'link_selectedvalueproposition', 'link_selectedcalltoaction', 'created')
     list_display_links = ('id',)
-    search_fields = ('emailto', 'owner__email')
+    search_fields = ('emailto', 'owner__email', 'owner__username')
     list_per_page = 20
     raw_id_fields = ( # don't do a dropdown
         'selectednugget',
