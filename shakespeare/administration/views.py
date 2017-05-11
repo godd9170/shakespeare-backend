@@ -78,13 +78,11 @@ def getstarted(request):
             {'firstname': request.user.first_name}
         )
     else:
-        return redirect('subscribe')
+        return redirect('/auth/login/google-oauth2?next=/administration/get-started')
 
 def subscribe(request):
-    return render(
-        request, 
-        'administration/subscribe.html'
-    )
+    return redirect('/administration/get-started')
+
 
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
