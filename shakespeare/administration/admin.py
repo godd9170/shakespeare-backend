@@ -13,10 +13,13 @@ from organizations.models import (Organization, OrganizationUser, OrganizationOw
 
 @admin.register(ShakespeareUser)
 class ShakespeareUserAdmin(admin.ModelAdmin):
-    list_display = ('user', 'trialemails', 'price', 'research_performed', 'emails_sent', 'research_to_emails', 'vp_count', 'emails_per_day', 'pieces_per_research', 'date_joined', 'last_activity')
-    list_display_links = ('user',)
+    list_display = ('email', 'trialemails', 'price', 'research_performed', 'emails_sent', 'research_to_emails', 'vp_count', 'emails_per_day', 'pieces_per_research', 'date_joined', 'last_activity')
+    list_display_links = ('email',)
     search_fields = ('user__email',)
     list_per_page = 20
+
+    def email(self, obj):
+        return obj.user.email
 
     def research_performed(self, obj):
         return Research.objects.filter(owner=obj.user.id).count()
