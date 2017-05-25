@@ -4,7 +4,7 @@ from requests import HTTPError
 from research.models import Research, Piece, Nugget
 from .aggregator import AbstractAggregator
 
-RESOURCE_DOMAIN = 'http://www.storyzy.com'
+RESOURCE_DOMAIN = 'http://search.storyzy.com'
 
 class Storyzy(AbstractAggregator):
 
